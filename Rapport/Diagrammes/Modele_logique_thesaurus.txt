@@ -2,7 +2,6 @@
 Auteur : Depret Axel
 
 Class Mot {
-	int idMot;
 	String libelleMot;
 	String definitionMot;
 	Relationship List< ref<Mot> > synonymie;
