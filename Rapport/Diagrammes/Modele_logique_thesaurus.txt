@@ -1,0 +1,12 @@
+*** Modele logique Thesaurus ***
+Auteur : Depret Axel
+
+Class Mot {
+	int idMot;
+	String libelleMot;
+	String definitionMot;
+	Relationship List< ref<Mot> > synonymie;
+	Relationship ref<Mot> pere inverse fils;
+	Relationship List< ref<Mot> > fils inverse pere;
+	Relationship List< ref<Mot> > association;
+}
