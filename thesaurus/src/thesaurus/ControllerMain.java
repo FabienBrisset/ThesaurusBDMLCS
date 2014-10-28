@@ -1,19 +1,19 @@
 package thesaurus;
 
 import java.awt.Event;
+import java.awt.event.ActionEvent;
 
-public class ControllerMain {
-	public void afficherFenetrePrincipale()
-	{
+public class ControllerMain extends Controller {
+	
+	public void afficherFenetrePrincipale() {
 		
 	}
-	public void actionPerformed(Event ActionEvent)
-	{
+	
+	public void actionPerformed(ActionEvent arg0) {
 		
 	}
-	public void main()
-	{
+	
+	public static void main(String[] args) {
 		
 	}
-
 }

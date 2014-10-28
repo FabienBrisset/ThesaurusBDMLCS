@@ -23,8 +23,8 @@ public class main {
 
 		try {
 			connection = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521:oracle", "system",
-					"jakanddaxterA1");
+					"jdbc:oracle:thin:@localhost:1521:orcl", "system",
+					"Fabien34090");
 		} catch (SQLException e) {
 
 			System.out.println("Connection Failed! Check output console");

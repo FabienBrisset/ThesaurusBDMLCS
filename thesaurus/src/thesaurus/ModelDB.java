@@ -1,16 +1,18 @@
 package thesaurus;
 
-public class ModelDB {
-	protected String db;
+import java.sql.Connection;
+import java.sql.ResultSet;
 
-	public String getDB()
-	{
+public class ModelDB {
+	
+	protected Connection db;
+
+	public Connection getDB() {
 		return this.db;
 	}
 
-	public Object[] query(String sql, Object[] parametres)
-	{
+	public ResultSet query(String sql, Object[] parametres) {
+		// A changer par la suite
 		return null;
 	}
-	
 }
