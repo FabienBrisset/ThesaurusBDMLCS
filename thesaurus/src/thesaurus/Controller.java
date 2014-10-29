@@ -6,10 +6,6 @@ import java.awt.event.ActionListener;
 public class Controller implements ActionListener {
 	
 	protected static Fenetre fenetre;
-	
-	public Controller() {
-		fenetre = null;
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

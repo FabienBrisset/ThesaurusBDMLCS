@@ -14,6 +14,6 @@ public class ControllerMain extends Controller {
 	}
 	
 	public static void main(String[] args) {
-		
+		//ControllerMots cm = new ControllerMots();
 	}
 }
