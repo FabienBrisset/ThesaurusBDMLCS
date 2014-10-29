@@ -1,16 +1,21 @@
 package thesaurus;
 
-import java.awt.Event;
 import java.awt.event.ActionEvent;
 
 public class ControllerMots extends Controller {
 	
+	private Mot motCourant;
+	
 	public ControllerMots() {
-		
+		this.motCourant = null;
+	}
+	
+	public ControllerMots(Mot M) {
+		this.motCourant = M;
 	}
 	
 	public void afficherMot(Mot M) {
-	
+		
 	}
 	
 	public void afficherArborescenceMot(Mot M) {
@@ -38,5 +43,9 @@ public class ControllerMots extends Controller {
 	
 	public void actionPerformed(ActionEvent arg0) {
 		
+	}
+	
+	public Mot getMotCourant() {
+		return this.motCourant;
 	}
 }

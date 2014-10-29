@@ -10,13 +10,13 @@ public class ModelDB {
 	protected static Connection db;
 	protected static ModelDB instance;
 	
-	public ModelDB()
-	{
+	public ModelDB() {
 		try {
 
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 
-		} catch (ClassNotFoundException e) {
+		} 
+		catch (ClassNotFoundException e) {
 
 			System.out.println("Where is your Oracle JDBC Driver?");
 			e.printStackTrace();
@@ -24,10 +24,11 @@ public class ModelDB {
 
 		}
 		try {
-			this.db = DriverManager.getConnection(
+			db = DriverManager.getConnection(
 					"jdbc:oracle:thin:@localhost:1521:orcl", "system",
 					"Fabien34090");
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
@@ -38,10 +39,10 @@ public class ModelDB {
 
 	public static ModelDB getInstance() {
 		
-		if(instance==null)
-		{
+		if(instance == null) {
 			instance=new ModelDB();
 		}
+		
 		return instance;
 	}
 
