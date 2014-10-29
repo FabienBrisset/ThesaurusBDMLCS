@@ -6,9 +6,13 @@ import java.awt.event.ActionListener;
 
 public class Controller implements ActionListener {
 
-	protected Controller instance;
+	protected static Controller instance;
 	
 	public Controller getInstance() {
+		if(this.instance==null)
+		{
+			this.instance=new Controller();
+		}
 		return this.instance;
 	}
 
