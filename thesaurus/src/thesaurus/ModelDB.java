@@ -1,53 +1,75 @@
 package thesaurus;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+
+/**
+ * Classe modelDB permettant la connexion à la BD et l'execution de requetes.
+ * Cette classe est un Pattern Singleton ce qui permet de n'avoir qu'un seul instance de connection.
+ * 
+ * @author Axel
+ *
+ */
 
 public class ModelDB {
+	
+	/**
+	 * Liste des paramètres permettant l'accès à la BD.
+	 * 
+	 * db : variable de type Connection assurant la connexion à la BD.
+	 * instance : variable de type ModelBD permettant d'utiliser les methodes de la classe 
+	 */
 	
 	protected static Connection db;
 	protected static ModelDB instance;
 	
-	public ModelDB() {
-		try {
-
+	/**
+	 * Constructeur privée de la classe 
+	 */
+	private ModelDB()
+	{
+		// On verifie d'abord si le driver jdbc existe 
+		try 
+		{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-
 		} 
-		catch (ClassNotFoundException e) {
-
+		catch (ClassNotFoundException e) 
+		{
 			System.out.println("Where is your Oracle JDBC Driver?");
 			e.printStackTrace();
-			//return null;
-
+			return;
 		}
-		try {
-			db = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521:orcl", "system",
-					"Fabien34090");
+		
+		// On effectue ensuite la connexion
+		try 
+		{
+			db = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:database","system","Toto123");
 		} 
-		catch (SQLException e) {
-
+		catch (SQLException e) 
+		{
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
-			//return null;
-
+			return;
 		}
 	}
-
-	public static ModelDB getInstance() {
-		
-		if(instance == null) {
-			instance=new ModelDB();
+	
+	/**
+	 * Permet d'instancier une seule fois la Classe
+	 * 
+	 * @return Une instance de la classe ModelDB
+	 */
+	public static ModelDB getDB()
+	{
+		if (instance==null)
+		{
+			instance = new ModelDB();
+			System.out.println("First instance of connexion SQL");
+		}
+		else
+		{
+			System.out.println("Connexion SQL already exists");
 		}
 		
 		return instance;
 	}
-
-	public ResultSet query(String sql, Object[] parametres) {
-		// A changer par la suite
-		return null;
-	}
+	
 }
