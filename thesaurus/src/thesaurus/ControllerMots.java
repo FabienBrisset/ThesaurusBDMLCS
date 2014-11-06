@@ -1,6 +1,11 @@
 package thesaurus;
 
 import java.awt.event.ActionEvent;
+import java.util.TreeSet;
+
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 public class ControllerMots extends Controller {
 	
@@ -10,16 +15,19 @@ public class ControllerMots extends Controller {
 		this.motCourant = null;
 	}
 	
-	public ControllerMots(Mot M) {
-		this.motCourant = M;
+	public ControllerMots(Mot m) {
+		this.motCourant = m;
 	}
 	
-	public void afficherMot(Mot M) {
+	public void afficherMot(Mot m) {
 		
 	}
 	
-	public void afficherArborescenceMot(Mot M) {
-		
+	public void afficherArborescenceMot(Mot m) {
+		this.motCourant = m;
+		TreeNode<Mot> racine = new TreeNode<Mot>(m);
+		TreeNode<Mot> arbre = m.getArborescence(racine, racine);
+		VueArborescenceMot vue = new VueArborescenceMot(arbre);
 	}
 	
 	public void afficherAjout() {
@@ -33,7 +41,7 @@ public class ControllerMots extends Controller {
 	public void ajouterMot(Mot nouveauMot) {
 		
 	}
-	public void modifierMot(Mot M) {
+	public void modifierMot(Mot m) {
 		
 	}
 	

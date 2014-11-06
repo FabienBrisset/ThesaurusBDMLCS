@@ -3,6 +3,11 @@ package thesaurus;
 import java.sql.*;
 import java.util.*;
 
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+
 /**
  * Classe Mot du Modele permettant les operations en BD du type Mot.
  * Cette classe utilise la classe ModelBD pour la gestion des requetes. 
@@ -147,6 +152,23 @@ public class Mot {
 
 	public void setAssociationsMot(ArrayList<Ref> associationsMot) {
 		this.associationsMot = associationsMot;
+	}
+	
+	public TreeNode<Mot> getArborescence(TreeNode<Mot> racine, TreeNode<Mot> currentNode){
+		ArrayList<Mot> listeFils = this.getFils();
+		TreeNode<Mot> tree = racine;
+		TreeNode<Mot> newChild;
+		
+		for(int i=0; i<listeFils.size(); i++){
+			if(racine.getNode(currentNode.data) != null){
+				newChild = tree.getNode(currentNode.data).addChild(listeFils.get(i));
+			} else{
+				newChild = racine;
+			}
+			tree = listeFils.get(i).getArborescence(racine, newChild);
+		}
+		
+		return tree;
 	}
 	
 	/**

@@ -2,7 +2,11 @@ package thesaurus;
 
 public class VueArborescenceMot {
 
-	protected Mot mot;
+	private TreeNode<Mot> arborescence;
+	
+	public VueArborescenceMot(TreeNode<Mot> arborescence){
+		
+	}
 	
 	public void afficher() {
 		
