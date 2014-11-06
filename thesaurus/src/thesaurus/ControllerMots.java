@@ -20,7 +20,9 @@ public class ControllerMots extends Controller {
 	}
 	
 	public void afficherMot(Mot m) {
-		
+		this.motCourant = m;
+		VueMot vue = new VueMot(m);
+		vue.afficher();
 	}
 	
 	public void afficherArborescenceMot(Mot m) {
@@ -28,10 +30,12 @@ public class ControllerMots extends Controller {
 		TreeNode<Mot> racine = new TreeNode<Mot>(m);
 		TreeNode<Mot> arbre = m.getArborescence(racine, racine);
 		VueArborescenceMot vue = new VueArborescenceMot(arbre);
+		vue.afficher();
 	}
 	
 	public void afficherAjout() {
-		
+		VueAjoutMot vue = new VueAjoutMot();
+		vue.afficher();
 	}
 	
 	public void afficherModificationMot() {
