@@ -1,45 +1,16 @@
 import java.sql.*;
 
+import thesaurus.Controller;
+import thesaurus.ControllerMain;
+import thesaurus.ControllerMots;
+import thesaurus.Mot;
+
 public class main {
 
 	public static void main(String[] args) {
-		System.out.println("-------- Oracle JDBC Connection Testing ------");
-
-		try {
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-		} catch (ClassNotFoundException e) {
-
-			System.out.println("Where is your Oracle JDBC Driver?");
-			e.printStackTrace();
-			return;
-
-		}
-
-		System.out.println("Oracle JDBC Driver Registered!");
-
-		Connection connection = null;
-
-		try {
-			connection = DriverManager.getConnection(
-					"jdbc:oracle:thin:@localhost:1521:orcl", "system",
-					"Fabien34090");
-		} catch (SQLException e) {
-
-			System.out.println("Connection Failed! Check output console");
-			e.printStackTrace();
-			return;
-
-		}
-
-		if (connection != null) {
-			System.out.println("You made it, take control your database now!");
-		} else {
-			System.out.println("Failed to make connection!");
-		}
-
-		// Requête : SELECT table_name FROM all_tables;
+		ControllerMain c = new ControllerMain();
+		c.afficherFenetrePrincipale();
+		// Requï¿½te : SELECT table_name FROM all_tables;
 		/*Statement req;
 		String nom;
 		String prenom;
@@ -51,7 +22,7 @@ public class main {
 			  Statement req; int nb; req = connection.createStatement(); nb =
 			  req.executeUpdate(
 			  "INSERT into Joueur values ('Delpino', 'Dorian', 22, 'France')");
-			  System.out.println("Nombre de lignes modifiées : " + nb);
+			  System.out.println("Nombre de lignes modifiï¿½es : " + nb);
 			  req.close();
 			 
 
@@ -59,7 +30,7 @@ public class main {
 			  int nb; req = connection.createStatement(); nb =
 			  req.executeUpdate
 			  ("INSERT into Joueur values ('Malmassari', 'Pierre', 22, 'France')"
-			  ); System.out.println("Nombre de lignes modifiées : " + nb);
+			  ); System.out.println("Nombre de lignes modifiï¿½es : " + nb);
 			  req.close();
 			 
 
@@ -71,8 +42,8 @@ public class main {
 				prenom = rs.getString(2);
 				age = rs.getInt(3);
 				nationalite = rs.getString(4);
-				System.out.println("Nom : " + nom + ", prénom : " + prenom
-						+ ", age : " + age + ", nationalité : " + nationalite);
+				System.out.println("Nom : " + nom + ", prï¿½nom : " + prenom
+						+ ", age : " + age + ", nationalitï¿½ : " + nationalite);
 			}
 			req.close();
 		} catch (SQLException e) {

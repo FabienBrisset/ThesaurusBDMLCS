@@ -13,11 +13,7 @@ public class Controller implements ActionListener {
 		
 	}
 	
-	public Fenetre getFenetre() {
-		if (fenetre == null) {
-			fenetre = new Fenetre();
-		}
-		
+	public Fenetre getFenetre() {		
 		return fenetre;
 	}
 }
