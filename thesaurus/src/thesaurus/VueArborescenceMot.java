@@ -1,6 +1,6 @@
 package thesaurus;
 
-public class VueArborescenceMot {
+public class VueArborescenceMot extends View {
 
 	private TreeNode<Mot> arborescence;
 	

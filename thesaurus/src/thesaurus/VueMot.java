@@ -1,6 +1,6 @@
 package thesaurus;
 
-public class VueMot {
+public class VueMot extends View {
 
 	private Mot mot;
 	

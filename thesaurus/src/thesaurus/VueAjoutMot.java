@@ -1,6 +1,6 @@
 package thesaurus;
 
-public class VueAjoutMot {
+public class VueAjoutMot extends View {
 
 	public void afficher() {
 		
