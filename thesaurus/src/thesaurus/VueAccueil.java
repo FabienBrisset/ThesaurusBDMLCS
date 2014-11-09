@@ -16,7 +16,7 @@ public class VueAccueil extends View
 		textAccueil = new JTextPane();
 		textAccueil.setEditable(false);
 		textAccueil.setContentType("text/html"); 
-		textAccueil.setText("<center><br /><br /><h1>BIENVENUE SUR L'APPLICATION THESAURUS 'CUISINE'</h1><center>  <center> <br/><br/><br /><br />RÃ©alisÃ©e par :  </center> <center>LAFON Lucas - MALMASSARI Pierre - DEPRET Axel</center> <center>CHAMBON ThÃ©o - BRISSET Fabien</center><br /><br/><br/><br/><br/><br/><br/><br/><br/><br/><center> M1 INFORMATIQUE 2014-2015</center> <center>UNIVERSITE MONTPELLIER II</center> ");
+		textAccueil.setText("<center><br /><br /><h1>BIENVENUE SUR L'APPLICATION THESAURUS 'CUISINE'</h1><center>  <center> <br/><br/><br /><br />Réalisée par :  </center> <center>LAFON Lucas - MALMASSARI Pierre - DEPRET Axel</center> <center>CHAMBON Théo - BRISSET Fabien</center><br /><br/><br/><br/><br/><br/><br/><br/><br/><br/><center> M1 INFORMATIQUE 2014-2015</center> <center>UNIVERSITE MONTPELLIER II</center> ");
 	}
 	
 	public void afficher() 
