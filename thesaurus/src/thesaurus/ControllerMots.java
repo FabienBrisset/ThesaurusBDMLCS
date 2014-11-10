@@ -1,6 +1,7 @@
 package thesaurus;
 
 import java.awt.event.ActionEvent;
+import java.sql.Ref;
 import java.util.TreeSet;
 
 import javax.swing.JTree;
@@ -43,11 +44,13 @@ public class ControllerMots extends Controller {
 	}
 	
 	public void ajouterMot(Mot nouveauMot) {
-		
+		nouveauMot.insert();
 	}
 	
-	public void modifierMot(Mot m) {
-		
+	public void modifierMot(Mot m) { 
+		Ref refAncienMot = m.getRef();
+		Mot ancienMot = Mot.getMotByRef(refAncienMot);
+		m.update(ancienMot);
 	}
 	
 	public void supprimerMot() {
