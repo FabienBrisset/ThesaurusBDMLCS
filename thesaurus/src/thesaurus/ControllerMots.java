@@ -43,6 +43,13 @@ public class ControllerMots extends Controller {
 		fenetre.setView(vue);
 	}
 	
+	public void AfficherModificationMot(Mot m){
+		this.motCourant = m;
+		VueAfficherModificationMot vue = new VueAfficherModificationMot(m);
+		vue.afficher();
+		fenetre.setView(vue);
+	}
+	
 	public void ajouterMot(Mot nouveauMot) {
 		nouveauMot.insert();
 	}
@@ -53,8 +60,8 @@ public class ControllerMots extends Controller {
 		m.update(ancienMot);
 	}
 	
-	public void supprimerMot() {
-		
+	public void supprimerMot(Mot m) {
+		m.delete();
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
