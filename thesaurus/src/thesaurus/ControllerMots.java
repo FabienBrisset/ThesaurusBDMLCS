@@ -30,10 +30,10 @@ public class ControllerMots extends Controller {
 	public void afficherArborescenceMot(Mot m) {
 		this.motCourant = m;
 		TreeNode<Mot> racine = new TreeNode<Mot>(m);
-		TreeNode<Mot> arbre = m.getArborescence(racine, racine);
+		TreeNode<Mot> arbre = m.getArborescence();
+		System.out.println(arbre.children.get(3).children.get(0).data);
 		VueArborescenceMot vue = new VueArborescenceMot(arbre);
 		vue.afficher();
-		fenetre.setView(vue);
 	}
 	
 	public void afficherAjout() {

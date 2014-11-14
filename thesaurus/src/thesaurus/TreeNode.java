@@ -78,7 +78,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 				DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(((Mot) aTraiterTreeNode.get(0).children.get(i).data).getLibelleMot());
 				currentNode.add(newChild);
 				aTraiterTreeNode.add(aTraiterTreeNode.get(0).children.get(i));
-				aTraiterDefaultMutableTreeNode.add(currentNode);
+				aTraiterDefaultMutableTreeNode.add(newChild);
 			}
 			aTraiterDefaultMutableTreeNode.remove(0);
 			aTraiterTreeNode.remove(0);

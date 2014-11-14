@@ -154,21 +154,28 @@ public class Mot {
 		this.associationsMot = associationsMot;
 	}
 	
-	public TreeNode<Mot> getArborescence(TreeNode<Mot> racine, TreeNode<Mot> currentNode){
-		ArrayList<Mot> listeFils = this.getFils();
-		TreeNode<Mot> tree = racine;
-		TreeNode<Mot> newChild;
+	public TreeNode<Mot> getArborescence(){
+		ArrayList<TreeNode<Mot>> aTraiterTreeNode = new ArrayList<TreeNode<Mot>>();
+		ArrayList<Mot> aTraiterMot = new ArrayList<Mot>();
+		aTraiterMot.add(this);
+		TreeNode<Mot> top = new TreeNode<Mot>(this);
+		aTraiterTreeNode.add(top);
+		TreeNode<Mot> currentNode = top;
 		
-		for(int i=0; i<listeFils.size(); i++){
-			if(racine.getNode(currentNode.data) != null){
-				newChild = tree.getNode(currentNode.data).addChild(listeFils.get(i));
-			} else{
-				newChild = racine;
+		while(aTraiterMot.size() > 0){
+			for(int i=0; i<aTraiterMot.get(0).getFils().size(); i++){
+				TreeNode<Mot> addedNode = currentNode.addChild(aTraiterMot.get(0).getFils().get(i));
+				aTraiterTreeNode.add(addedNode);
+				aTraiterMot.add(aTraiterMot.get(0).getFils().get(i));
 			}
-			tree = listeFils.get(i).getArborescence(racine, newChild);
+			aTraiterMot.remove(0);
+			aTraiterTreeNode.remove(0);
+			if(aTraiterMot.size() > 0){
+				currentNode = aTraiterTreeNode.get(0);
+			}
 		}
 		
-		return tree;
+		return top;
 	}
 	
 	/**
