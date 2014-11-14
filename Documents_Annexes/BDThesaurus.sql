@@ -58,6 +58,18 @@ INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE lm.libelleMot='table') V
 INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE lm.libelleMot='table') VALUES ((SELECT ref(lm1) FROM LesMots lm1 WHERE lm1.libelleMot='couteau'));
 INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE lm.libelleMot='table') VALUES ((SELECT ref(lm1) FROM LesMots lm1 WHERE lm1.libelleMot='verre'));
 
+--ajout des fils à "verre"
+UPDATE LesMots lm
+SET lm.filsMot=(ensMot((SELECT ref(lm1) FROM LesMots lm1 WHERE lm1.libelleMot='vin')))
+WHERE lm.libelleMot='verre';
+
+UPDATE LesMots lm
+SET lm.pereMot=(SELECT ref(lm1) FROM LesMots lm1 WHERE lm1.libelleMot='verre')
+WHERE lm.libelleMot='vin';
+
+--liste des fils de "verre"
+SELECT value(f).libelleMot FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE lm.libelleMot='verre') f;
+
 --liste des fils de "table"
 SELECT value(f).libelleMot FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE lm.libelleMot='table') f;
 
