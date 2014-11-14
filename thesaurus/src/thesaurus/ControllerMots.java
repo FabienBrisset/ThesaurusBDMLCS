@@ -25,7 +25,6 @@ public class ControllerMots extends Controller {
 		this.motCourant = m;
 		VueMot vue = new VueMot(m);
 		vue.afficher();
-		fenetre.setView(vue);
 	}
 	
 	public void afficherArborescenceMot(Mot m) {
@@ -61,7 +60,7 @@ public class ControllerMots extends Controller {
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
-		
+		System.out.println(arg0);
 	}
 	
 	public Mot getMotCourant() {

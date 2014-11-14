@@ -7,6 +7,7 @@ public class ControllerMain extends Controller {
 	
 	public void afficherFenetrePrincipale() {
 		fenetre = new Fenetre();
+		fenetre.setView(new View());
 		VueAccueil vue = new VueAccueil();
 		vue.afficher();
 	}
