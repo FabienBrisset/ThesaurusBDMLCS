@@ -1,8 +1,13 @@
 package thesaurus;
 
 import java.awt.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
@@ -57,6 +62,32 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 		return null;
 	}
 
-    // other features ...
-
+	/**
+	 * @return un JTree pour afficher this graphiquement sous forme d'arbre
+	 */
+	public JTree toJTree(){
+		ArrayList<TreeNode<T>> aTraiterTreeNode = new ArrayList<TreeNode<T>>();
+		ArrayList<DefaultMutableTreeNode> aTraiterDefaultMutableTreeNode = new ArrayList<DefaultMutableTreeNode>();
+		aTraiterTreeNode.add(this);
+		DefaultMutableTreeNode top = new DefaultMutableTreeNode(((Mot) this.data).getLibelleMot());
+		aTraiterDefaultMutableTreeNode.add(top);
+		DefaultMutableTreeNode currentNode = top;
+		
+		while(aTraiterTreeNode.size() > 0){
+			for(int i=0; i<aTraiterTreeNode.get(0).children.size(); i++){
+				DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(((Mot) aTraiterTreeNode.get(0).children.get(i).data).getLibelleMot());
+				currentNode.add(newChild);
+				aTraiterTreeNode.add(aTraiterTreeNode.get(0).children.get(i));
+				aTraiterDefaultMutableTreeNode.add(currentNode);
+			}
+			aTraiterDefaultMutableTreeNode.remove(0);
+			aTraiterTreeNode.remove(0);
+			if(aTraiterDefaultMutableTreeNode.size() > 0)
+				currentNode = aTraiterDefaultMutableTreeNode.get(0);
+		}
+		
+		DefaultTreeModel modelArbre = new DefaultTreeModel(top);
+		
+		return new JTree(modelArbre);
+	}
 }
