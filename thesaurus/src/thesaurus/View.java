@@ -12,10 +12,10 @@ import javax.swing.event.ChangeListener;
 
 public class View extends JPanel {
 	protected static JTabbedPane listeOnglets;
-	protected JPanel panAccueil;
-	protected JPanel panAjouter;
-	protected JPanel panConsulter;
-	protected JPanel panArbo;
+	protected static JPanel panAccueil;
+	protected static JPanel panAjouter;
+	protected static JPanel panConsulter;
+	protected static JPanel panArbo;
 	
 	public View()
 	{
