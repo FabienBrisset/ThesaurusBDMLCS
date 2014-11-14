@@ -55,7 +55,7 @@ public class ControllerMots extends Controller {
 	
 	public void supprimerMot(Mot m) {
 		Mot pere = m.getPere();
-		m.delete();
+	   	m.delete();
 		this.afficherMot(pere);
 	}
 	
