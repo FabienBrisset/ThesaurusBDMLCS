@@ -1,8 +1,12 @@
 package thesaurus;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,6 +23,7 @@ public class VueMot {
 	
 	private Object[][] donneesTableauSynonymes;
 	private Object[][] donneesTableauFils;
+	private Object[][] donneesTableauAssos;
 	private String[] nomColonnes = {"Entrée", "Description"};
 	
 	private JPanel panChampRecherche;
@@ -32,7 +37,7 @@ public class VueMot {
 	
 	private JPanel panParent;
 	private JLabel labelParent;
-	private JButton buttonMotParent;
+	private JLabel labelMotParent;
 	
 	private JPanel panSynonymes;
 	private JPanel panLabelSynonymes; // Pas réussi à faire sans en gardant le centrage du label
@@ -45,6 +50,12 @@ public class VueMot {
 	private JLabel labelFils;
 	private JScrollPane scrollPanFils;
 	private JTable tableauFils;
+	
+	private JPanel panAssos;
+	private JPanel panLabelAssos; // Pas réussi à faire sans en gardant le centrage du label
+	private JLabel labelAssos;
+	private JScrollPane scrollPanAssos;
+	private JTable tableauAssos;
 	
 	private JPanel panDescription;
 	private JPanel panLabelDescription;
@@ -76,7 +87,19 @@ public class VueMot {
 		panParent.setMaximumSize(new Dimension(32767, 200));
 		panParent.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		labelParent = new JLabel("Parent : ");
-		buttonMotParent = new JButton(mot.getPere().getLibelleMot().toUpperCase());
+		if(mot.getPere() != null)
+		{
+			labelMotParent = new JLabel(mot.getPere().getLibelleMot().toUpperCase());
+			labelMotParent.setForeground(Color.BLUE);
+			Font font = labelMotParent.getFont();
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			labelMotParent.setFont(font.deriveFont(attributes));
+		}
+		else
+		{
+			labelMotParent = new JLabel("Aucun");
+		}
 		
 		panSynonymes = new JPanel();
 		panSynonymes.setLayout(new BoxLayout(panSynonymes, BoxLayout.Y_AXIS));
@@ -126,6 +149,30 @@ public class VueMot {
 		tableauFils.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauFils.setShowVerticalLines(false);
 		
+		panAssos = new JPanel();
+		panAssos.setLayout(new BoxLayout(panAssos, BoxLayout.Y_AXIS));
+		panLabelAssos = new JPanel();
+		labelAssos = new JLabel("Association(s) :");
+		scrollPanAssos = new JScrollPane();
+		ArrayList<Mot> listeAssos = mot.getAssociations();
+		if(listeAssos.size() == 0)
+		{
+			Object[][] donneesTableauAssos= {{"Aucune association", "Aucune association"},};
+			tableauAssos = new JTable(donneesTableauAssos, nomColonnes);
+		}
+		else
+		{
+			donneesTableauAssos = new Object[listeAssos.size()][2];
+			for (int i = 0; i < listeAssos.size(); i++)
+			{
+				donneesTableauAssos[i][0] = listeAssos.get(i).libelleMot.toUpperCase();
+				donneesTableauAssos[i][1] = listeAssos.get(i).definitionMot;
+				tableauAssos = new JTable(donneesTableauAssos,nomColonnes);
+			}
+		}
+		tableauAssos.setDefaultRenderer(Object.class, new RenduCellule());
+		tableauAssos.setShowVerticalLines(false);
+		
 		panDescription = new JPanel();
 		panDescription.setMinimumSize(new Dimension(10, 150));
 		panDescription.setLayout(new BoxLayout(panDescription, BoxLayout.Y_AXIS));
@@ -158,7 +205,7 @@ public class VueMot {
 		Controller.fenetre.getVueCourante().panConsulter.add(panEntreeRecherchee);
 		
 		panParent.add(labelParent);
-		panParent.add(buttonMotParent);
+		panParent.add(labelMotParent);
 		Controller.fenetre.getVueCourante().panConsulter.add(panParent);
 		
 		panSynonymes.add(panLabelSynonymes);
@@ -172,6 +219,12 @@ public class VueMot {
 		panLabelFils.add(labelFils);
 		panFils.add(scrollPanFils);
 		scrollPanFils.setViewportView(tableauFils);
+		
+		Controller.fenetre.getVueCourante().panConsulter.add(panAssos);
+		panAssos.add(panLabelAssos);
+		panLabelAssos.add(labelAssos);
+		panAssos.add(scrollPanAssos);
+		scrollPanAssos.setViewportView(tableauAssos);
 		
 		panDescription.add(panLabelDescription);
 		panLabelDescription.add(labelDescription);

@@ -12,9 +12,14 @@ public class RenduCellule extends DefaultTableCellRenderer
 			boolean isSelected, boolean hasFocus, int row, int column) 
 	{
 		Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		if(column == 0)
+		if(column == 0 && (row % 2 == 0))
 		{
 			cell.setBackground(Color.LIGHT_GRAY);
+		}
+		else if (column == 0 && (row % 2 == 1))
+		{
+			cell.setBackground(Color.GRAY);
+
 		}
 		else
 		{
