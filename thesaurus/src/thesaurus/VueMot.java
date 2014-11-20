@@ -106,7 +106,14 @@ public class VueMot {
 		panLabelSynonyme = new JPanel();
 		labelSynonyme = new JLabel("Synonyme(s) :");
 		scrollPanSynonyme = new JScrollPane();
-		ArrayList<Mot> listeSynonymes = mot.getSynonymes();
+		//ArrayList<Mot> listeSynonymes = mot.getSynonymes(); PIERRE
+		/* Fab */
+		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>(mot.getSynonymesMot().size());
+		for (int i = 0; i < mot.getSynonymesMot().size(); i++) {
+			if (mot.getMotByRef(mot.getSynonymesMot().get(i)) != null)
+				listeSynonymes.add(mot.getMotByRef(mot.getSynonymesMot().get(i)));
+		}
+		/* */
 		if(listeSynonymes.size() == 0)
 		{
 			Object[][] donneesTableauSynonymes= {{"Aucun synonyme", "Aucun synonyme"},};
@@ -114,9 +121,10 @@ public class VueMot {
 		}
 		else
 		{
-			donneesTableauFils = new Object[listeSynonymes.size()][2];
+			donneesTableauSynonymes = new Object[listeSynonymes.size()][2];
+			
 			for (int i = 0; i < listeSynonymes.size(); i++)
-			{
+			{	
 				donneesTableauSynonymes[i][0] = listeSynonymes.get(i).libelleMot.toUpperCase();
 				donneesTableauSynonymes[i][1] = listeSynonymes.get(i).definitionMot;
 				tableauSynonyme = new JTable(donneesTableauSynonymes,nomColonnes);

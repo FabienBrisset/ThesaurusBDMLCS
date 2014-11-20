@@ -1,7 +1,10 @@
 package thesaurus;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Ref;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 import javax.swing.JTree;
@@ -9,7 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-public class ControllerMots extends Controller {
+public class ControllerMots extends Controller implements ActionListener {
 	
 	private Mot motCourant;
 	
@@ -36,15 +39,61 @@ public class ControllerMots extends Controller {
 		vue.afficher();
 	}
 	
-	public void afficherAjout() {
-		VueAjoutMot vue = new VueAjoutMot();
+	public void afficherAjout() throws SQLException {
+		ArrayList<Mot> listeMots = Mot.getLibelleDeTousLesMots();
+		VueAjoutMot vue = new VueAjoutMot(listeMots);
 		vue.afficher();
-		//fenetre.setView(vue);
 	}
 	
 	
-	public void ajouterMot(Mot nouveauMot) {
-		nouveauMot.insert();
+	public void ajouterMot(String mot, String pere, String synonyme, String description) {
+		try {
+			if (this.motCourant.libelleMotExisteDeja(mot)) {
+				this.afficherAjout();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String[] lesSynonymesEnString = recupererSousChaineEtMot(synonyme);
+		String[] lesSynonymesEnStringEnMinuscules = new String[lesSynonymesEnString.length];
+		Mot[] lesSynonymesEnMot = new Mot[lesSynonymesEnString.length];
+		Ref[] lesSynonymesEnRef = new Ref[lesSynonymesEnMot.length];
+		ArrayList<Ref> lesSynonymesEnRefArrayList = new ArrayList<Ref>(lesSynonymesEnRef.length);
+		
+		for (int i = 0; i < lesSynonymesEnString.length; i++) {
+			lesSynonymesEnStringEnMinuscules[i] = lesSynonymesEnString[i].toLowerCase();
+			Mot motTeste = null;
+			try {
+				motTeste = this.motCourant.getMotByLibelle(lesSynonymesEnStringEnMinuscules[i]);
+				if (motTeste != null)
+					lesSynonymesEnMot[i] = motTeste;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (lesSynonymesEnMot[i] != null)
+				lesSynonymesEnRef[i] = lesSynonymesEnMot[i].getRef();
+		}
+		
+		Mot motPere = null;
+		try {
+			motPere = this.motCourant.getMotByLibelle(pere.toLowerCase());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < lesSynonymesEnRef.length; i++) {
+			if (lesSynonymesEnRef[i] != null)
+				lesSynonymesEnRefArrayList.add(lesSynonymesEnRef[i]);
+		}
+		
+		Mot m = new Mot(mot.toLowerCase(), description, motPere.getRef(), null, lesSynonymesEnRefArrayList, null);
+		
+		m.insert();
+		this.afficherMot(m);
 	}
 	
 	public void modifierMot(Mot m) { 
@@ -57,10 +106,6 @@ public class ControllerMots extends Controller {
 		Mot pere = m.getPere();
 	   	m.delete();
 		this.afficherMot(pere);
-	}
-	
-	public void actionPerformed(ActionEvent arg0) {
-		System.out.println(arg0);
 	}
 	
 	public Mot getMotCourant() {
@@ -76,12 +121,23 @@ public class ControllerMots extends Controller {
 			this.afficherMot(new Mot("table"));
 			break;
 		case 2 :
-			this.afficherAjout();
+			try {
+				this.afficherAjout();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 		case 3 :
 			this.afficherArborescenceMot(new Mot("table"));
 			break;
 		};
+	}
+	
+	public String[] recupererSousChaineEtMot(String s) {
+		String stringSansEspaces = s.replaceAll("\\s", "");;
+		String[] SousChaine = stringSansEspaces.split(",");
 
+		return SousChaine;
 	}
 }

@@ -301,17 +301,17 @@ public class Mot {
 				}
 				
 				//insertions des differentes types de relation
-				if (this.filsMot.size() > 0)
+				if (this.filsMot != null)
 				{
 					rowsAffected = Mot.insertRelations("filsMot",this.filsMot,refMotAjoute);
 				}
 				
-				if (this.synonymesMot.size() > 0)
+				if (this.synonymesMot != null)
 				{
 					rowsAffected = Mot.insertRelations("synonymesMot",this.synonymesMot,refMotAjoute);
 				}
 				
-				if (this.associationsMot.size() > 0)
+				if (this.associationsMot != null)
 				{
 					rowsAffected = Mot.insertRelations("associationsMot",this.associationsMot,refMotAjoute);
 				}
@@ -570,6 +570,7 @@ public class Mot {
 		str = str + "Synonymes : ";
 		
 		mots = this.getSynonymes();
+		
 		for (int i=0;i<mots.size();i++)
 		{
 			str = str + mots.get(i).getLibelleMot() + " ";
@@ -591,7 +592,60 @@ public class Mot {
 		return str;			
 	}
 	
-	
+	public String toStringFabien()
+	{
+		String str = new String();
+		
+		str = "libelle : " + this.libelleMot + "\n";
+		str = str + "definition : " + this.definitionMot + "\n";
+		
+		if ( this.pereMot!=null)
+		{
+			str = str + "pere : " + this.getPere().getLibelleMot() + "\n" ;
+		}
+		else
+		{
+			str = str + "pere : \n" ;
+		}
+		
+		str = str + "Fils : ";
+		
+		ArrayList<Mot> mots = this.getFils();
+		for (int i=0;i<mots.size();i++)
+		{
+			str = str + mots.get(i).getLibelleMot() + " ";
+		}
+		
+		str = str + "\n";
+		
+		str = str + "Synonymes : ";
+		
+		ArrayList<Ref>synonymes = this.getSynonymesMot();
+		ArrayList<Mot>synonymesEnMot = new ArrayList<Mot>(synonymes.size());
+		for (int i = 0; i < synonymes.size(); i++) {
+			synonymesEnMot.add(this.getMotByRef(synonymes.get(i)));
+		}
+		
+		for (int i=0;i<synonymes.size();i++)
+		{
+			str = str + synonymesEnMot.get(i).getLibelleMot() + " ";
+		}
+		
+		str = str + "\n";
+		
+		str = str + "Associations : ";
+		
+		mots = this.getAssociations();
+		
+		for (int i=0;i<mots.size();i++)
+		{
+			str = str + mots.get(i).getLibelleMot() + " ";
+		}
+		
+		str = str + "\n";
+		
+		return str;			
+	}
 	
 	/******************************* METHODES STATIQUES UTILISEES POUR LA FACTORISATION DU CODE *******************************/
 	/**************************** A NE PAS UTILISER A L'EXTERIEUR DE CETTE CLASSE !!!!! *********************************/
@@ -802,5 +856,59 @@ public class Mot {
 		requete.close();
 		
 		return mots;
+	}
+	
+	public static ArrayList<Mot> getLibelleDeTousLesMots() throws SQLException
+	{
+		ArrayList<Mot> mots = new ArrayList<Mot>();
+		
+		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT libelleMot FROM lesMots t");
+		ResultSet rs = requete.executeQuery();
+		
+		while (rs.next())
+		{
+			mots.add(new Mot(rs.getString(1)));
+		}
+
+		requete.close();
+		
+		return mots;
+	}
+	
+	public static boolean libelleMotExisteDeja(String libelle) throws SQLException
+	{
+		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT value(lm).libelleMot,value(lm).definitionMot,value(lm).pereMot,value(lm).filsMot,value(lm).synonymesMot,value(lm).associationsMot FROM lesMots lm WHERE lm.libelleMot = ?");
+		requete.setString(1,libelle);
+		ResultSet rs = requete.executeQuery();
+		
+		if (rs.next())
+			return true;
+		else
+			return false;
+	}
+	
+	public static Mot getMotByLibelle(String libelle) throws SQLException
+	{
+		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT value(lm).libelleMot,value(lm).definitionMot,value(lm).pereMot,value(lm).filsMot,value(lm).synonymesMot,value(lm).associationsMot FROM lesMots lm WHERE lm.libelleMot = ?");
+		requete.setString(1,libelle);
+		ResultSet rs = requete.executeQuery();
+		
+		if (rs.next()) {
+			String l = rs.getString(1);
+			String definition = rs.getString(2);
+			Ref pere = rs.getRef(3);
+			
+			ArrayList<Ref> fils = listeRef(rs.getArray(4));
+			ArrayList<Ref> synonymes = listeRef(rs.getArray(5));
+			ArrayList<Ref> associations = listeRef(rs.getArray(6));	
+			
+			requete.close();
+			
+			return new Mot(l,definition,pere,fils,synonymes,associations);
+			
+		}
+		else {
+			return null;
+		}
 	}
 }

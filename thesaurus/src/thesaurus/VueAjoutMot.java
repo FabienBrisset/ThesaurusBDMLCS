@@ -1,13 +1,17 @@
 package thesaurus;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.*;
 
-public class VueAjoutMot {
+public class VueAjoutMot implements ActionListener {
+	
+	ArrayList<Mot> mots;
 	
 	JTextField textFieldNouvelleEntree;
 	
@@ -24,7 +28,7 @@ public class VueAjoutMot {
 	JLabel labelSynonyme;
 	JLabel labelDescription;
 	
-	String[] donneesComboBox = {"Exemple", "Exemple"};
+	String[] donneesComboBox;
 	JComboBox comboBoxParent;
 	JScrollPane scrollPanDescription;
 	JScrollPane scrollPanSynonyme;
@@ -32,8 +36,14 @@ public class VueAjoutMot {
 	JTextArea textAreaSynonyme;
 	JButton buttonAjouterEntree;
 	
-	public VueAjoutMot() 
+	public VueAjoutMot(ArrayList<Mot> listeMots) 
 	{	
+		this.mots = listeMots;
+		donneesComboBox = new String[listeMots.size()];
+		for (int i = 0; i < listeMots.size(); i++) {
+			donneesComboBox[i] = new String(listeMots.get(i).getLibelleMot().toUpperCase());
+		}
+		
 		panNouvelleEntree = new JPanel();
 		panNouvelleEntree.setMaximumSize(new Dimension(32767, 200));
 		labelNouvelleEntree = new JLabel("Intitul\u00E9 de la nouvelle entr\u00E9e :");
@@ -42,7 +52,7 @@ public class VueAjoutMot {
 		
 		panParent = new JPanel();
 		panParent.setMaximumSize(new Dimension(32767, 200));
-		labelParentExiste = new JLabel("Parent (doit exister) :");
+		labelParentExiste = new JLabel("Parent :");
 		comboBoxParent = new JComboBox(donneesComboBox);
 		
 		panSynonyme = new JPanel();
@@ -68,6 +78,7 @@ public class VueAjoutMot {
 		
 		buttonAjouterEntree = new JButton("Ajouter l'Entr\u00E9e");
 		buttonAjouterEntree.setForeground(Color.BLACK);
+		buttonAjouterEntree.addActionListener(this);
 	}
 
 	public void afficher() 
@@ -96,5 +107,12 @@ public class VueAjoutMot {
 		
 		panButton.add(buttonAjouterEntree);
 		Controller.fenetre.getVueCourante().panAjouter.add(panButton);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		ControllerMots cm = new ControllerMots();
+		cm.ajouterMot(textFieldNouvelleEntree.getText(), comboBoxParent.getSelectedItem().toString(), textAreaSynonyme.getText(), textAreaDescription.getText());
 	}
 }
