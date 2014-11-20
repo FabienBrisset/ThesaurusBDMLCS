@@ -39,11 +39,11 @@ public class VueMot {
 	private JLabel labelParent;
 	private JLabel labelMotParent;
 	
-	private JPanel panSynonymes;
-	private JPanel panLabelSynonymes; // Pas réussi à faire sans en gardant le centrage du label
-	private JLabel labelSynonymes;
-	private JScrollPane scrollPanSynonymes; // Conteneur scrollable du tableau contenant les synonymes
-	private JTable tableauSynonymes;
+	private JPanel panSynonyme;
+	private JPanel panLabelSynonyme; // Pas réussi à faire sans en gardant le centrage du label
+	private JLabel labelSynonyme;
+	private JScrollPane scrollPanSynonyme; // Conteneur scrollable du tableau contenant les synonymes
+	private JTable tableauSynonyme;
 	
 	private JPanel panFils;
 	private JPanel panLabelFils; // Pas réussi à faire sans en gardant le centrage du label
@@ -101,16 +101,16 @@ public class VueMot {
 			labelMotParent = new JLabel("Aucun");
 		}
 		
-		panSynonymes = new JPanel();
-		panSynonymes.setLayout(new BoxLayout(panSynonymes, BoxLayout.Y_AXIS));
-		panLabelSynonymes = new JPanel();
-		labelSynonymes = new JLabel("Synonyme(s) :");
-		scrollPanSynonymes = new JScrollPane();
+		panSynonyme = new JPanel();
+		panSynonyme.setLayout(new BoxLayout(panSynonyme, BoxLayout.Y_AXIS));
+		panLabelSynonyme = new JPanel();
+		labelSynonyme = new JLabel("Synonyme(s) :");
+		scrollPanSynonyme = new JScrollPane();
 		ArrayList<Mot> listeSynonymes = mot.getSynonymes();
 		if(listeSynonymes.size() == 0)
 		{
 			Object[][] donneesTableauSynonymes= {{"Aucun synonyme", "Aucun synonyme"},};
-			tableauSynonymes = new JTable(donneesTableauSynonymes,nomColonnes);
+			tableauSynonyme = new JTable(donneesTableauSynonymes,nomColonnes);
 		}
 		else
 		{
@@ -119,11 +119,11 @@ public class VueMot {
 			{
 				donneesTableauSynonymes[i][0] = listeSynonymes.get(i).libelleMot.toUpperCase();
 				donneesTableauSynonymes[i][1] = listeSynonymes.get(i).definitionMot;
-				tableauSynonymes = new JTable(donneesTableauSynonymes,nomColonnes);
+				tableauSynonyme = new JTable(donneesTableauSynonymes,nomColonnes);
 			}
 		}
-		tableauSynonymes.setDefaultRenderer(Object.class, new RenduCellule());
-		tableauSynonymes.setShowVerticalLines(false);
+		tableauSynonyme.setDefaultRenderer(Object.class, new RenduCellule());
+		tableauSynonyme.setShowVerticalLines(false);
 		
 		panFils = new JPanel();
 		panFils.setLayout(new BoxLayout(panFils, BoxLayout.Y_AXIS));
@@ -192,7 +192,6 @@ public class VueMot {
 	public void afficher() 
 	{
 		Controller.fenetre.getVueCourante().panConsulter.removeAll();
-		System.out.println(Controller.fenetre.getVueCourante().panConsulter);
 		Controller.fenetre.getVueCourante().panConsulter.setLayout(new BoxLayout(Controller.fenetre.getVueCourante().panConsulter, BoxLayout.Y_AXIS));
 		
 		panChampRecherche.add(labelChampRecherche);
@@ -208,11 +207,11 @@ public class VueMot {
 		panParent.add(labelMotParent);
 		Controller.fenetre.getVueCourante().panConsulter.add(panParent);
 		
-		panSynonymes.add(panLabelSynonymes);
-		panLabelSynonymes.add(labelSynonymes);
-		panSynonymes.add(scrollPanSynonymes);
-		scrollPanSynonymes.setViewportView(tableauSynonymes);
-		Controller.fenetre.getVueCourante().panConsulter.add(panSynonymes);
+		panSynonyme.add(panLabelSynonyme);
+		panLabelSynonyme.add(labelSynonyme);
+		panSynonyme.add(scrollPanSynonyme);
+		scrollPanSynonyme.setViewportView(tableauSynonyme);
+		Controller.fenetre.getVueCourante().panConsulter.add(panSynonyme);
 		
 		Controller.fenetre.getVueCourante().panConsulter.add(panFils);
 		panFils.add(panLabelFils);
