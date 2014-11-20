@@ -10,7 +10,6 @@ import javax.swing.*;
 public class VueAjoutMot {
 	
 	JTextField textFieldNouvelleEntree;
-	JTabbedPane tabbedPane;
 	
 	JPanel panNouvelleEntree;
 	JPanel panParent;
