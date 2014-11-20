@@ -39,7 +39,7 @@ public class ControllerMots extends Controller {
 	public void afficherAjout() {
 		VueAjoutMot vue = new VueAjoutMot();
 		vue.afficher();
-		fenetre.setView(vue);
+		//fenetre.setView(vue);
 	}
 	
 	

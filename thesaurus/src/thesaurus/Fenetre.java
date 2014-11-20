@@ -20,7 +20,7 @@ public class Fenetre extends JFrame {
 	}
 	
 	public void setView(View vue) {
-		
+		this.vueCourante = vue;
 	}
 	
 	public View getVueCourante() {
