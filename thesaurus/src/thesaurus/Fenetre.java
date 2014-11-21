@@ -6,7 +6,25 @@ public class Fenetre extends JFrame {
 	
 	private View vueCourante;
 	private VueAjoutMot vueAjout;
+	private VueMot vueMot;
+	private VueArborescenceMot vueArborescence;
 	
+	public VueMot getVueMot() {
+		return vueMot;
+	}
+
+	public void setVueMot(VueMot vueMot) {
+		this.vueMot = vueMot;
+	}
+
+	public VueArborescenceMot getVueArborescence() {
+		return vueArborescence;
+	}
+
+	public void setVueArborescence(VueArborescenceMot vueArborescence) {
+		this.vueArborescence = vueArborescence;
+	}
+
 	public Fenetre() {
 		this.vueCourante = null;
 		this.setTitle("Thesaurus");

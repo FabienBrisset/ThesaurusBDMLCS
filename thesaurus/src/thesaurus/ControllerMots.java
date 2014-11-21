@@ -18,7 +18,7 @@ public class ControllerMots extends Controller implements ActionListener {
 	private Mot motCourant;
 	
 	public ControllerMots() {
-		this.motCourant = null;
+		this.motCourant = new Mot("cuisine");
 	}
 	
 	public ControllerMots(Mot m) {
@@ -29,15 +29,18 @@ public class ControllerMots extends Controller implements ActionListener {
 		this.motCourant = m;
 		VueMot vue = new VueMot(m);
 		vue.afficher();
+		Controller.fenetre.setVueMot(vue);
+		Controller.fenetre.getVueCourante().panConsulter = null;
+		Controller.fenetre.getVueCourante().listeOnglets.setSelectedIndex(1);
 	}
 	
 	public void afficherArborescenceMot(Mot m) {
 		this.motCourant = m;
 		TreeNode<Mot> racine = new TreeNode<Mot>(m);
 		TreeNode<Mot> arbre = m.getArborescence();
-		System.out.println(arbre.children.get(3).children.get(0).data);
 		VueArborescenceMot vue = new VueArborescenceMot(arbre);
 		vue.afficher();
+		Controller.fenetre.setVueArborescence(vue);
 	}
 	
 	public void afficherAjout() throws SQLException {
@@ -121,7 +124,7 @@ public class ControllerMots extends Controller implements ActionListener {
 		switch(fenetre.getVueCourante().getListeOnglets().getSelectedIndex())
 		{
 		case 1 :
-			this.afficherMot(new Mot("wasser"));
+			this.afficherMot(this.motCourant);
 			break;
 		case 2 :
 			try {
@@ -132,7 +135,7 @@ public class ControllerMots extends Controller implements ActionListener {
 			}
 			break;
 		case 3 :
-			this.afficherArborescenceMot(new Mot("table"));
+			this.afficherArborescenceMot(this.motCourant);
 			break;
 		};
 	}

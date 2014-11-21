@@ -199,52 +199,54 @@ public class VueMot {
 	
 	public void afficher() 
 	{
-		Controller.fenetre.getVueCourante().panConsulter.removeAll();
-		Controller.fenetre.getVueCourante().panConsulter.setLayout(new BoxLayout(Controller.fenetre.getVueCourante().panConsulter, BoxLayout.Y_AXIS));
-		
-		panChampRecherche.add(labelChampRecherche);
-		panChampRecherche.add(textFieldChampRecherche);
-		panChampRecherche.add(buttonChampRecherche);
-		Controller.fenetre.getVueCourante().panConsulter.add(panChampRecherche);
-		
-		panEntreeRecherchee.add(labelEntreeRecherchee);
-		panEntreeRecherchee.add(labelMotEntreeRecherchee);
-		Controller.fenetre.getVueCourante().panConsulter.add(panEntreeRecherchee);
-		
-		panParent.add(labelParent);
-		panParent.add(labelMotParent);
-		Controller.fenetre.getVueCourante().panConsulter.add(panParent);
-		
-		panSynonyme.add(panLabelSynonyme);
-		panLabelSynonyme.add(labelSynonyme);
-		panSynonyme.add(scrollPanSynonyme);
-		scrollPanSynonyme.setViewportView(tableauSynonyme);
-		Controller.fenetre.getVueCourante().panConsulter.add(panSynonyme);
-		
-		Controller.fenetre.getVueCourante().panConsulter.add(panFils);
-		panFils.add(panLabelFils);
-		panLabelFils.add(labelFils);
-		panFils.add(scrollPanFils);
-		scrollPanFils.setViewportView(tableauFils);
-		
-		Controller.fenetre.getVueCourante().panConsulter.add(panAssos);
-		panAssos.add(panLabelAssos);
-		panLabelAssos.add(labelAssos);
-		panAssos.add(scrollPanAssos);
-		scrollPanAssos.setViewportView(tableauAssos);
-		
-		panDescription.add(panLabelDescription);
-		panLabelDescription.add(labelDescription);
-		Controller.fenetre.getVueCourante().panConsulter.add(panDescription);
-		panDescription.add(scrollPanDescription);
-		scrollPanDescription.setViewportView(textAreaDescription);
-		
-		panButtonsConsulter.add(buttonEnregistrer);
-		panButtonsConsulter.add(buttonSupprimer);
-		buttonEnregistrer.addActionListener(new ControllerMots());
-		buttonSupprimer.addActionListener(new ControllerMots());
-		Controller.fenetre.getVueCourante().panConsulter.add(panButtonsConsulter);
-		
-		Controller.fenetre.getVueCourante().panConsulter.revalidate();
+		if (Controller.fenetre.getVueCourante().panConsulter != null) {
+			Controller.fenetre.getVueCourante().panConsulter.removeAll();
+			Controller.fenetre.getVueCourante().panConsulter.setLayout(new BoxLayout(Controller.fenetre.getVueCourante().panConsulter, BoxLayout.Y_AXIS));
+			
+			panChampRecherche.add(labelChampRecherche);
+			panChampRecherche.add(textFieldChampRecherche);
+			panChampRecherche.add(buttonChampRecherche);
+			Controller.fenetre.getVueCourante().panConsulter.add(panChampRecherche);
+			
+			panEntreeRecherchee.add(labelEntreeRecherchee);
+			panEntreeRecherchee.add(labelMotEntreeRecherchee);
+			Controller.fenetre.getVueCourante().panConsulter.add(panEntreeRecherchee);
+			
+			panParent.add(labelParent);
+			panParent.add(labelMotParent);
+			Controller.fenetre.getVueCourante().panConsulter.add(panParent);
+			
+			panSynonyme.add(panLabelSynonyme);
+			panLabelSynonyme.add(labelSynonyme);
+			panSynonyme.add(scrollPanSynonyme);
+			scrollPanSynonyme.setViewportView(tableauSynonyme);
+			Controller.fenetre.getVueCourante().panConsulter.add(panSynonyme);
+			
+			Controller.fenetre.getVueCourante().panConsulter.add(panFils);
+			panFils.add(panLabelFils);
+			panLabelFils.add(labelFils);
+			panFils.add(scrollPanFils);
+			scrollPanFils.setViewportView(tableauFils);
+			
+			Controller.fenetre.getVueCourante().panConsulter.add(panAssos);
+			panAssos.add(panLabelAssos);
+			panLabelAssos.add(labelAssos);
+			panAssos.add(scrollPanAssos);
+			scrollPanAssos.setViewportView(tableauAssos);
+			
+			panDescription.add(panLabelDescription);
+			panLabelDescription.add(labelDescription);
+			Controller.fenetre.getVueCourante().panConsulter.add(panDescription);
+			panDescription.add(scrollPanDescription);
+			scrollPanDescription.setViewportView(textAreaDescription);
+			
+			panButtonsConsulter.add(buttonEnregistrer);
+			panButtonsConsulter.add(buttonSupprimer);
+			buttonEnregistrer.addActionListener(new ControllerMots());
+			buttonSupprimer.addActionListener(new ControllerMots());
+			Controller.fenetre.getVueCourante().panConsulter.add(panButtonsConsulter);
+			
+			Controller.fenetre.getVueCourante().panConsulter.revalidate();
+		}
 	}
 }
