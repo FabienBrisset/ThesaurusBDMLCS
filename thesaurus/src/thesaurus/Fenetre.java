@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 public class Fenetre extends JFrame {
 	
 	private View vueCourante;
+	private VueAjoutMot vueAjout;
 	
 	public Fenetre() {
 		this.vueCourante = null;
@@ -25,5 +26,13 @@ public class Fenetre extends JFrame {
 	
 	public View getVueCourante() {
 		return this.vueCourante;
+	}
+
+	public VueAjoutMot getVueAjout() {
+		return vueAjout;
+	}
+
+	public void setVueAjout(VueAjoutMot vueAjout) {
+		this.vueAjout = vueAjout;
 	}
 }
