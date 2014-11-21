@@ -163,11 +163,14 @@ public class Mot {
 		TreeNode<Mot> currentNode = top;
 		
 		while(aTraiterMot.size() > 0){
-			for(int i=0; i<aTraiterMot.get(0).getFils().size(); i++){
-				TreeNode<Mot> addedNode = currentNode.addChild(aTraiterMot.get(0).getFils().get(i));
+			Mot motCourant = aTraiterMot.get(0);
+			ArrayList<Mot> filsMotCourant = motCourant.getFils();
+			for(int i=0; i<filsMotCourant.size(); i++){
+				TreeNode<Mot> addedNode = currentNode.addChild(filsMotCourant.get(i));
 				aTraiterTreeNode.add(addedNode);
-				aTraiterMot.add(aTraiterMot.get(0).getFils().get(i));
+				aTraiterMot.add(filsMotCourant.get(i));
 			}
+			
 			aTraiterMot.remove(0);
 			aTraiterTreeNode.remove(0);
 			if(aTraiterMot.size() > 0){
