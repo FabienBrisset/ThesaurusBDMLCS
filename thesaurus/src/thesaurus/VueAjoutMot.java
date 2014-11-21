@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.swing.*;
 
-public class VueAjoutMot implements ActionListener {
+public class VueAjoutMot extends View {
 	
 	ArrayList<Mot> mots;
 	
@@ -78,7 +78,7 @@ public class VueAjoutMot implements ActionListener {
 		
 		buttonAjouterEntree = new JButton("Ajouter l'Entr\u00E9e");
 		buttonAjouterEntree.setForeground(Color.BLACK);
-		buttonAjouterEntree.addActionListener(this);
+		buttonAjouterEntree.addActionListener(new ControllerMots());
 	}
 
 	public void afficher() 
@@ -108,11 +108,20 @@ public class VueAjoutMot implements ActionListener {
 		panButton.add(buttonAjouterEntree);
 		Controller.fenetre.getVueCourante().panAjouter.add(panButton);
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		ControllerMots cm = new ControllerMots();
-		cm.ajouterMot(textFieldNouvelleEntree.getText(), comboBoxParent.getSelectedItem().toString(), textAreaSynonyme.getText(), textAreaDescription.getText());
+	
+	public JTextField getTextFieldNouvelleEntree() {
+		return this.textFieldNouvelleEntree;
+	}
+	
+	public JComboBox getJComboBox() {
+		return this.comboBoxParent;
+	}
+	
+	public JTextArea getTextAreaSynonyme() {
+		return this.textAreaSynonyme;
+	}
+	
+	public JTextArea getTextAreaDescription() {
+		return this.textAreaDescription;
 	}
 }
