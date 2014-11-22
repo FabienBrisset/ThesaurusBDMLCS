@@ -21,7 +21,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	private Mot motCourant;
 	
 	public ControllerMots() {
-		this.motCourant = new Mot("cuisine");
+		this.motCourant = new Mot("table");
 	}
 	
 	public ControllerMots(Mot m) {
@@ -187,6 +187,14 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	@Override
 	public void actionPerformed(ActionEvent arg0) 
 	{
+		
+		if(arg0.getSource().equals(Controller.fenetre.getVueMot().getButtonEnregistrer())){
+			this.modifierMot(motCourant);
+		}
+		if(arg0.getSource().equals(Controller.fenetre.getVueMot().getButtonSupprimer())){
+			this.supprimerMot(motCourant);
+		}
+		
 		if(arg0.getSource().getClass().equals(Controller.fenetre.getVueAjout().getJComboBox().getClass()))
 		{
 			String motChoisi = Controller.fenetre.getVueAjout().getJComboBox().getSelectedItem().toString();
