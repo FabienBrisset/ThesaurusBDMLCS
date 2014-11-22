@@ -24,7 +24,7 @@ public class VueMot {
 	private Object[][] donneesTableauSynonymes;
 	private Object[][] donneesTableauFils;
 	private Object[][] donneesTableauAssos;
-	private String[] nomColonnes = {"EntrÃ©e", "Description"};
+	private String[] nomColonnes = {"Entrée", "Description"};
 	
 	private JPanel panChampRecherche;
 	private JLabel labelChampRecherche;
@@ -40,19 +40,19 @@ public class VueMot {
 	private JLabel labelMotParent;
 	
 	private JPanel panSynonyme;
-	private JPanel panLabelSynonyme; // Pas rÃ©ussi Ã  faire sans en gardant le centrage du label
+	private JPanel panLabelSynonyme; // Pas réussi à faire sans en gardant le centrage du label
 	private JLabel labelSynonyme;
 	private JScrollPane scrollPanSynonyme; // Conteneur scrollable du tableau contenant les synonymes
 	private JTable tableauSynonyme;
 	
 	private JPanel panFils;
-	private JPanel panLabelFils; // Pas rÃ©ussi Ã  faire sans en gardant le centrage du label
+	private JPanel panLabelFils; // Pas réussi à faire sans en gardant le centrage du label
 	private JLabel labelFils;
 	private JScrollPane scrollPanFils;
 	private JTable tableauFils;
 	
 	private JPanel panAssos;
-	private JPanel panLabelAssos; // Pas rÃ©ussi Ã  faire sans en gardant le centrage du label
+	private JPanel panLabelAssos; // Pas réussi à faire sans en gardant le centrage du label
 	private JLabel labelAssos;
 	private JScrollPane scrollPanAssos;
 	private JTable tableauAssos;
@@ -73,14 +73,14 @@ public class VueMot {
 		
 		panChampRecherche = new JPanel();
 		panChampRecherche.setMaximumSize(new Dimension(32767, 200));
-		labelChampRecherche = new JLabel("Mot Ã  rechercher : ");
+		labelChampRecherche = new JLabel("Mot à rechercher : ");
 		textFieldChampRecherche = new JTextField();
 		textFieldChampRecherche.setColumns(10);
-		setButtonChampRecherche(new JButton("Rechercher"));
+		buttonChampRecherche = new JButton("Rechercher");
 		
 		panEntreeRecherchee = new JPanel();
 		panEntreeRecherchee.setMaximumSize(new Dimension(32767, 200));
-		labelEntreeRecherchee = new JLabel("EntrÃ©e recherchÃ©e : ");
+		labelEntreeRecherchee = new JLabel("Entrée recherchée : ");
 		labelMotEntreeRecherchee = new JLabel(mot.getLibelleMot().toUpperCase());
 		
 		panParent = new JPanel();
@@ -192,8 +192,8 @@ public class VueMot {
 		textAreaDescription = new JTextArea(mot.definitionMot);
 		
 		panButtonsConsulter = new JPanel();
-		setButtonEnregistrer(new JButton("Enregistrer les modifications"));
-		setButtonSupprimer(new JButton("Supprimer l'entrÃ©e"));
+		buttonEnregistrer = new JButton("Enregistrer les modifications");
+		buttonSupprimer = new JButton("Supprimer l'entrée");
 		
 	}
 	
@@ -205,7 +205,7 @@ public class VueMot {
 			
 			panChampRecherche.add(labelChampRecherche);
 			panChampRecherche.add(textFieldChampRecherche);
-			panChampRecherche.add(getButtonChampRecherche());
+			panChampRecherche.add(buttonChampRecherche);
 			Controller.fenetre.getVueCourante().panConsulter.add(panChampRecherche);
 			
 			panEntreeRecherchee.add(labelEntreeRecherchee);
@@ -240,37 +240,13 @@ public class VueMot {
 			panDescription.add(scrollPanDescription);
 			scrollPanDescription.setViewportView(textAreaDescription);
 			
-			panButtonsConsulter.add(getButtonEnregistrer());
-			panButtonsConsulter.add(getButtonSupprimer());
-			getButtonEnregistrer().addActionListener(new ControllerMots());
-			getButtonSupprimer().addActionListener(new ControllerMots());
+			panButtonsConsulter.add(buttonEnregistrer);
+			panButtonsConsulter.add(buttonSupprimer);
+			buttonEnregistrer.addActionListener(new ControllerMots());
+			buttonSupprimer.addActionListener(new ControllerMots());
 			Controller.fenetre.getVueCourante().panConsulter.add(panButtonsConsulter);
 			
 			Controller.fenetre.getVueCourante().panConsulter.revalidate();
 		}
-	}
-
-	public JButton getButtonEnregistrer() {
-		return buttonEnregistrer;
-	}
-
-	public void setButtonEnregistrer(JButton buttonEnregistrer) {
-		this.buttonEnregistrer = buttonEnregistrer;
-	}
-
-	public JButton getButtonSupprimer() {
-		return buttonSupprimer;
-	}
-
-	public void setButtonSupprimer(JButton buttonSupprimer) {
-		this.buttonSupprimer = buttonSupprimer;
-	}
-
-	public JButton getButtonChampRecherche() {
-		return buttonChampRecherche;
-	}
-
-	public void setButtonChampRecherche(JButton buttonChampRecherche) {
-		this.buttonChampRecherche = buttonChampRecherche;
 	}
 }
