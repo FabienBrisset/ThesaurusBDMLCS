@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.ChangeEvent;
@@ -154,7 +155,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	
 	public void supprimerMot(Mot m) {
 		Mot pere = m.getPere();
-	   	m.delete();
 		this.afficherMot(pere);
 	}
 	
@@ -188,12 +188,14 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	public void actionPerformed(ActionEvent arg0) 
 	{
 		
-		if(arg0.getSource().equals(Controller.fenetre.getVueMot().getButtonEnregistrer())){
+		
+		if(arg0.getActionCommand().equals("Enregistrer les modifications")){
 			this.modifierMot(motCourant);
 		}
-		if(arg0.getSource().equals(Controller.fenetre.getVueMot().getButtonSupprimer())){
-			this.supprimerMot(motCourant);
+		if(arg0.getActionCommand().equals("Supprimer l'entée")){
+			this.supprimerMot(motCourant);	
 		}
+		
 		
 		if(arg0.getSource().getClass().equals(Controller.fenetre.getVueAjout().getJComboBox().getClass()))
 		{
@@ -239,6 +241,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			String description = Controller.fenetre.getVueAjout().getTextAreaDescription().getText();
 			ajouterMot(nouveauMot, pere, assos, synonymes, description);
 		}
+		
 		//this.ajouterMot(nouveauMot, pere, synonymeEnString, description);
 	}
 	
