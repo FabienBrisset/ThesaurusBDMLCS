@@ -192,7 +192,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		if(arg0.getActionCommand().equals("Enregistrer les modifications")){
 			this.modifierMot(motCourant);
 		}
-		if(arg0.getActionCommand().equals("Supprimer l'ent�e")){
+		if(arg0.getActionCommand().equals("Supprimer l'entrée")){
 			this.supprimerMot(motCourant);	
 		}
 		
