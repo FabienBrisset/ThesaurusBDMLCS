@@ -24,7 +24,7 @@ public class VueMot {
 	private Object[][] donneesTableauSynonymes;
 	private Object[][] donneesTableauFils;
 	private Object[][] donneesTableauAssos;
-	private String[] nomColonnes = {"Entrée", "Description"};
+	private String[] nomColonnes = {"EntrÃ©e", "Description"};
 	
 	private JPanel panChampRecherche;
 	private JLabel labelChampRecherche;
@@ -40,19 +40,19 @@ public class VueMot {
 	private JLabel labelMotParent;
 	
 	private JPanel panSynonyme;
-	private JPanel panLabelSynonyme; // Pas réussi à faire sans en gardant le centrage du label
+	private JPanel panLabelSynonyme; // Pas rï¿½ussi ï¿½ faire sans en gardant le centrage du label
 	private JLabel labelSynonyme;
 	private JScrollPane scrollPanSynonyme; // Conteneur scrollable du tableau contenant les synonymes
 	private JTable tableauSynonyme;
 	
 	private JPanel panFils;
-	private JPanel panLabelFils; // Pas réussi à faire sans en gardant le centrage du label
+	private JPanel panLabelFils; // Pas rï¿½ussi ï¿½ faire sans en gardant le centrage du label
 	private JLabel labelFils;
 	private JScrollPane scrollPanFils;
 	private JTable tableauFils;
 	
 	private JPanel panAssos;
-	private JPanel panLabelAssos; // Pas réussi à faire sans en gardant le centrage du label
+	private JPanel panLabelAssos; // Pas rï¿½ussi ï¿½ faire sans en gardant le centrage du label
 	private JLabel labelAssos;
 	private JScrollPane scrollPanAssos;
 	private JTable tableauAssos;
@@ -73,14 +73,14 @@ public class VueMot {
 		
 		panChampRecherche = new JPanel();
 		panChampRecherche.setMaximumSize(new Dimension(32767, 200));
-		labelChampRecherche = new JLabel("Mot à rechercher : ");
+		labelChampRecherche = new JLabel("Mot Ã  rechercher : ");
 		textFieldChampRecherche = new JTextField();
 		textFieldChampRecherche.setColumns(10);
 		buttonChampRecherche = new JButton("Rechercher");
 		
 		panEntreeRecherchee = new JPanel();
 		panEntreeRecherchee.setMaximumSize(new Dimension(32767, 200));
-		labelEntreeRecherchee = new JLabel("Entrée recherchée : ");
+		labelEntreeRecherchee = new JLabel("EntrÃ©e recherchÃ©e : ");
 		labelMotEntreeRecherchee = new JLabel(mot.getLibelleMot().toUpperCase());
 		
 		panParent = new JPanel();
@@ -193,7 +193,7 @@ public class VueMot {
 		
 		panButtonsConsulter = new JPanel();
 		buttonEnregistrer = new JButton("Enregistrer les modifications");
-		buttonSupprimer = new JButton("Supprimer l'entrée");
+		buttonSupprimer = new JButton("Supprimer l'entrÃ©e");
 		
 	}
 	

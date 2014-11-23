@@ -109,11 +109,20 @@ public class VueAjoutMot
 		}
 		else
 		{
-			donneesTableauAssosGauche = new Object[listeMots.size()][2];
-			for (int i = 0; i < listeMots.size(); i++)
+			donneesTableauAssosGauche = new Object[listeMots.size()-1][2];
+			//for (int i = 0; i < listeMots.size()-1; i++)
+			int i = 0;
+			int curseur = 0;
+			while (i < listeMots.size())
 			{
-				donneesTableauAssosGauche[i][0] = listeMots.get(i).libelleMot.toUpperCase();
-				donneesTableauAssosGauche[i][1] = listeMots.get(i).definitionMot;
+				if(!comboBoxParent.getSelectedItem().toString().toLowerCase().equals(listeMots.get(i).libelleMot.toLowerCase()))
+				{
+					System.out.println(i);
+					donneesTableauAssosGauche[curseur][0] = listeMots.get(i).libelleMot.toUpperCase();
+					donneesTableauAssosGauche[curseur][1] = listeMots.get(i).definitionMot;
+					curseur++;
+				}
+				i++;
 			}
 			modelAssosGauche = new DefaultTableModel(donneesTableauAssosGauche,nomColonnesAssos);
 			tableauAssosGauche = new JTable(modelAssosGauche);

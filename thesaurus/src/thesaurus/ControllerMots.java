@@ -192,7 +192,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		if(arg0.getActionCommand().equals("Enregistrer les modifications")){
 			this.modifierMot(motCourant);
 		}
-		if(arg0.getActionCommand().equals("Supprimer l'entée")){
+		if(arg0.getActionCommand().equals("Supprimer l'entï¿½e")){
 			this.supprimerMot(motCourant);	
 		}
 		
@@ -223,6 +223,28 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 					}
 					Controller.fenetre.getVueAjout().setDonneesTableauSynonymesGauche(donneesTableauSynonymesGauche);
 					Controller.fenetre.getVueAjout().getModelSynonymeGauche().setDataVector(donneesTableauSynonymesGauche, nomColonnesSynonyme);
+					Controller.fenetre.getVueCourante().revalidate();
+				}
+				
+				ArrayList<Mot> listeMots = Mot.getLibelleDeTousLesMots();
+				if(listeMots.size() > 0)
+				{
+					Object[][] donneesTableauAssosGauche = new Object[listeMots.size()-1][2];
+					int i = 0;
+					int curseur = 0;
+					while (i < listeMots.size())
+					{
+						if(!motChoisi.toLowerCase().equals(listeMots.get(i).libelleMot.toLowerCase()))
+						{
+							donneesTableauAssosGauche[curseur][0] = listeMots.get(i).libelleMot.toUpperCase();
+							donneesTableauAssosGauche[curseur][1] = listeMots.get(i).definitionMot;
+							curseur++;
+						}
+						i++;
+					}
+					String[] nomColonnesAssos = {"EntrÃ©e (Associations)", "Description"};
+					Controller.fenetre.getVueAjout().setDonneesTableauAssosGauche(donneesTableauAssosGauche);
+					Controller.fenetre.getVueAjout().getModelAssosGauche().setDataVector(donneesTableauAssosGauche, nomColonnesAssos);
 					Controller.fenetre.getVueCourante().revalidate();
 				}
 			} 
