@@ -130,7 +130,7 @@ public class Mot implements SQLData {
 			}
 			else
 			{
-				System.out.println("Erreur : mot introuvable");
+				System.out.println("Erreur : mot introuvable -> " + libelle);
 				return;
 			}
 		}

@@ -117,8 +117,8 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	
 	public void ajouterMot(String mot, String pere, Object[][] assos, Object[][] synonymes, String description)
 	{
-		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>(synonymes.length);
-		ArrayList<Mot> listeAssos = new ArrayList<Mot>(assos.length);
+		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>();
+		ArrayList<Mot> listeAssos = new ArrayList<Mot>();
 		Mot motPere = null;
 		try {
 			Mot m = new Mot(null,mot,"",null,null,null,null);
@@ -129,19 +129,27 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			{
 				for (int i = 0; i < synonymes.length; i++) 
 				{
-					m = new Mot(synonymes[i][0].toString().toLowerCase());
-					if(m != null)
+					if (!synonymes[i][0].toString().toLowerCase().equals("aucun mot"))
 					{
-						listeSynonymes.add(m);
+						m = new Mot(synonymes[i][0].toString().toLowerCase());
+						if(m != null)
+						{
+							listeSynonymes.add(m);
+						}
 					}
+					
 				}
 				for (int i = 0; i < assos.length; i++) 
 				{
-					m = new Mot(assos[i][0].toString().toLowerCase());
-					if(m != null)
+					if (!assos[i][0].toString().toLowerCase().equals("aucun mot"))
 					{
-						listeAssos.add(m);
+						m = new Mot(assos[i][0].toString().toLowerCase());
+						if(m != null)
+						{
+							listeAssos.add(m);
+						}
 					}
+					
 				}
 			
 				motPere = new Mot(pere.toLowerCase());
