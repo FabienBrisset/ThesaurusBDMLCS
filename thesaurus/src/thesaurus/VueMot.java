@@ -87,9 +87,9 @@ public class VueMot {
 		panParent.setMaximumSize(new Dimension(32767, 200));
 		panParent.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		labelParent = new JLabel("Parent : ");
-		if(mot.getPere() != null)
+		if(mot.getPereMot() != null)
 		{
-			labelMotParent = new JLabel(mot.getPere().getLibelleMot().toUpperCase());
+			labelMotParent = new JLabel(mot.getPereMot().getLibelleMot().toUpperCase());
 			labelMotParent.setForeground(Color.BLUE);
 			Font font = labelMotParent.getFont();
 			Map attributes = font.getAttributes();
@@ -110,8 +110,7 @@ public class VueMot {
 		/* Fab */
 		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>(mot.getSynonymesMot().size());
 		for (int i = 0; i < mot.getSynonymesMot().size(); i++) {
-			if (mot.getMotByRef(mot.getSynonymesMot().get(i)) != null)
-				listeSynonymes.add(mot.getMotByRef(mot.getSynonymesMot().get(i)));
+			listeSynonymes.add(mot.getSynonymesMot().get(i));
 		}
 		/* */
 		if(listeSynonymes.size() == 0)
@@ -138,7 +137,7 @@ public class VueMot {
 		panLabelFils = new JPanel();
 		labelFils = new JLabel("Fils :");
 		scrollPanFils = new JScrollPane();
-		ArrayList<Mot> listeFils = mot.getFils();
+		ArrayList<Mot> listeFils = mot.getFilsMot();
 		if(listeFils.size() == 0)
 		{
 			Object[][] donneesTableauFils= {{"Aucun fils", "Aucun fils"},};
@@ -162,7 +161,7 @@ public class VueMot {
 		panLabelAssos = new JPanel();
 		labelAssos = new JLabel("Association(s) :");
 		scrollPanAssos = new JScrollPane();
-		ArrayList<Mot> listeAssos = mot.getAssociations();
+		ArrayList<Mot> listeAssos = mot.getAssociationsMot();
 		if(listeAssos.size() == 0)
 		{
 			Object[][] donneesTableauAssos= {{"Aucune association", "Aucune association"},};

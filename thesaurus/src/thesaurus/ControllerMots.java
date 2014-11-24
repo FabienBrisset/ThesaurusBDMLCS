@@ -48,7 +48,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	}
 	
 	public void afficherAjout() throws SQLException {
-		ArrayList<Mot> listeMots = Mot.getLibelleDeTousLesMots();
+		ArrayList<Mot> listeMots = Mot.listeDesMots();
 		VueAjoutMot vue = new VueAjoutMot(listeMots);
 		vue.afficher();
 		Controller.fenetre.setVueAjout(vue);
@@ -57,7 +57,8 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	
 	public void ajouterMot(String mot, String pere, String synonyme, String description) {
 		try {
-			if (Mot.libelleMotExisteDeja(mot)) {
+			Mot m = new Mot(null,mot,"",null,null,null,null);
+			if (m.existe()) {
 				this.afficherAjout();
 			}
 			else {
@@ -66,39 +67,47 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 				Mot[] lesSynonymesEnMot = new Mot[lesSynonymesEnString.length];
 				Ref[] lesSynonymesEnRef = new Ref[lesSynonymesEnMot.length];
 				ArrayList<Ref> lesSynonymesEnRefArrayList = new ArrayList<Ref>(lesSynonymesEnRef.length);
+				ArrayList<Mot> lesSynonymesMotArrayList = new ArrayList<Mot>(lesSynonymesEnMot.length);
+				
 				
 				for (int i = 0; i < lesSynonymesEnString.length; i++) {
 					lesSynonymesEnStringEnMinuscules[i] = lesSynonymesEnString[i].toLowerCase();
 					Mot motTeste = null;
-					try {
-						motTeste = Mot.getMotByLibelle(lesSynonymesEnStringEnMinuscules[i]);
+					//try {
+						motTeste = new Mot(lesSynonymesEnStringEnMinuscules[i]);
 						if (motTeste != null)
 							lesSynonymesEnMot[i] = motTeste;
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+//					} catch (SQLException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
 					if (lesSynonymesEnMot[i] != null)
 						lesSynonymesEnRef[i] = lesSynonymesEnMot[i].getRef();
 				}
 				
 				Mot motPere = null;
-				try {
-					motPere = this.motCourant.getMotByLibelle(pere.toLowerCase());
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				//try {
+					//motPere = this.motCourant.getMotByLibelle(pere.toLowerCase());
+					motPere = new Mot(pere.toLowerCase());
+//				} catch (SQLException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				
 				for (int i = 0; i < lesSynonymesEnRef.length; i++) {
 					if (lesSynonymesEnRef[i] != null)
 						lesSynonymesEnRefArrayList.add(lesSynonymesEnRef[i]);
 				}
 				
-				Mot m = new Mot(mot.toLowerCase(), description, motPere.getRef(), null, lesSynonymesEnRefArrayList, null);
+				for (int i = 0; i < lesSynonymesEnMot.length; i++) {
+					if (lesSynonymesEnMot[i] != null)
+						lesSynonymesMotArrayList.add(lesSynonymesEnMot[i]);
+				}
 				
-				m.insert();
-				this.afficherMot(m);
+				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, null, lesSynonymesMotArrayList, null);
+				
+				m2.insert();
+				this.afficherMot(m2);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -108,39 +117,38 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	
 	public void ajouterMot(String mot, String pere, Object[][] assos, Object[][] synonymes, String description)
 	{
-		ArrayList<Ref> listeSynonymes = new ArrayList<Ref>(synonymes.length);
-		ArrayList<Ref> listeAssos = new ArrayList<Ref>(assos.length);
+		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>(synonymes.length);
+		ArrayList<Mot> listeAssos = new ArrayList<Mot>(assos.length);
 		Mot motPere = null;
 		try {
-			if (Mot.libelleMotExisteDeja(mot)) {
+			Mot m = new Mot(null,mot,"",null,null,null,null);
+			if (m.existe()) {
 				this.afficherAjout();
 			}
 			else 
 			{
 				for (int i = 0; i < synonymes.length; i++) 
 				{
-					if(Mot.getMotByLibelle(synonymes[i][0].toString().toLowerCase()) != null)
+					m = new Mot(synonymes[i][0].toString().toLowerCase());
+					if(m != null)
 					{
-						listeSynonymes.add((Mot.getMotByLibelle(synonymes[i][0].toString().toLowerCase())).getRef());
+						listeSynonymes.add(m);
 					}
 				}
 				for (int i = 0; i < assos.length; i++) 
 				{
-					if(Mot.getMotByLibelle(assos[i][0].toString().toLowerCase()) != null)
+					m = new Mot(synonymes[i][0].toString().toLowerCase());
+					if(m != null)
 					{
-						listeAssos.add((Mot.getMotByLibelle(assos[i][0].toString().toLowerCase())).getRef());
+						listeAssos.add(m);
 					}
 				}
-				try 
-				{
-					motPere = Mot.getMotByLibelle(pere.toLowerCase());
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Mot m = new Mot(mot.toLowerCase(), description, motPere.getRef(), null, listeSynonymes, listeAssos);
-				m.insert();
-				this.afficherMot(m);
+			
+				motPere = new Mot(pere.toLowerCase());
+				
+				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, null, listeSynonymes, listeAssos);
+				m2.insert();
+				this.afficherMot(m2);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -148,13 +156,13 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		}
 	}
 	public void modifierMot(Mot m) { 
-		Ref refAncienMot = m.getRef();
-		Mot ancienMot = Mot.getMotByRef(refAncienMot);
+		//Ref refAncienMot = m.getRef();
+		Mot ancienMot = new Mot(m.getLibelleMot());
 		m.update(ancienMot);
 	}
 	
 	public void supprimerMot(Mot m) {
-		Mot pere = m.getPere();
+		Mot pere = new Mot(m.getPereMot().getLibelleMot());
 		this.afficherMot(pere);
 	}
 	
@@ -200,9 +208,10 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		if(arg0.getSource().getClass().equals(Controller.fenetre.getVueAjout().getJComboBox().getClass()))
 		{
 			String motChoisi = Controller.fenetre.getVueAjout().getJComboBox().getSelectedItem().toString();
-			try 
-			{
-				ArrayList<Mot> listeFils = Mot.getMotByLibelle(motChoisi.toLowerCase()).getFils();
+//			try 
+//			{
+				Mot monMotChoisi = new Mot(motChoisi.toLowerCase());
+				ArrayList<Mot> listeFils = monMotChoisi.getFilsMot();
 				if(listeFils.size() == 0)
 				{
 					Object[][] donneesTableauSynonymesGauche = {{"Aucun mot", "Aucun mot"},};
@@ -226,7 +235,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 					Controller.fenetre.getVueCourante().revalidate();
 				}
 				
-				ArrayList<Mot> listeMots = Mot.getLibelleDeTousLesMots();
+				ArrayList<Mot> listeMots = Mot.listeDesMots();
 				if(listeMots.size() > 0)
 				{
 					Object[][] donneesTableauAssosGauche = new Object[listeMots.size()-1][2];
@@ -247,12 +256,12 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 					Controller.fenetre.getVueAjout().getModelAssosGauche().setDataVector(donneesTableauAssosGauche, nomColonnesAssos);
 					Controller.fenetre.getVueCourante().revalidate();
 				}
-			} 
-			catch (SQLException e) 
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			} 
+//			catch (SQLException e) 
+//			{
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		else if(arg0.getActionCommand().equals("Ajouter l'Entrée"))
 		{
