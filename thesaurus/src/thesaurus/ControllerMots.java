@@ -299,81 +299,76 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	@Override
 	public void mouseClicked(MouseEvent arg0) 
 	{
-		if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getTableauArbo()))
+		if(Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow() > -1
+				&& Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn() == 0)
 		{
-			System.out.println("dedans");
-			int x = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedRow();
-			int y = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedColumn();
-			if (Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y) != null)
+			int x = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow();
+			int y = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn();
+			if (Controller.fenetre.getVueAjout().getTableauAssosGauche().getValueAt(x, y) != null)
 			{
-				Mot m = new Mot(Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y).toString().toLowerCase());
-				if(m != null)
-				{
-					afficherArborescenceMot(m);
-				}
+				ActionTableauAssosGauche(x, y);
 			}
+			Controller.fenetre.getVueAjout().getTableauAssosGauche().clearSelection();
+			Controller.fenetre.getVueCourante().revalidate();
 		}
-		else
-		{
-			if(Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow() > -1
-					&& Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn() == 0)
+	
+			if(Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow() > -1
+					&& Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn() == 0)
 			{
-				int x = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow();
-				int y = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn();
-				if (Controller.fenetre.getVueAjout().getTableauAssosGauche().getValueAt(x, y) != null)
+				int x = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow();
+				int y = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn();
+				if (Controller.fenetre.getVueAjout().getTableauAssosDroite().getValueAt(x, y) != null)
 				{
-					ActionTableauAssosGauche(x, y);
+					ActionTableauAssosDroite(x, y);
+	
 				}
 				Controller.fenetre.getVueAjout().getTableauAssosGauche().clearSelection();
 				Controller.fenetre.getVueCourante().revalidate();
 			}
 			else
 			{
-				if(Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow() > -1
-						&& Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn() == 0)
+				if(Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow() > -1
+						&& Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn() == 0)
 				{
-					int x = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow();
-					int y = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn();
-					if (Controller.fenetre.getVueAjout().getTableauAssosDroite().getValueAt(x, y) != null)
+					int x = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow();
+					int y = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn();
+					if (Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getValueAt(x, y) != null)
 					{
-						ActionTableauAssosDroite(x, y);
-	
+						ActionTableauSynonymeGauche(x, y);
 					}
-					Controller.fenetre.getVueAjout().getTableauAssosGauche().clearSelection();
+					Controller.fenetre.getVueAjout().getTableauSynonymeGauche().clearSelection();
 					Controller.fenetre.getVueCourante().revalidate();
 				}
 				else
 				{
-					if(Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow() > -1
-							&& Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn() == 0)
+					if(Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow() > -1
+							&& Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn()== 0)
 					{
-						int x = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow();
-						int y = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn();
-						if (Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getValueAt(x, y) != null)
+						int x = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow();
+						int y = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn();
+						if (Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, y) != null)
 						{
-							ActionTableauSynonymeGauche(x, y);
+							ActionTableauSynonymeDroite(x, y);
 						}
-						Controller.fenetre.getVueAjout().getTableauSynonymeGauche().clearSelection();
+						Controller.fenetre.getVueAjout().getTableauSynonymeDroite().clearSelection();
 						Controller.fenetre.getVueCourante().revalidate();
-					}
-					else
-					{
-						if(Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow() > -1
-								&& Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn()== 0)
-						{
-							int x = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow();
-							int y = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn();
-							if (Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, y) != null)
-							{
-								ActionTableauSynonymeDroite(x, y);
-							}
-							Controller.fenetre.getVueAjout().getTableauSynonymeDroite().clearSelection();
-							Controller.fenetre.getVueCourante().revalidate();
-						}
 					}
 				}
 			}
-		}
+			if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getTableauArbo()))
+			{
+				System.out.println("dedans");
+				int x = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedRow();
+				int y = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedColumn();
+				if (Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y) != null)
+				{
+					Mot m = new Mot(Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y).toString().toLowerCase());
+					if(m != null)
+					{
+						afficherArborescenceMot(m);
+					}
+				}
+			}
 	}
 	
 	public void ActionTableauAssosGauche(int x, int y)
