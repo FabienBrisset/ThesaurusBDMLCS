@@ -214,6 +214,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			this.supprimerMot(motCourant);
 			this.afficherMot(motCourant);
 			JOptionPane.showMessageDialog(fenetre, "Mot Supprimé");
+			
 		}
 		System.out.println(arg0.getActionCommand());
 		
