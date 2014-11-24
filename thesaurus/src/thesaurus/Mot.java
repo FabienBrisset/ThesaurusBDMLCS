@@ -978,6 +978,33 @@ public class Mot implements SQLData {
 		return listMot;
 	}
 	
+	public static ArrayList<Mot> ArrayListEnOrdreAlphabetique (ArrayList<Mot> listeMots)
+	{
+		Mot[] donneesTableauArbo = new Mot[listeMots.size()];
+		ArrayList<Mot> listMot = new ArrayList<Mot>();
+		for (int i = 0; i < listeMots.size(); i++)
+		{
+			donneesTableauArbo[i] = listeMots.get(i);
+		}
+		for(int j=0; j<donneesTableauArbo.length;j++)
+		 {
+		     for (int i=j+1 ; i<donneesTableauArbo.length; i++)
+		     {
+		         if(donneesTableauArbo[i].toString().compareTo(donneesTableauArbo[j].toString())<0)
+		         {
+		             Mot temp = donneesTableauArbo[j];
+		             donneesTableauArbo[j] = donneesTableauArbo[i]; 
+		             donneesTableauArbo[i] = temp;
+		         }
+		     }
+		 }
+		for (int i = 0; i < listeMots.size(); i++)
+		{
+			listMot.add(donneesTableauArbo[i]);
+		}
+		return listMot;
+	}
+	
 	/**
 	 * Permet de convertir ArrayList<Mot> en ArrayList<Ref>
 	 * @param a ArrayList<Mot>
