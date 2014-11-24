@@ -22,7 +22,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	private Mot motCourant;
 	
 	public ControllerMots() {
-		this.motCourant = new Mot("table");
+		this.motCourant = new Mot("vin");
 	}
 	
 	public ControllerMots(Mot m) {
@@ -199,10 +199,15 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		
 		if(arg0.getActionCommand().equals("Enregistrer les modifications")){
 			this.modifierMot(motCourant);
+			this.afficherMot(motCourant);
+			JOptionPane.showMessageDialog(fenetre, "Modification Effectuée");
 		}
 		if(arg0.getActionCommand().equals("Supprimer l'entrée")){
-			this.supprimerMot(motCourant);	
+			this.supprimerMot(motCourant);
+			this.afficherMot(motCourant);
+			JOptionPane.showMessageDialog(fenetre, "Mot Supprimé");
 		}
+		System.out.println(arg0.getActionCommand());
 		
 		
 		if(arg0.getSource().getClass().equals(Controller.fenetre.getVueAjout().getJComboBox().getClass()))
