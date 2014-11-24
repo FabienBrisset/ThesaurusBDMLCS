@@ -120,6 +120,7 @@ public class VueMot {
 		}
 		else
 		{
+			listeSynonymes = Mot.ArrayListEnOrdreAlphabetique(listeSynonymes);
 			donneesTableauSynonymes = new Object[listeSynonymes.size()][2];
 			
 			for (int i = 0; i < listeSynonymes.size(); i++)
@@ -145,6 +146,7 @@ public class VueMot {
 		}
 		else
 		{
+			listeFils = Mot.ArrayListEnOrdreAlphabetique(listeFils);
 			donneesTableauFils = new Object[listeFils.size()][2];
 			for (int i = 0; i < listeFils.size(); i++)
 			{
@@ -169,6 +171,7 @@ public class VueMot {
 		}
 		else
 		{
+			listeAssos = Mot.ArrayListEnOrdreAlphabetique(listeAssos);
 			donneesTableauAssos = new Object[listeAssos.size()][2];
 			for (int i = 0; i < listeAssos.size(); i++)
 			{

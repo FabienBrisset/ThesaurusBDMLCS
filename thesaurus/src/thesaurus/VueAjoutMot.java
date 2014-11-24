@@ -73,6 +73,8 @@ public class VueAjoutMot
 	public VueAjoutMot(ArrayList<Mot> listeMots) throws SQLException 
 	{	
 		mots = listeMots;
+		mots = Mot.ArrayListEnOrdreAlphabetique(mots);
+		listeMots = Mot.ArrayListEnOrdreAlphabetique(listeMots);
 		
 		panNouvelleEntree = new JPanel();
 		panNouvelleEntree.setMaximumSize(new Dimension(32767, 200));

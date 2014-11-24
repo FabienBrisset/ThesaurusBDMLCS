@@ -225,6 +225,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 //			{
 				Mot monMotChoisi = new Mot(motChoisi.toLowerCase());
 				ArrayList<Mot> listeFils = monMotChoisi.getFilsMot();
+				listeFils = Mot.ArrayListEnOrdreAlphabetique(listeFils);
 				if(listeFils.size() == 0)
 				{
 					Object[][] donneesTableauSynonymesGauche = {{"Aucun mot", "Aucun mot"},};
@@ -249,6 +250,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 				}
 				
 				ArrayList<Mot> listeMots = Mot.listeDesMots();
+				listeMots = Mot.ArrayListEnOrdreAlphabetique(listeMots);
 				if(listeMots.size() > 0)
 				{
 					Object[][] donneesTableauAssosGauche = new Object[listeMots.size()-1][2];
