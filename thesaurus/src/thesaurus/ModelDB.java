@@ -19,7 +19,7 @@ public class ModelDB {
 	 * instance : variable de type ModelBD permettant d'utiliser les methodes de la classe 
 	 */
 	
-	protected static Connection db;
+	protected Connection db;
 	protected static ModelDB instance;
 	
 	/**

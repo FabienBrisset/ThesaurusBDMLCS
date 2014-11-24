@@ -7,34 +7,55 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 /**
  * Classe Mot du Modele permettant les operations en BD du type Mot.
  * Cette classe utilise la classe ModelBD pour la gestion des requetes. 
- * Les methodes static qu'elle possède (mis à part getMotByRef()) ont pour but de factoriser le code et sont donc inclus dans les méthodes principales de la classe.
+ * Elle implemente l'interface SQLDate permettant de "mapper" la classe avec son type en BD
  *  
  * @author Axel
  *
  */
 
-public class Mot {
+public class Mot implements SQLData {
 	
 	/**
 	 * Liste des attributs de la classe Mot propre à celle de la representation en BD de la table MOT
 	 * 
+	 * -- Attributs propres au Mot --
 	 * libelleMot : designation du mot
 	 * definitionMot : definition du mot
-	 * pereMot : variable de type Ref qui est la representation d'un pointeur en BD (i.e Ref permet de stocker des adresses de structure en BD)
-	 * filsMot, synonymesMot, associationsMot : différents types de relations représentés par des tableaux de Ref
+	 * pereMot : variable de type Mot permettant d'avoir une structure de type Mot du pere
+	 * filsMot, synonymesMot, associationsMot : différents types de relations représentés par des ArrayLists de Mot
+	 * 
+	 * -- Attributs complémentaires --
+	 * oidMot : adresse (Ref) du Mot en BD, ce qui nous permet les operations sur les relations (pere,fils,synonymes,associations) en BD
+	 * sqlType : type du Mot en BD, est obligatoire pour implémenter l'interface SQLData
+	 * 
+	 * oid : attribut static permettant l'attribution de l'oid du Mot lors de l'optention en BD
+	 * historiqueMotFils,historiqueMotSynonymes,historiqueMotAssociations : ces attributs static permettent de garder un historique 
+	 * des différents types de relation et d'evité de ce fait une eventuel recursivité "infini" à cause de doublons rencontrés lors de l'optention du Mot en BD
 	 */
 	
 	protected String libelleMot;
 	protected String definitionMot;
-	protected Ref pereMot;
-	protected ArrayList<Ref> filsMot;
-	protected ArrayList<Ref> synonymesMot;
-	protected ArrayList<Ref> associationsMot;
+	protected Mot pereMot;
+	protected ArrayList<Mot> filsMot;
+	protected ArrayList<Mot> synonymesMot;
+	protected ArrayList<Mot> associationsMot;
 	
+	private Ref oidMot;
+	private String sqlType = "SYSTEM.MOT";
+	
+	private static Ref oid; 
+	private static ArrayList<Ref> historiqueMotFils;
+	private static ArrayList<Ref> historiqueMotSynonymes;
+	private static ArrayList<Ref> historiqueMotAssociations;
+	
+	/**
+	 * 								******************************  CONSTRUCTEURS ******************************
+	 */
 	
 	/**
 	 * Constructeur à vide
@@ -44,22 +65,27 @@ public class Mot {
 		this.libelleMot = new String();
 		this.definitionMot = new String();
 		this.pereMot = null;
-		this.filsMot = new ArrayList<Ref>();
-		this.synonymesMot = new ArrayList<Ref>();
-		this.associationsMot = new ArrayList<Ref>();
+		this.filsMot = new ArrayList<Mot>();
+		this.synonymesMot = new ArrayList<Mot>();
+		this.associationsMot = new ArrayList<Mot>();
 	}
 	
 	/**
 	 * Constructeur par recopie
 	 */
-	public Mot(String libelle, String definition, Ref pere, ArrayList<Ref> fils, ArrayList<Ref> synonymes, ArrayList<Ref> associations)
+	public Mot(Ref oid,String libelle, String definition, Mot pere, ArrayList<Mot> fils, ArrayList<Mot> synonymes, ArrayList<Mot> associations)
 	{
+		this.oidMot = oid;
 		this.libelleMot = libelle;
 		this.definitionMot = definition;
 		this.pereMot = pere;
 		this.filsMot = fils;
 		this.synonymesMot = synonymes;
 		this.associationsMot = associations;
+		
+		historiqueMotFils = new ArrayList<Ref>();
+		historiqueMotSynonymes = new ArrayList<Ref>();
+		historiqueMotAssociations = new ArrayList<Ref>();
 	}
 	
 	/**
@@ -67,25 +93,46 @@ public class Mot {
 	 */
 	public Mot(String libelle)
 	{
+		historiqueMotFils = new ArrayList<Ref>();
+		historiqueMotSynonymes = new ArrayList<Ref>();
+		historiqueMotAssociations = new ArrayList<Ref>();
+		
 		try 
 		{
-			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT * FROM LesMots lm WHERE lm.libelleMot= ?");
+			// On mappe l'objet Mot Java avec celui en BD
+			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
+			ModelDB.getDB().db.setTypeMap(map);
+			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
+			
+			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT REF(lm),VALUE(lm) FROM LesMots lm WHERE lm.libelleMot= ?");
 			requete.setString(1, libelle);
 			ResultSet rs = requete.executeQuery();
 			
 			if (rs.next())
 			{
-				this.libelleMot=rs.getString(1);
-				this.definitionMot=rs.getString(2);
-				this.pereMot=rs.getRef(3);
+				Mot m = new Mot();
 				
-				this.filsMot = listeRef(rs.getArray(4));
-				this.synonymesMot = listeRef(rs.getArray(5));
-				this.associationsMot = listeRef(rs.getArray(6));	
+				//permet de garder l'oid courant en recursivité
+				oid = rs.getRef(1);
 				
+				//on sauvegarde l'oid du mot en cours pour eviter une possible recursivité du mot sur lui-meme ce qui engendrerai un "Stack overflow"
+				historiqueMotFils.add(oid);
+				historiqueMotSynonymes.add(oid);
+				historiqueMotAssociations.add(oid);
+				
+				//on stocke directement l'objet dans m grace au mappage
+				m = (Mot) rs.getObject(2);
+				
+				//une fois l'objet m construit, on affecte ses différents attributs à l'objet courant this 
+				this.oidMot = m.getOid();
+				this.libelleMot = m.getLibelleMot();
+				this.definitionMot = m.getDefinitionMot();
+				this.pereMot = m.getPereMot();
+				this.filsMot = m.getFilsMot();
+				this.synonymesMot = m.getSynonymesMot();
+				this.associationsMot = m.getAssociationsMot();	
 				
 				requete.close();
-				
 			}
 			else
 			{
@@ -96,16 +143,21 @@ public class Mot {
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
-			
+			return;
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
 			return;
 		}
 	}
 	
+	
 	/**
-	 * 
-	 * ACCESSEURS EN CONSULTATION / MODIFICATION
-	 * 
+	 * 				******************************  ACCESSEURS EN CONSULTATION / MODIFICATION ******************************
+	 *
 	 */
+	
 	public String getLibelleMot() {
 		return libelleMot;
 	}
@@ -122,37 +174,116 @@ public class Mot {
 		this.definitionMot = definitionMot;
 	}
 
-	public Ref getPereMot() {
+	public Mot getPereMot() {
 		return pereMot;
 	}
 
-	public void setPereMot(Ref pereMot) {
+	public void setPereMot(Mot pereMot) {
 		this.pereMot = pereMot;
 	}
 
-	public ArrayList<Ref> getFilsMot() {
+	public ArrayList<Mot> getFilsMot() {
 		return filsMot;
 	}
 
-	public void setFilsMot(ArrayList<Ref> filsMot) {
+	public void setFilsMot(ArrayList<Mot> filsMot) {
 		this.filsMot = filsMot;
 	}
 
-	public ArrayList<Ref> getSynonymesMot() {
+	public ArrayList<Mot> getSynonymesMot() {
 		return synonymesMot;
 	}
 
-	public void setSynonymesMot(ArrayList<Ref> synonymesMot) {
+	public void setSynonymesMot(ArrayList<Mot> synonymesMot) {
 		this.synonymesMot = synonymesMot;
 	}
 
-	public ArrayList<Ref> getAssociationsMot() {
+	public ArrayList<Mot> getAssociationsMot() {
 		return associationsMot;
 	}
 
-	public void setAssociationsMot(ArrayList<Ref> associationsMot) {
+	public void setAssociationsMot(ArrayList<Mot> associationsMot) {
 		this.associationsMot = associationsMot;
 	}
+	
+	public Ref getOid()
+	{
+		return this.oidMot;
+	}
+	
+	public void setOid(Ref r)
+	{
+		this.oidMot = r;
+	}
+	
+	/**
+	 * 				******************************  IMPLEMENTATION DE L'INTERFACE SQLData ******************************
+	 * 
+	 * méthodes à implémenter avec l'interface SQLData
+	 * - getSQLTypeName() : retourne le type du Mot en BD
+	 * - readSQL(SQLInput stream, String type) : permet la lecture d'un objet mappé en BD et est applé à chaque fois que l'on effectue un getObject()
+	 * - writeSQL(SQLOutput stream) : permet l'écriture d'un objet mappé en BD et est applé à chaque fois que l'on effectue un setObject()
+	 * 
+	 */
+	
+	public String getSQLTypeName()
+	{
+		return this.sqlType;
+	}
+	
+	public void readSQL(SQLInput stream, String type) throws SQLException 
+	{
+		this.sqlType = type;
+		
+		this.oidMot = oid;
+		
+		this.libelleMot = stream.readString();
+		this.definitionMot = stream.readString();
+		Ref r = stream.readRef();
+		
+		//concernant la lecture d'un tableau, on utilise une fonction auxiliare 'traitementDesRefs' afin de convertir le tableau en ArrayList<Ref> et de traiter les possibles doublons rencontrés grace 
+		//aux attributs static "historique" 
+		ArrayList<Ref> fils = Mot.traitementDesRefs(stream.readArray(),historiqueMotFils);
+		ArrayList<Ref> synonymes = Mot.traitementDesRefs(stream.readArray(),historiqueMotSynonymes);
+		ArrayList<Ref> associations = Mot.traitementDesRefs(stream.readArray(),historiqueMotAssociations);
+		
+		//permet la convertion ArrayList<Ref> --> ArrayList<Mot> fonction auxiliaire 'ArrayReftoArraylisteMot'
+		this.filsMot = Mot.ArrayReftoArraylisteMot(fils);
+		this.synonymesMot = Mot.ArrayReftoArraylisteMot(synonymes);
+		this.associationsMot = Mot.ArrayReftoArraylisteMot(associations);
+		
+		//traitement de l'attribut Père
+		if (r != null)
+		{
+			oid = r;
+			this.pereMot = (Mot) r.getObject();
+		}
+		else
+		{
+			this.pereMot = null;
+		}
+	}
+
+	public void writeSQL(SQLOutput stream) throws SQLException 
+	{
+		stream.writeString(this.libelleMot);
+		stream.writeString(this.definitionMot);
+		
+		if (this.pereMot != null)
+		{
+			stream.writeRef(this.pereMot.getOid());
+		}
+		
+		//N'ayant trouvé aucune solution concernant l'ecriture direct d'un Array en BD, on effectue l'initialisation et les traitements à la main (en traitant un par un par les elements)
+		// dans les methodes insert,update,delete.
+		stream.writeArray(null);
+		stream.writeArray(null);
+		stream.writeArray(null);
+	}
+	
+	/**
+	 * 					******************************  METHODE POUR REPRESENTATION GRAPHIQUE DU MOT ******************************
+	 */
 	
 	public TreeNode<Mot> getArborescence(){
 		ArrayList<TreeNode<Mot>> aTraiterTreeNode = new ArrayList<TreeNode<Mot>>();
@@ -164,7 +295,7 @@ public class Mot {
 		
 		while(aTraiterMot.size() > 0){
 			Mot motCourant = aTraiterMot.get(0);
-			ArrayList<Mot> filsMotCourant = motCourant.getFils();
+			ArrayList<Mot> filsMotCourant = motCourant.getFilsMot();
 			for(int i=0; i<filsMotCourant.size(); i++){
 				TreeNode<Mot> addedNode = currentNode.addChild(filsMotCourant.get(i));
 				aTraiterTreeNode.add(addedNode);
@@ -181,60 +312,462 @@ public class Mot {
 		return top;
 	}
 	
+	
+	
 	/**
-	 * Methode static qui permet d'obtenir un mot par sa reference en BD
-	 * 
-	 * @param oid : est une reference de Mot
-	 * @return une instance de Mot correspondante au mot qui possede la reference oid
+	 * 				******************************  METHODES D'OPERATION EN BD ******************************
 	 */
-	public static Mot getMotByRef(Ref oid)
+	
+	/**
+	 * Permet l'ajout d'un mot en BD
+	 * @return vrai si le mot a été correctement ajouté, faux sinon
+	 */
+	public boolean insert()
 	{
 		try 
 		{
-			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT * FROM LesMots lm WHERE ref(lm)= ?");
-			requete.setRef(1, oid);
+			// On mappe l'objet Mot Java avec celui en BD
+			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
+			ModelDB.getDB().db.setTypeMap(map);
+			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
+			
+			int rowsAffected = 0;
+			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("INSERT INTO LesMots VALUES (?)"); // on insere le mot
+			
+			requete.setObject(1,this);
+			
+			rowsAffected = requete.executeUpdate();
+			
+			requete.close();
+			
+			if (rowsAffected > 0)
+			{
+				this.oidMot = this.getRef();
+				
+				// on insere l'ensemble des relations du Mot grace à la méthode auxilaire 'insertRelations' permettant l'insertion un par un des elements de chaque relation
+				boolean insertionFils = Mot.insertRelations("filsMot", Mot.ArrayListMotToArrayRef(this.filsMot), this.oidMot);
+				boolean insertionSynonymes = Mot.insertRelations("synonymesMot", Mot.ArrayListMotToArrayRef(this.synonymesMot), this.oidMot);
+				boolean insertionAssociations = Mot.insertRelations("associationsMot", Mot.ArrayListMotToArrayRef(this.associationsMot), this.oidMot);
+				
+				if (insertionFils && insertionSynonymes && insertionAssociations)
+				{
+					if (this.pereMot != null) // si le pere du Mot n'est pas null on ajout au pere un fils qui est le mot en question
+					{
+						requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)");
+						
+						requete.setRef(1,this.pereMot.getOid());
+						requete.setRef(2,this.oidMot);
+						
+						rowsAffected = requete.executeUpdate();
+						requete.close();
+					}
+					
+					if (rowsAffected > 0)
+					{
+						rowsAffected = 0;
+						
+						// on met à jour le pere de chacun des fils appartenant au Mot courant (MAJ symétrique)
+						for (int i=0;i<this.filsMot.size();i++)
+						{
+							requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
+							
+							requete.setRef(1,this.oidMot);
+							requete.setRef(2,this.filsMot.get(i).getOid());
+							
+							rowsAffected = rowsAffected + requete.executeUpdate();
+							requete.close();
+						}
+						
+						if (rowsAffected == this.filsMot.size())
+						{
+							rowsAffected = 0;
+							
+							// on met à jour les synonymes de chacun des synonymes appartenant au Mot courant (MAJ symétrique)
+							for (int i=0;i<this.synonymesMot.size();i++)
+							{
+								requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)");
+								
+								requete.setRef(1,this.synonymesMot.get(i).getOid());
+								requete.setRef(2,this.oidMot);
+								
+								rowsAffected = rowsAffected + requete.executeUpdate();
+								requete.close();
+							}
+							
+							if (rowsAffected == this.synonymesMot.size())
+							{
+								return true;
+							}
+							else
+							{
+								System.out.println("pb2");
+								return false;
+							}
+						}
+						else
+						{
+							System.out.println("pb3");
+							return false;
+						}
+					}
+					else
+					{
+						System.out.println("pb4");
+						return false;
+					}
+				}
+				else
+				{
+					System.out.println("pb5");
+					return false;
+				}
+			}
+			else
+			{
+				System.out.println("pb6");
+				return false;
+			}
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Permet la modif d'un mot en BD 
+	 * @return vrai si le mot a été correctement modifié, faux sinon
+	 */
+	public boolean update(Mot ancienMot)
+	{
+		try 
+		{
+			// on affecte l'oid du Mot à modifier
+			this.oidMot = ancienMot.getOid();
+			
+			// On mappe l'objet Mot Java avec celui en BD
+			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
+			ModelDB.getDB().db.setTypeMap(map);
+			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
+			
+			int rowsAffected = 0;
+			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm = ? WHERE REF(lm)= ?"); //MAJ du mot
+			
+			requete.setObject(1,this);
+			requete.setObject(2,ancienMot.getOid());
+			
+			rowsAffected = requete.executeUpdate();
+			
+			requete.close();
+			
+			if (rowsAffected > 0)
+			{
+				// on insere l'ensemble des relations du Mot grace à la méthode auxilaire 'insertRelations' permettant l'insertion un par un des elements de chaque relation
+				boolean insertionFils = Mot.insertRelations("filsMot", Mot.ArrayListMotToArrayRef(this.filsMot), this.oidMot);
+				boolean insertionSynonymes = Mot.insertRelations("synonymesMot", Mot.ArrayListMotToArrayRef(this.synonymesMot), this.oidMot);
+				boolean insertionAssociations = Mot.insertRelations("associationsMot", Mot.ArrayListMotToArrayRef(this.associationsMot), this.oidMot);
+				
+				if (insertionFils && insertionSynonymes && insertionAssociations)
+				{
+					// si le pere a changé alors on effectue les modifs neccessaires afin de prendre en compte ce changement
+					if (this.pereMot != null && ancienMot.getPereMot() != null)
+					{
+						if (!this.pereMot.equals(ancienMot.getPereMot()))
+						{
+							requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?"); 
+							requete.setRef(1, ancienMot.getPereMot().getOid());
+							requete.setRef(2, this.oidMot);
+							rowsAffected = requete.executeUpdate();
+							requete.close();
+							
+							if (rowsAffected > 0)
+							{
+								requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)");
+								requete.setRef(1, this.pereMot.getOid());
+								requete.setRef(2, this.oidMot);
+								rowsAffected = requete.executeUpdate();
+								requete.close();
+							}
+							else
+							{
+								return false;
+							}
+							
+						}
+					}
+					else if (this.pereMot != ancienMot.getPereMot())
+					{
+						if (this.pereMot == null)
+						{
+							requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?"); 
+							requete.setRef(1, ancienMot.getPereMot().getOid());
+							requete.setRef(2, this.oidMot);
+							rowsAffected = requete.executeUpdate();
+							requete.close();
+						}
+						else
+						{
+							requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)"); 
+							requete.setRef(1, this.pereMot.getOid());
+							requete.setRef(2, this.oidMot);
+							System.out.println(rowsAffected + " -- " + this.pereMot.getOid().toString());
+							rowsAffected = requete.executeUpdate();
+							requete.close();
+						}
+					}
+					
+					if (rowsAffected > 0)
+					{
+						rowsAffected = 0;
+						
+						// on met à NULL le pere des fils de l'ancien Mot
+						for (int i=0;i<ancienMot.getFilsMot().size();i++)
+						{
+							requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = NULL WHERE REF(lm) = ?");
+							
+							requete.setRef(1,ancienMot.getFilsMot().get(i).getOid());
+							
+							rowsAffected = rowsAffected + requete.executeUpdate();
+							requete.close();
+						}
+						
+						
+						if (rowsAffected == ancienMot.getFilsMot().size())
+						{
+							rowsAffected = 0;
+							
+							// on met à jour le pere des fils du nouveau mot
+							for (int i=0;i<this.filsMot.size();i++)
+							{
+								requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
+								
+								requete.setRef(1,this.oidMot);
+								requete.setRef(2,this.filsMot.get(i).getOid());
+								
+								rowsAffected = rowsAffected + requete.executeUpdate();
+								requete.close();
+							}
+							
+							if (rowsAffected == this.filsMot.size())
+							{
+								rowsAffected = 0;
+								
+								// on met à jour les synonymes de chacun des synonymes appartenant au Mot courant (MAJ symétrique)
+								for (int i=0; i<this.synonymesMot.size(); i++)
+								{
+										requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)"); 
+										requete.setRef(1, this.synonymesMot.get(i).getOid());
+										requete.setRef(2, this.oidMot);
+										rowsAffected = rowsAffected + requete.executeUpdate();
+										requete.close();
+								}
+								
+								if (rowsAffected == this.synonymesMot.size())
+								{
+									return true;
+								}
+								else
+								{
+									return false;
+								}
+							}
+							else
+							{
+								return false;
+							}
+						}
+						else
+						{
+							return false;
+						}
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Permet la suppression recursive d'un mot en BD 
+	 * @return vrai si le mot a été correctement supprimé, faux sinon
+	 */
+	public boolean delete()
+	{
+		try 
+		{
+			int rowsAffected = 0;
+			PreparedStatement requete;
+				
+			// on supprime le fils du pere du mot qui correspond au mot à supprimer
+			if (this.pereMot != null)
+			{
+				requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?"); 
+				requete.setRef(1, this.pereMot.getOid());
+				requete.setRef(2, this.oidMot);
+				rowsAffected = requete.executeUpdate();
+				requete.close();
+			}
+			else
+			{
+				rowsAffected = 1;
+			}
+
+			if (rowsAffected > 0)
+			{
+				rowsAffected = 0;
+				
+				// on supprime le mot dans les synonymes des synonymes du mot qui correspond au mot à supprimer
+				for (int i=0; i<this.synonymesMot.size(); i++)
+				{	
+					requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?"); 
+					requete.setRef(1, this.synonymesMot.get(i).getOid());
+					requete.setRef(2, this.oidMot);
+					rowsAffected = rowsAffected + requete.executeUpdate();
+					requete.close();
+				}
+				
+				if (rowsAffected == this.synonymesMot.size())
+				{
+					// on supprime les possibles associations avec le mot à supprimer
+					
+					// liste des possibles associations avec le Mot en question
+					requete = ModelDB.getDB().db.prepareStatement("SELECT REF(lm) FROM LesMots lm WHERE (?) IN (SELECT VALUE(t) FROM TABLE(lm.associationsMot) t)"); 
+					requete.setRef(1, this.oidMot);
+					ResultSet rs = requete.executeQuery();
+					
+					// suppression de ces associations
+					while (rs.next())
+					{
+						PreparedStatement majAssoc = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.associationsMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?");
+						majAssoc.setRef(1,rs.getRef(1));
+						majAssoc.setRef(2,this.oidMot);
+						
+						rowsAffected = majAssoc.executeUpdate();
+						
+						if (rowsAffected == 0)
+						{
+							System.out.println("pb1 : " + this.libelleMot );
+							return false;
+						}
+						
+						majAssoc.close();
+					}
+					
+					requete.close();
+					
+					// suppression du mot
+					requete = ModelDB.getDB().db.prepareStatement("DELETE FROM LesMots lm WHERE REF(lm) = ?"); 
+					requete.setRef(1,this.oidMot);
+					rowsAffected = requete.executeUpdate();
+					requete.close();
+					
+					if (rowsAffected > 0)
+					{
+						boolean deleteOk = true;
+						int i=0;
+						
+						// suppression recursive de ses fils
+						while (i<this.filsMot.size() && deleteOk)
+						{
+							Mot fils = new Mot(this.filsMot.get(i).getLibelleMot());
+							fils.setPereMot(null);
+							deleteOk = fils.delete();
+							i++;
+						}
+						
+						return deleteOk;
+					}
+					else
+					{
+						System.out.println("pb2 : " + this.libelleMot );
+						return false;
+					}
+				}
+				else
+				{
+					System.out.println("pb3 : " + this.libelleMot );
+					return false;
+				}
+			}
+			else
+			{
+				System.out.println("pb4 : " + this.libelleMot );
+				return false;
+			}
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Permet de savoir si oui ou non un mot existe en BD
+	 * @return vrai si le mot existe, faux sinon
+	 */
+	public boolean existe()
+	{
+		try 
+		{
+			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT COUNT(*) FROM LesMots lm WHERE lm.libelleMot= ?");
+			requete.setString(1, this.libelleMot);
 			ResultSet rs = requete.executeQuery();
 			
 			if (rs.next())
 			{
-				String libelle=rs.getString(1);
-				String definition=rs.getString(2);
-				Ref pere=rs.getRef(3);
-				
-				ArrayList<Ref> fils = listeRef(rs.getArray(4));
-				ArrayList<Ref> synonymes = listeRef(rs.getArray(5));
-				ArrayList<Ref> associations = listeRef(rs.getArray(6));	
-				
-				
-				requete.close();
-				
-				return new Mot(libelle,definition,pere,fils,synonymes,associations);
-				
+				return  (rs.getInt(1) > 0);
 			}
 			else
 			{
-				return null;
+				return false;
 			}
 		}
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 			
-			return null;
+			return false;
 		}
-		
 	}
+
 	
 	/**
 	 * Permet d'obtenir la reference en BD du mot
-	 * 
 	 * @return la reference du mot
 	 */
 	public Ref getRef()
 	{
 		try 
 		{
-			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT ref(lm) FROM LesMots lm WHERE lm.libelleMot= ?");
+			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT REF(lm) FROM LesMots lm WHERE lm.libelleMot= ?");
 			requete.setString(1, this.libelleMot);
 			ResultSet rs = requete.executeQuery();
 			
@@ -258,239 +791,25 @@ public class Mot {
 		}
 	}
 	
-	
-	
-	/**
-	 * Permet l'insertion d'un mot en BD
-	 * 
-	 * Note : Les relations "symetriques" tel que les synonymes et Pere/Fils sont gérer dans les deux sens (coté mot mais aussi au niveau des mots liés à celui-ci)
-	 * 
-	 * @return le nombre de ligne affecté par l'operation, -1 si echec
-	 */
-	public int insert()
+	public static ArrayList<Mot> listeDesMots()
 	{
-		try 
+		try
 		{
-			int rowsAffected = 0;
-			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("INSERT INTO LesMots VALUES (Mot(?,?,?,ensMot(),ensMot(),ensMot()))"); //insertion du mot à "proprement dit"
-			requete.setString(1,this.libelleMot);
-			requete.setString(2,this.definitionMot);
-		
-			if (this.pereMot!=null) // verification (si null -> affectation de NULL sinon -> affectation de la reference du pere du mot
-			{
-				requete.setRef(3,this.pereMot);
-			}
-			else
-			{
-				requete.setNull(3,java.sql.Types.REF,"MOT");
-			}
+			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
+			ModelDB.getDB().db.setTypeMap(map);
+			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
 			
-			rowsAffected = requete.executeUpdate();
+			ArrayList<Mot> mots = new ArrayList<Mot>();
 			
-			requete.close();
+			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT lm.libelleMot FROM LesMots lm");
+			ResultSet rs = requete.executeQuery();
 			
-			if (rowsAffected > 0)
+			while (rs.next())
 			{
-				Ref refMotAjoute = this.getRef();
-				
-				
-				if (this.pereMot!=null) // si le pere du Mot n'est pas null on ajout au pere un fils qui est le mot en question
-				{
-					requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) VALUES ((?))");
-					requete.setRef(1,this.pereMot);
-					requete.setRef(2,refMotAjoute);
-					rowsAffected = requete.executeUpdate();
-					requete.close();
-				}
-				
-				//insertions des differentes types de relation
-				if (this.filsMot != null)
-				{
-					rowsAffected = Mot.insertRelations("filsMot",this.filsMot,refMotAjoute);
-				}
-				
-				if (this.synonymesMot != null)
-				{
-					rowsAffected = Mot.insertRelations("synonymesMot",this.synonymesMot,refMotAjoute);
-				}
-				
-				if (this.associationsMot != null)
-				{
-					rowsAffected = Mot.insertRelations("associationsMot",this.associationsMot,refMotAjoute);
-				}
+				mots.add(new Mot(rs.getString(1)));
 			}
 			
-			return rowsAffected;
-		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-			
-			return -1;
-		}
-		
-	}
-	
-	
-	/**
-	 * Permet la modification d'un mot en BD
-	 * 
-	 * Note : Les relations "symetriques" tel que les synonymes et Pere/Fils sont gérer dans les deux sens (coté mot mais aussi au niveau des mots liés à celui-ci)
-	 * 
-	 * @param ancienMot : Etat (instance du mot) avant les modifications
-	 * @return le nombre de ligne affecté par l'operation, -1 si echec
-	 */
-	public int update(Mot ancienMot)
-	{
-		try 
-		{
-			Ref referenceMot = ancienMot.getRef();
-			
-			int rowsAffected = 0;
-			
-			if (this.pereMot!=null) // si le mot possede un pere alors on regarde si ce pere est le meme que le pere de l'ancien mot et si ce n'est pas le cas on modifie la relation Pere/fils 
-			{
-				if (! this.pereMot.toString().equals(ancienMot.getPereMot().toString()))
-				{
-					PreparedStatement requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?)t WHERE value(t) = ?");
-					requete.setRef(1,ancienMot.getPereMot());
-					requete.setRef(2,referenceMot);
-					rowsAffected = requete.executeUpdate();
-					requete.close();
-				
-					requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) VALUES ((?))");
-					requete.setRef(1,this.pereMot);
-					requete.setRef(2,referenceMot);
-					rowsAffected = requete.executeUpdate();
-					requete.close();
-				}
-			}
-			else // sinon on enleve le fils (la ref du mot) à l'ancien pere
-			{
-				PreparedStatement requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?)t WHERE value(t) = ?");
-				requete.setRef(1,ancienMot.getPereMot());
-				requete.setRef(2,referenceMot);
-				rowsAffected = requete.executeUpdate();
-				
-				requete.close();
-			}
-			
-			//modifications des differentes types de relation
-			rowsAffected = Mot.updateRelations("filsMot",ancienMot.getFilsMot(),this.filsMot,referenceMot);
-			rowsAffected = Mot.updateRelations("synonymesMot",ancienMot.getSynonymesMot(),this.synonymesMot,referenceMot);
-			rowsAffected = Mot.updateRelations("associationsMot",ancienMot.getAssociationsMot(),this.associationsMot,referenceMot);
-			
-			//modification du mot à "proprement dit"
-			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.libelleMot = ?, lm.definitionMot = ?, lm.pereMot = ? WHERE REF(lm) = ?");
-			requete.setString(1,this.libelleMot);
-			requete.setString(2,this.definitionMot);
-		
-			if (this.pereMot!=null)
-			{
-				requete.setRef(3,this.pereMot);
-			}
-			else
-			{
-				requete.setNull(3,java.sql.Types.REF,"MOT");
-			}
-			
-			requete.setRef(4,referenceMot);
-			
-			rowsAffected = requete.executeUpdate();
-			
-			requete.close();
-			
-			return rowsAffected;
-		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-			
-			return -1;
-		}
-	}
-	
-
-	/**
-	 * Permet la suppression d'un mot en BD
-	 * 
-	 * @return le nombre de ligne affecté par l'operation, -1 si echec
-	 */
-	public int delete()
-	{
-		try 
-		{
-			Ref referenceMot = this.getRef();
-			
-			int rowsAffected = 0;
-			
-			
-			
-			if (this.pereMot!=null) // si le mot possède un pere on supprime le mot de ses fils
-			{
-				PreparedStatement requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?)t WHERE value(t) = ?");
-				requete.setRef(1,this.pereMot);
-				requete.setRef(2,referenceMot);
-				rowsAffected = requete.executeUpdate();
-			
-				requete.close();
-			}
-			
-			//suppression des differentes types de relation
-			rowsAffected = Mot.deleteRelations("filsMot",this.filsMot,referenceMot,"delete");
-		
-			rowsAffected = Mot.deleteRelations("synonymesMot",this.synonymesMot,referenceMot,"delete");
-	
-			rowsAffected = Mot.deleteRelations("associationsMot",this.associationsMot,referenceMot,"delete");
-			
-			//suppression du mot à "proprement dit"
-			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("DELETE FROM LesMots lm WHERE REF(lm) = ?");	
-			requete.setRef(1,referenceMot);
-			
-			rowsAffected = requete.executeUpdate();
-			
-			requete.close();
-			
-			return rowsAffected;
-		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-			
-			return -1;
-		}
-	}
-	
-	/**
-	 * Permet d'obtenir une instance de Mot qui represente le pere du mot
-	 * 
-	 * @return un mot qui est le pere du mot en question
-	 */
-	public Mot getPere()
-	{
-		if (this.pereMot!=null)
-		{
-			Mot pere = Mot.getMotByRef(this.pereMot);
-			
-			return pere;
-		}
-		else
-		{
-			return null;
-		}
-	}
-	
-	/**
-	 * Permet d'obtenir une liste de mot qui est la liste des fils du Mot
-	 * @return un ArrayList de mot 
-	 */
-	public ArrayList<Mot> getFils()
-	{
-		try 
-		{
-			ArrayList<Mot> fils = Mot.getMotsRelation("filsMot",this.libelleMot);
-			
-			return fils;
+			return mots;
 		}
 		catch (SQLException e) 
 		{
@@ -498,46 +817,86 @@ public class Mot {
 			
 			return null;
 		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	
+	/**
+	 * 				******************************  METHODE D'OPERATION SUR LA CLASSE ******************************
+	 */
+	
+	/**
+	 * Permet de savoir si un mot est present parmis les fils d'un mot
+	 * @param m : mot à chercher
+	 * @return vrai si le mot est trouvé, faux sinon
+	 */
+	public boolean estDansFils(Mot m)
+	{
+		int i=0;
+		boolean trouve = false;
+		
+		while (i<this.filsMot.size() && !trouve)
+		{
+			if (this.filsMot.get(i).equals(m))
+			{
+				trouve = true;
+			}
+			
+			i++;
+		}
+		
+		return trouve;
 	}
 	
 	/**
-	 * Permet d'obtenir une liste de mot qui est la liste des synonymes du Mot
-	 * @return un ArrayList de mot 
+	 * Permet de savoir si un mot est present parmis les synonymes d'un mot
+	 * @param m : mot à chercher
+	 * @return vrai si le mot est trouvé, faux sinon
 	 */
-	public ArrayList<Mot> getSynonymes()
+	public boolean estDansSynonymes(Mot m)
 	{
-		try 
+		int i=0;
+		boolean trouve = false;
+		
+		while (i<this.synonymesMot.size() && !trouve)
 		{
-			ArrayList<Mot> synonymes = Mot.getMotsRelation("synonymesMot",this.libelleMot);
+			if (this.synonymesMot.get(i).equals(m))
+			{
+				trouve = true;
+			}
 			
-			return synonymes;
+			i++;
 		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-			
-			return null;
-		}
+		
+		return trouve;
 	}
 	
 	/**
-	 * Permet d'obtenir une liste de mot qui est la liste des associations du Mot
-	 * @return un ArrayList de mot 
+	 * Permet de savoir si un mot est present parmis les associations d'un mot
+	 * @param m : mot à chercher
+	 * @return vrai si le mot est trouvé, faux sinon
 	 */
-	public ArrayList<Mot> getAssociations()
+	public boolean estDansAssociations(Mot m)
 	{
-		try 
+		int i=0;
+		boolean trouve = false;
+		
+		while (i<this.associationsMot.size() && !trouve)
 		{
-			ArrayList<Mot> associations = Mot.getMotsRelation("associationsMot",this.libelleMot);
+			if (this.associationsMot.get(i).equals(m))
+			{
+				trouve = true;
+			}
 			
-			return associations;
+			i++;
 		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-			
-			return null;
-		}
+		
+		return trouve;		
 	}
 	
 	/**
@@ -553,7 +912,7 @@ public class Mot {
 		
 		if ( this.pereMot!=null)
 		{
-			str = str + "pere : " + this.getPere().getLibelleMot() + "\n" ;
+			str = str + "pere : " + this.pereMot.getLibelleMot() + "\n" ;
 		}
 		else
 		{
@@ -562,356 +921,171 @@ public class Mot {
 		
 		str = str + "Fils : ";
 		
-		ArrayList<Mot> mots = this.getFils();
-		for (int i=0;i<mots.size();i++)
+		
+		for (int i=0;i<this.filsMot.size();i++)
 		{
-			str = str + mots.get(i).getLibelleMot() + " ";
+			str = str + this.filsMot.get(i).getLibelleMot() + " ";
 		}
 		
 		str = str + "\n";
 		
 		str = str + "Synonymes : ";
 		
-		mots = this.getSynonymes();
-		
-		for (int i=0;i<mots.size();i++)
+		for (int i=0;i<this.synonymesMot.size();i++)
 		{
-			str = str + mots.get(i).getLibelleMot() + " ";
+			str = str + this.synonymesMot.get(i).getLibelleMot() + " ";
 		}
 		
 		str = str + "\n";
 		
 		str = str + "Associations : ";
 		
-		mots = this.getAssociations();
-		
-		for (int i=0;i<mots.size();i++)
+		for (int i=0;i<this.associationsMot.size();i++)
 		{
-			str = str + mots.get(i).getLibelleMot() + " ";
+			str = str + this.associationsMot.get(i).getLibelleMot() + " ";
 		}
 		
 		str = str + "\n";
 		
 		return str;			
 	}
-	
-	public String toStringFabien()
-	{
-		String str = new String();
-		
-		str = "libelle : " + this.libelleMot + "\n";
-		str = str + "definition : " + this.definitionMot + "\n";
-		
-		if ( this.pereMot!=null)
-		{
-			str = str + "pere : " + this.getPere().getLibelleMot() + "\n" ;
-		}
-		else
-		{
-			str = str + "pere : \n" ;
-		}
-		
-		str = str + "Fils : ";
-		
-		ArrayList<Mot> mots = this.getFils();
-		for (int i=0;i<mots.size();i++)
-		{
-			str = str + mots.get(i).getLibelleMot() + " ";
-		}
-		
-		str = str + "\n";
-		
-		str = str + "Synonymes : ";
-		
-		ArrayList<Ref>synonymes = this.getSynonymesMot();
-		ArrayList<Mot>synonymesEnMot = new ArrayList<Mot>(synonymes.size());
-		for (int i = 0; i < synonymes.size(); i++) {
-			synonymesEnMot.add(this.getMotByRef(synonymes.get(i)));
-		}
-		
-		for (int i=0;i<synonymes.size();i++)
-		{
-			str = str + synonymesEnMot.get(i).getLibelleMot() + " ";
-		}
-		
-		str = str + "\n";
-		
-		str = str + "Associations : ";
-		
-		mots = this.getAssociations();
-		
-		for (int i=0;i<mots.size();i++)
-		{
-			str = str + mots.get(i).getLibelleMot() + " ";
-		}
-		
-		str = str + "\n";
-		
-		return str;			
-	}
-	
-	/******************************* METHODES STATIQUES UTILISEES POUR LA FACTORISATION DU CODE *******************************/
-	/**************************** A NE PAS UTILISER A L'EXTERIEUR DE CETTE CLASSE !!!!! *********************************/
 	
 	/**
-	 * Permet de convertir un Array (tableau en BD) en une liste de réference
-	 * 
-	 * @param a Array 
-	 * @return ArrayList de Ref de mot
+	 * Implementation de la méthode Object equals()
+	 * @param m : mot à comparer avec le mot courant
+	 * @return vrai si deux mots sont egaux, faux sinon
+	 */
+	public boolean equals(Mot m)
+	{
+		return (this.libelleMot.equals(m.getLibelleMot()));
+	}
+	
+//	
+//	
+//	/******************************* METHODES STATIQUES UTILISEES COMME FONCTION AUXILIAIRE *******************************/
+//	/**************************** A NE PAS UTILISER A L'EXTERIEUR DE CETTE CLASSE !!!!! *********************************/
+//	
+	/**
+	 * Permet de convertir ArrayList<Ref> en ArrayList<Mot>
+	 * @param relation ArrayList<Ref>
+	 * @return ArrayList de Mot
 	 * @throws SQLException
 	 */
-	public static ArrayList<Ref> listeRef(Array a) throws SQLException
+	public static ArrayList<Mot> ArrayReftoArraylisteMot(ArrayList<Ref> relation) throws SQLException
+	{
+		ArrayList<Mot> listMot = new ArrayList<Mot>();
+		
+		for (int i=0;i<relation.size();i++)
+		{
+			oid = relation.get(i);
+			listMot.add((Mot)relation.get(i).getObject());
+		}
+		
+		return listMot;
+	}
+	
+	/**
+	 * Permet de convertir ArrayList<Mot> en ArrayList<Ref>
+	 * @param a ArrayList<Mot>
+	 * @return ArrayList<Ref>
+	 */
+	public static ArrayList<Ref> ArrayListMotToArrayRef(ArrayList<Mot> a)
+	{
+		ArrayList<Ref> tref = new ArrayList<Ref>();
+		
+		for (int i=0; i<a.size(); i++)
+		{
+			tref.add(a.get(i).getOid());
+		}
+		
+		return tref;
+	}
+	
+	/**
+	 * Permet de savoir si une Ref est dans un tableau de Ref
+	 * @param lr ArrayList<Ref>
+	 * @param r Ref à chercher
+	 * @return vrai si r trouvé, faux sinon
+	 */
+	public static boolean estDansArrayListRef(ArrayList<Ref> lr, Ref r)
+	{
+		int i=0;
+		boolean trouve = false;
+		
+		while (i<lr.size() && !trouve)
+		{
+			if (lr.get(i).toString().equals(r.toString()))
+			{
+				trouve = true;
+			}
+			
+			i++;
+		}
+		
+		return trouve;
+	}
+	
+	/**
+	 * Permet de traiter les possibles doublons rencontré lors de la construction recursive du Mot
+	 * @param a Array venant de la BD
+	 * @param h ArrayList<Ref> qui correspond à l'historique des Mots deja trouvé
+	 * @return un tableau sans doublons
+	 * @throws SQLException
+	 */
+	public static ArrayList<Ref> traitementDesRefs(Array a, ArrayList<Ref> h) throws SQLException
 	{
 		ArrayList<Ref> listRef = new ArrayList<Ref>();
 		
 		if (a!=null)
 		{
 			ResultSet tableau = a.getResultSet();
+			boolean trouve = false;
 			
 			while (tableau.next())
 			{
-				listRef.add(tableau.getRef(2));
+				trouve = Mot.estDansArrayListRef(h,tableau.getRef(2));
+				if (!trouve)
+				{
+					h.add(tableau.getRef(2));
+					listRef.add(tableau.getRef(2));
+				}
 			}
 		}
-		
 		return listRef;
 	}
 	
 	/**
 	 * Permet d'inserer les relations d'un mot 
-	 * Gère aussi la symétrie des relations synonymes et Pere/Fils
-	 * 
 	 * @param typeRelation type de la relation
-	 * @param relations liste des references de mot relié au mot par le type de relation defini en parametre
-	 * @param refMot reference du mot en question
-	 * @return nombre de lignes affectées
+	 * @param relations liste des references du mot
+	 * @param refMot reference du mot
+	 * @return vrai si l'insertion s'est bien passé, faux sinon
 	 * @throws SQLException
 	 */
-	public static int insertRelations(String typeRelation, ArrayList<Ref> relations, Ref refMot) throws SQLException
+	public static boolean insertRelations(String typeRelation, ArrayList<Ref> relations, Ref refMot) throws SQLException
 	{
 		int rowsAffected = 0;
 		
-		//insertion des relations
-		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm."+typeRelation+" FROM LesMots lm WHERE REF(lm) = ?) VALUES ((?))");
+		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm." + typeRelation + " = ENSMOT()  WHERE REF(lm) = ?");
 		
+		requete.setRef(1,refMot);
+		
+		rowsAffected = requete.executeUpdate();
+		
+		//insertion des relations
+		requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm."+typeRelation+" FROM LesMots lm WHERE REF(lm) = ?) VALUES ((?))");
+
 		requete.setRef(1,refMot);
 		
 		for (int i=0; i<relations.size(); i++)
 		{
 			requete.setRef(2,relations.get(i));
-			rowsAffected = requete.executeUpdate();
+			rowsAffected = rowsAffected + requete.executeUpdate();
 		}
 		
 		requete.close();
 		
-		//gestion des relations symétrique
-		if (typeRelation.equals("filsMot"))
-		{
-			requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
-			
-			requete.setRef(1,refMot);
-			
-			for (int i=0; i<relations.size(); i++)
-			{
-				requete.setRef(2,relations.get(i));
-				rowsAffected = requete.executeUpdate();
-			}
-			
-			requete.close();
-		}
-		
-		if (typeRelation.equals("synonymesMot"))
-		{
-			requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) VALUES ((?))");
-			
-			requete.setRef(2,refMot);
-			
-			for (int i=0; i<relations.size(); i++)
-			{
-				requete.setRef(1,relations.get(i));
-				rowsAffected = requete.executeUpdate();
-			}
-			
-			requete.close();
-		}
-		
-		
-		return rowsAffected;
-	}
-	
-	/**
-	 * Permet de modifier les relations d'un mot 
-	 * 
-	 * Dans un premier temps on supprime toutes les anciennes relations et puis on insert les nouvelles relations 
-	 * 
-	 * Gère aussi la symétrie des relations synonymes et Pere/Fils
-	 * 
-	 * @param typeRelation type de la relation
-	 * @param anciennesRelations liste des anciennes relations à remplacer
-	 * @param nouvellesRelations liste des nouvelles relations 
-	 * @param refMot reference du mot en question
-	 * @return nombre de lignes affectées
-	 * @throws SQLException
-	 */
-	public static int updateRelations(String typeRelation, ArrayList<Ref> anciennesRelations, ArrayList<Ref> nouvellesRelations, Ref refMot) throws SQLException
-	{
-		int rowsAffected = 0;
-		
-		rowsAffected = Mot.deleteRelations(typeRelation,anciennesRelations,refMot,"update");
-		
-		rowsAffected = Mot.insertRelations(typeRelation,nouvellesRelations,refMot);
-		
-		return rowsAffected;
-	}
-	
-	/**
-	 * Permet de supprimer les relations d'un mot 
-	 * 
-	 * @param typeRelation type de la relation
-	 * @param relations liste des references de mot relié au mot par le type de relation defini en parametre
-	 * @param refMot reference du mot en question
-	 * @param mode utiliser uniquement pour permettre la suppression des relations d'associations
-	 * @return
-	 * @throws SQLException
-	 */
-	public static int deleteRelations(String typeRelation, ArrayList<Ref> relations, Ref refMot, String mode) throws SQLException
-	{
-		int rowsAffected = 0;
-		
-		//suppression des relations
-		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm."+typeRelation+" FROM LesMots lm WHERE REF(lm) = ?)");
-		requete.setRef(1,refMot);
-		
-		rowsAffected = requete.executeUpdate();
-		
-		requete.close();
-		
-		//gestion des relations symétriques
-		if (typeRelation.equals("filsMot"))
-		{
-			requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
-			
-			requete.setNull(1,java.sql.Types.REF,"MOT");
-			
-			for (int i=0; i<relations.size(); i++)
-			{
-				requete.setRef(2,relations.get(i));
-				rowsAffected = requete.executeUpdate();
-			}
-			
-			requete.close();
-		}
-		
-		if (typeRelation.equals("synonymesMot"))
-		{
-			requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE value(t) = ?");
-			
-			requete.setRef(2,refMot);
-			
-			for (int i=0; i<relations.size(); i++)
-			{
-				requete.setRef(1,relations.get(i));
-				rowsAffected = requete.executeUpdate();
-			}
-			
-			requete.close();
-		}
-		
-		if (typeRelation.equals("associationsMot") && mode.equals("delete"))
-		{
-			requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.associationsMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE value(t) = ?");
-			
-			requete.setRef(2,refMot);
-			
-			for (int i=0; i<relations.size(); i++)
-			{
-				requete.setRef(1,relations.get(i));
-				rowsAffected = requete.executeUpdate();
-			}
-			
-			requete.close();
-		}
-		
-		return rowsAffected;
-	}
-	
-	/**
-	 * Donne la liste des mots relié par le mot en question avec la relation defini en parametre
-	 * 
-	 * @param relation type de relation
-	 * @param libelle libelle du mot
-	 * @return arraylist de mots liés avec le mot par la relation defini en parametre
-	 * @throws SQLException
-	 */
-	public static ArrayList<Mot> getMotsRelation(String relation,String libelle) throws SQLException
-	{
-		ArrayList<Mot> mots = new ArrayList<Mot>();
-		
-		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT value(t).libelleMot,value(t).definitionMot,value(t).pereMot,value(t).filsMot,value(t).synonymesMot,value(t).associationsMot FROM THE(SELECT lm."+relation+" FROM LesMots lm WHERE lm.libelleMot = ?) t");
-		requete.setString(1,libelle);
-		ResultSet rs = requete.executeQuery();
-		
-		while (rs.next())
-		{
-			mots.add(new Mot(rs.getString(1),rs.getString(2),rs.getRef(3),Mot.listeRef(rs.getArray(4)),Mot.listeRef(rs.getArray(5)),Mot.listeRef(rs.getArray(6))));
-		}
-
-		requete.close();
-		
-		return mots;
-	}
-	
-	public static ArrayList<Mot> getLibelleDeTousLesMots() throws SQLException
-	{
-		ArrayList<Mot> mots = new ArrayList<Mot>();
-		
-		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT libelleMot FROM lesMots t");
-		ResultSet rs = requete.executeQuery();
-		
-		while (rs.next())
-		{
-			mots.add(new Mot(rs.getString(1)));
-		}
-
-		requete.close();
-		
-		return mots;
-	}
-	
-	public static boolean libelleMotExisteDeja(String libelle) throws SQLException
-	{
-		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT value(lm).libelleMot,value(lm).definitionMot,value(lm).pereMot,value(lm).filsMot,value(lm).synonymesMot,value(lm).associationsMot FROM lesMots lm WHERE lm.libelleMot = ?");
-		requete.setString(1,libelle);
-		ResultSet rs = requete.executeQuery();
-		
-		if (rs.next())
-			return true;
-		else
-			return false;
-	}
-	
-	public static Mot getMotByLibelle(String libelle) throws SQLException
-	{
-		PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT value(lm).libelleMot,value(lm).definitionMot,value(lm).pereMot,value(lm).filsMot,value(lm).synonymesMot,value(lm).associationsMot FROM lesMots lm WHERE lm.libelleMot = ?");
-		requete.setString(1,libelle);
-		ResultSet rs = requete.executeQuery();
-		
-		if (rs.next()) {
-			String l = rs.getString(1);
-			String definition = rs.getString(2);
-			Ref pere = rs.getRef(3);
-			
-			ArrayList<Ref> fils = listeRef(rs.getArray(4));
-			ArrayList<Ref> synonymes = listeRef(rs.getArray(5));
-			ArrayList<Ref> associations = listeRef(rs.getArray(6));	
-			
-			requete.close();
-			
-			return new Mot(l,definition,pere,fils,synonymes,associations);
-			
-		}
-		else {
-			return null;
-		}
+		System.out.println(rowsAffected + "-"+ relations.size());
+		return (rowsAffected == relations.size() + 1);
 	}
 }
