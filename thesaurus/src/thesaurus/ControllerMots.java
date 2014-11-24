@@ -22,7 +22,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	private Mot motCourant;
 	
 	public ControllerMots() {
-		this.motCourant = new Mot("vin");
+		this.motCourant = new Mot("table");
 	}
 	
 	public ControllerMots(Mot m) {
@@ -396,7 +396,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			donneesTableauAssosDroiteFUTUR[i][1] = listeAssosDroite[i][1];
 		}
 		donneesTableauAssosDroiteFUTUR[listeAssosDroite.length][0] = Controller.fenetre.getVueAjout().getTableauAssosGauche().getValueAt(x, y).toString().toUpperCase();
-		donneesTableauAssosDroiteFUTUR[listeAssosDroite.length][1] = Controller.fenetre.getVueAjout().getTableauAssosGauche().getValueAt(x, 1).toString().toLowerCase();
+		donneesTableauAssosDroiteFUTUR[listeAssosDroite.length][1] = Controller.fenetre.getVueAjout().getTableauAssosGauche().getValueAt(x, 1);
 		Controller.fenetre.getVueAjout().setDonneesTableauAssosDroite(donneesTableauAssosDroiteFUTUR);
 		Controller.fenetre.getVueAjout().getModelAssosDroite().setDataVector(donneesTableauAssosDroiteFUTUR, nomColonnesAssos);
 		((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauAssosDroite().getModel()).removeRow(0);
@@ -441,7 +441,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			donneesTableauAssosGaucheFUTUR[i][1] = listeAssosGauche[i][1];
 		}
 		donneesTableauAssosGaucheFUTUR[listeAssosGauche.length][0] = Controller.fenetre.getVueAjout().getTableauAssosDroite().getValueAt(x, y).toString().toUpperCase();
-		donneesTableauAssosGaucheFUTUR[listeAssosGauche.length][1] = Controller.fenetre.getVueAjout().getTableauAssosDroite().getValueAt(x, 1).toString().toLowerCase();
+		donneesTableauAssosGaucheFUTUR[listeAssosGauche.length][1] = Controller.fenetre.getVueAjout().getTableauAssosDroite().getValueAt(x, 1);
 		Controller.fenetre.getVueAjout().setDonneesTableauAssosGauche(donneesTableauAssosGaucheFUTUR);
 		Controller.fenetre.getVueAjout().getModelAssosGauche().setDataVector(donneesTableauAssosGaucheFUTUR, nomColonnesAssos);
 		Controller.fenetre.getVueCourante().revalidate();
@@ -486,7 +486,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			donneesTableauSynonymeDroiteFUTUR[i][1] = listeSynonymeDroite[i][1];
 		}
 		donneesTableauSynonymeDroiteFUTUR[listeSynonymeDroite.length][0] = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getValueAt(x, y).toString().toUpperCase();
-		donneesTableauSynonymeDroiteFUTUR[listeSynonymeDroite.length][1] = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getValueAt(x, 1).toString().toLowerCase();
+		donneesTableauSynonymeDroiteFUTUR[listeSynonymeDroite.length][1] = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getValueAt(x, 1);
 		Controller.fenetre.getVueAjout().setDonneesTableauSynonymesDroite(donneesTableauSynonymeDroiteFUTUR);
 		Controller.fenetre.getVueAjout().getModelSynonymeDroite().setDataVector(donneesTableauSynonymeDroiteFUTUR, nomColonnesSynonyme);
 		((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getModel()).removeRow(0);
@@ -531,7 +531,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			donneesTableauSynonymeGaucheFUTUR[i][1] = listeSynonymeGauche[i][1];
 		}
 		donneesTableauSynonymeGaucheFUTUR[listeSynonymeGauche.length][0] = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, y).toString().toUpperCase();
-		donneesTableauSynonymeGaucheFUTUR[listeSynonymeGauche.length][1] = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, 1).toString().toLowerCase();
+		donneesTableauSynonymeGaucheFUTUR[listeSynonymeGauche.length][1] = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, 1);
 		Controller.fenetre.getVueAjout().setDonneesTableauSynonymesGauche(donneesTableauSynonymeGaucheFUTUR);
 		Controller.fenetre.getVueAjout().getModelSynonymeGauche().setDataVector(donneesTableauSynonymeGaucheFUTUR, nomColonnesSynonyme);
 		//((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getModel()).removeRow(0);
