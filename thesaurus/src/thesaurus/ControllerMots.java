@@ -104,7 +104,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 						lesSynonymesMotArrayList.add(lesSynonymesEnMot[i]);
 				}
 				
-				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, null, lesSynonymesMotArrayList, null);
+				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, new ArrayList<Mot>(), lesSynonymesMotArrayList, null);
 				
 				m2.insert();
 				this.afficherMot(m2);
@@ -137,7 +137,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 				}
 				for (int i = 0; i < assos.length; i++) 
 				{
-					m = new Mot(synonymes[i][0].toString().toLowerCase());
+					m = new Mot(assos[i][0].toString().toLowerCase());
 					if(m != null)
 					{
 						listeAssos.add(m);
@@ -146,7 +146,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			
 				motPere = new Mot(pere.toLowerCase());
 				
-				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, null, listeSynonymes, listeAssos);
+				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, new ArrayList<Mot>(), listeSynonymes, listeAssos);
 				m2.insert();
 				this.afficherMot(m2);
 			}

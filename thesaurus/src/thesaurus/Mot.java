@@ -3,12 +3,6 @@ package thesaurus;
 import java.sql.*;
 import java.util.*;
 
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
-
 /**
  * Classe Mot du Modele permettant les operations en BD du type Mot.
  * Cette classe utilise la classe ModelBD pour la gestion des requetes. 
