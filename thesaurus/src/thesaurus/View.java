@@ -28,7 +28,7 @@ public class View extends JPanel {
 			panAjouter = new JPanel();
 			panConsulter = new JPanel();
 			panArbo = new JPanel();
-			listeOnglets.addChangeListener(new ControllerMots());
+			listeOnglets.addChangeListener(Controller.getControllerMots());
 		}
 	}
 	

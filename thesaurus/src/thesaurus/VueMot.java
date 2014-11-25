@@ -259,8 +259,8 @@ public class VueMot {
 		
 		panButtonsConsulter.add(buttonEnregistrer);
 		panButtonsConsulter.add(buttonSupprimer);
-		buttonEnregistrer.addActionListener(new ControllerMots());
-		buttonSupprimer.addActionListener(new ControllerMots());
+		buttonEnregistrer.addActionListener(Controller.getControllerMots());
+		buttonSupprimer.addActionListener(Controller.getControllerMots());
 		Controller.fenetre.getVueCourante().panConsulter.add(panButtonsConsulter);
 		
 		Controller.fenetre.getVueCourante().panConsulter.revalidate();

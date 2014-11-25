@@ -91,7 +91,7 @@ public class VueAjoutMot
 			donneesComboBox[i] = new String(listeMots.get(i).getLibelleMot().toUpperCase());
 		}
 		comboBoxParent = new JComboBox(donneesComboBox);
-		comboBoxParent.addActionListener(new ControllerMots());
+		comboBoxParent.addActionListener(Controller.getControllerMots());
 		
 		panSplit = new JPanel();
 		panSplit.setLayout(new BoxLayout(panSplit, BoxLayout.X_AXIS));
@@ -128,8 +128,8 @@ public class VueAjoutMot
 			}
 			modelAssosGauche = new DefaultTableModel(donneesTableauAssosGauche,nomColonnesAssos);
 			tableauAssosGauche = new JTable(modelAssosGauche);
-			tableauSynonymeGauche.addMouseListener(new ControllerMots());
-			tableauAssosGauche.addMouseListener(new ControllerMots());
+			tableauSynonymeGauche.addMouseListener(Controller.getControllerMots());
+			tableauAssosGauche.addMouseListener(Controller.getControllerMots());
 		}
 		tableauSynonymeGauche.setDefaultRenderer(Object.class, new RenduCellule());
 		((DefaultTableModel) tableauSynonymeGauche.getModel()).removeRow(0);
@@ -143,8 +143,8 @@ public class VueAjoutMot
 		((DefaultTableModel) tableauAssosDroite.getModel()).removeRow(0);
 		tableauSynonymeDroite.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauAssosDroite.setDefaultRenderer(Object.class, new RenduCellule());
-		tableauSynonymeDroite.addMouseListener(new ControllerMots());
-		tableauAssosDroite.addMouseListener(new ControllerMots());
+		tableauSynonymeDroite.addMouseListener(Controller.getControllerMots());
+		tableauAssosDroite.addMouseListener(Controller.getControllerMots());
 		
 		scrollPanSynonymeGauche.setViewportView(tableauSynonymeGauche);
 		scrollPanSynonymeDroite.setViewportView(tableauSynonymeDroite);
@@ -180,7 +180,7 @@ public class VueAjoutMot
 		
 		buttonAjouterEntree = new JButton("Ajouter l'Entr\u00E9e");
 		buttonAjouterEntree.setForeground(Color.BLACK);
-		buttonAjouterEntree.addActionListener(new ControllerMots());
+		buttonAjouterEntree.addActionListener(Controller.getControllerMots());
 	}
 
 	public void afficher() 

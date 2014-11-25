@@ -23,7 +23,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	private Mot motCourant;
 
 	public ControllerMots() {
-		this.motCourant = new Mot("groseille");
+		this.motCourant = new Mot("table");
 	}
 
 	public ControllerMots(Mot m) {
@@ -39,11 +39,14 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			Controller.fenetre.setVueMot(vue);
 		}
 		else
-		{
-			Controller.fenetre.getVueMot().getLabelEntreeRecherchee().setText(m.getLibelleMot());
+		{			
+			System.out.println(this);
+			Controller.fenetre.getVueMot().getLabelMotEntreeRecherchee().setText(m.getLibelleMot());
+			System.out.println(Controller.fenetre.getVueMot().getLabelMotEntreeRecherchee().getText());
 			Controller.fenetre.getVueCourante().panConsulter.revalidate();
+			
 		}
-		Controller.fenetre.getVueCourante().listeOnglets.setSelectedIndex(1);
+		//Controller.fenetre.getVueCourante().listeOnglets.setSelectedIndex(1);
 	}
 
 	public void afficherArborescenceMot(Mot m) {

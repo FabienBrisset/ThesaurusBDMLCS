@@ -11,7 +11,15 @@ import javax.swing.event.ChangeListener;
 public class Controller implements ActionListener, ChangeListener {
 	
 	protected static Fenetre fenetre;
+	public static ControllerMots controllerMots;
 
+	public synchronized static ControllerMots getControllerMots(){
+		if(controllerMots == null)
+			controllerMots = new ControllerMots();
+		
+		return controllerMots;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub

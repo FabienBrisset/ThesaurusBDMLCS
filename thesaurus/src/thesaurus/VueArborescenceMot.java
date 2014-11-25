@@ -83,10 +83,10 @@ public class VueArborescenceMot {
 			modelTableauArbo = new DefaultTableModel(donneesTableauArbo,nomColonnesArbo);
 			tableauArbo = new JTable(modelTableauArbo);
 			tableauArbo.setDefaultRenderer(Object.class, new RenduCellule());
-			tableauArbo.addMouseListener(new ControllerMots());
+			tableauArbo.addMouseListener(Controller.getControllerMots());
 		}
 		
-		graphicArbo.addMouseListener(new ControllerMots());
+		graphicArbo.addMouseListener(Controller.getControllerMots());
 	}
 	
     /** Returns an ImageIcon, or null if the path was invalid. */
