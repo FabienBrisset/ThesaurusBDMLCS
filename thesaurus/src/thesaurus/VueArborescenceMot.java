@@ -1,6 +1,9 @@
 package thesaurus;
 
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 
 public class VueArborescenceMot {
 
@@ -81,6 +85,8 @@ public class VueArborescenceMot {
 			tableauArbo.setDefaultRenderer(Object.class, new RenduCellule());
 			tableauArbo.addMouseListener(new ControllerMots());
 		}
+		
+		graphicArbo.addMouseListener(new ControllerMots());
 	}
 	
     /** Returns an ImageIcon, or null if the path was invalid. */
@@ -110,4 +116,10 @@ public class VueArborescenceMot {
 	public void setTableauArbo(JTable tableauArbo) {
 		this.tableauArbo = tableauArbo;
 	}
+
+	public JTree getGraphicArbo() {
+		return graphicArbo;
+	}
+	
+	
 }
