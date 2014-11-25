@@ -172,6 +172,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	
 	public void supprimerMot(Mot m) {
 		Mot pere = new Mot(m.getPereMot().getLibelleMot());
+		m.delete();
 		this.afficherMot(pere);
 	}
 	
