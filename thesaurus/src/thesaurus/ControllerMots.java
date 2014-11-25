@@ -16,6 +16,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 public class ControllerMots extends Controller implements ActionListener, MouseListener {
 
@@ -365,7 +366,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		{
 			if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getTableauArbo()))
 			{
-				System.out.println("dedans");
 				int x = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedRow();
 				int y = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedColumn();
 				if (Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y) != null)
@@ -376,6 +376,18 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 						afficherArborescenceMot(m);
 					}
 				}
+			//Double click sur un noeud de l'arborescence
+			} else if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getGraphicArbo())){
+		        int selRow = Controller.fenetre.getVueArborescence().getGraphicArbo().getRowForLocation(arg0.getX(), arg0.getY());
+		        TreePath selPath = Controller.fenetre.getVueArborescence().getGraphicArbo().getPathForLocation(arg0.getX(), arg0.getY());
+		        if(selRow != -1) {
+		            if(arg0.getClickCount() == 1) {
+		                System.out.println("simple");
+		            }
+		            else if(arg0.getClickCount() == 2) {
+		            	afficherMot(new Mot(selPath.getLastPathComponent().toString()));
+		            }
+		        }
 			}
 		}
 	}
