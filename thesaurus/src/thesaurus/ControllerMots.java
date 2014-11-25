@@ -22,7 +22,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	private Mot motCourant;
 
 	public ControllerMots() {
-		this.motCourant = new Mot("table");
+		this.motCourant = new Mot("groseille");
 	}
 
 	public ControllerMots(Mot m) {
@@ -31,10 +31,17 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 
 	public void afficherMot(Mot m) {
 		this.motCourant = m;
-		VueMot vue = new VueMot(m);
-		vue.afficher();
-		Controller.fenetre.setVueMot(vue);
-		Controller.fenetre.getVueCourante().panConsulter = null;
+		if(Controller.fenetre.getVueMot() == null)
+		{
+			VueMot vue = new VueMot(m);
+			vue.afficher();
+			Controller.fenetre.setVueMot(vue);
+		}
+		else
+		{
+			Controller.fenetre.getVueMot().getLabelEntreeRecherchee().setText(m.getLibelleMot());
+			Controller.fenetre.getVueCourante().panConsulter.revalidate();
+		}
 		Controller.fenetre.getVueCourante().listeOnglets.setSelectedIndex(1);
 	}
 
