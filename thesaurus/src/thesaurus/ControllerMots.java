@@ -273,13 +273,18 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 				Controller.fenetre.getVueAjout().setDonneesTableauAssosGauche(donneesTableauAssosGauche);
 				Controller.fenetre.getVueAjout().getModelAssosGauche().setDataVector(donneesTableauAssosGauche, nomColonnesAssos);
 				Controller.fenetre.getVueCourante().revalidate();
+				Object[][] donneesTableauSynonymesDroite = {{"Aucun mot", "Aucun mot"},};
+				String[] nomColonnesSynonyme = {"Entrée (Synonymes)", "Description"};
+				Controller.fenetre.getVueAjout().setDonneesTableauSynonymesDroite(donneesTableauSynonymesDroite);
+				Controller.fenetre.getVueAjout().getModelSynonymeDroite().setDataVector(donneesTableauSynonymesDroite, nomColonnesSynonyme);
+				((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getModel()).removeRow(0);
+				Controller.fenetre.getVueCourante().revalidate();
+				Object[][] donneesTableauAssosDroite = {{"Aucun mot", "Aucun mot"},};
+				Controller.fenetre.getVueAjout().setDonneesTableauAssosDroite(donneesTableauAssosDroite);
+				Controller.fenetre.getVueAjout().getModelAssosDroite().setDataVector(donneesTableauAssosDroite, nomColonnesAssos);
+				((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauAssosDroite().getModel()).removeRow(0);
+				Controller.fenetre.getVueCourante().revalidate();
 			}
-			//			} 
-			//			catch (SQLException e) 
-			//			{
-			//				// TODO Auto-generated catch block
-			//				e.printStackTrace();
-			//			}
 		}
 		else if(arg0.getActionCommand().equals("Ajouter l'Entrée"))
 		{
