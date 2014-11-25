@@ -32,21 +32,12 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 
 	public void afficherMot(Mot m) {
 		this.motCourant = m;
-		if(Controller.fenetre.getVueMot() == null)
-		{
-			VueMot vue = new VueMot(m);
-			vue.afficher();
-			Controller.fenetre.setVueMot(vue);
-		}
-		else
-		{			
-			System.out.println(this);
-			Controller.fenetre.getVueMot().getLabelMotEntreeRecherchee().setText(m.getLibelleMot());
-			System.out.println(Controller.fenetre.getVueMot().getLabelMotEntreeRecherchee().getText());
-			Controller.fenetre.getVueCourante().panConsulter.revalidate();
-			
-		}
-		//Controller.fenetre.getVueCourante().listeOnglets.setSelectedIndex(1);
+		VueMot vue = new VueMot(m);
+		vue.afficher();
+		Controller.fenetre.setVueMot(vue);
+		Controller.fenetre.getVueCourante().panConsulter.revalidate();
+
+		Controller.fenetre.getVueCourante().listeOnglets.setSelectedIndex(1);
 	}
 
 	public void afficherArborescenceMot(Mot m) {
