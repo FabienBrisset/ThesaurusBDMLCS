@@ -165,6 +165,9 @@ public class VueMot {
 		tableauFils.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauFils.setShowVerticalLines(false);
 		
+		ArrayList<Mot> listeMots = Mot.listeDesMots();
+		vueTableauxConsult = new VueTableauxConsult(listeMots, mot);
+		
 		/*panAssos = new JPanel();
 		panAssos.setLayout(new BoxLayout(panAssos, BoxLayout.Y_AXIS));
 		panLabelAssos = new JPanel();
@@ -239,9 +242,7 @@ public class VueMot {
 		panParent.add(labelParent);
 		panParent.add(labelMotParent);
 		Controller.fenetre.getVueCourante().panConsulter.add(panParent);
-		
-		ArrayList<Mot> listeMots = Mot.listeDesMots();
-		vueTableauxConsult = new VueTableauxConsult(listeMots, mot);
+
 		
 		/*panSynonyme.add(panLabelSynonyme);
 		panLabelSynonyme.add(labelSynonyme);

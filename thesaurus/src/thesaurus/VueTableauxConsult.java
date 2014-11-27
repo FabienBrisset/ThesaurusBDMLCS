@@ -62,12 +62,12 @@ public VueTableauxConsult(ArrayList<Mot> listeMots, Mot motCourant)
 	}
 	else
 	{
-		donneesTableauAssosGauche = new Object[listeMots.size()-(motCourant.getAssociationsMot().size())][2];
+		donneesTableauAssosGauche = new Object[listeMots.size()-(motCourant.getAssociationsMot().size())-1][2];
 		int i = 0;
 		int curseur = 0;
 		while (i < listeMots.size())
 		{
-			if(!motCourant.estDansAssociations(listeMots.get(i)) || listeMots.get(i).equals(motCourant))
+			if(!motCourant.estDansAssociations(listeMots.get(i)) && !listeMots.get(i).equals(motCourant))
 			{
 				donneesTableauAssosGauche[curseur][0] = listeMots.get(i).libelleMot.toUpperCase();
 				donneesTableauAssosGauche[curseur][1] = listeMots.get(i).definitionMot;
@@ -107,7 +107,8 @@ public VueTableauxConsult(ArrayList<Mot> listeMots, Mot motCourant)
 	
 	if(motCourant.getPereMot() != null)
 	{
-		Mot motParent = motCourant.getPereMot();
+		Mot motParent = new Mot(motCourant.getPereMot().getLibelleMot());
+		//Mot motParent = motCourant.getPereMot();
 		ArrayList<Mot> listeFils = motParent.getFilsMot();
 		listeFils = Mot.ArrayListEnOrdreAlphabetique(listeFils);
 		System.out.println("motparent =" + motParent + "nbfils= " + listeFils.size());
@@ -121,7 +122,7 @@ public VueTableauxConsult(ArrayList<Mot> listeMots, Mot motCourant)
 		}
 		else
 		{
-			donneesTableauSynonymesGauche = new Object[listeFils.size()-(motCourant.getFilsMot().size())][2];
+			donneesTableauSynonymesGauche = new Object[listeFils.size()-(motCourant.getSynonymesMot().size())][2];
 			int i = 0;
 			int curseur = 0;
 			while (i < listeFils.size())
