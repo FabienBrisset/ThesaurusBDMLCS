@@ -156,21 +156,30 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		this.afficherMot(m2);
 	}
 
-	public void modifierMot(Mot m) { 
+	/*public void modifierMot(Mot m) { 
 		//Ref refAncienMot = m.getRef();
 		Mot ancienMot = new Mot(m.getLibelleMot());
 		boolean res = m.update(ancienMot);
-		if(res){JOptionPane.showMessageDialog(fenetre, "Mot modifié");}
-		else{JOptionPane.showMessageDialog(fenetre, "Echec de la modification");
+		if (res) {
+			JOptionPane.showMessageDialog(fenetre, "Mot modifié");
 		}
+		else {
+			JOptionPane.showMessageDialog(fenetre, "Echec de la modification");
 		}
+	}*/
 
 	public void modifierMot(Mot m, String description) { 
 		Mot nouveauMot = m;
 		m.setDefinitionMot(description);
-		nouveauMot.update(this.getMotCourant());
+		boolean res = nouveauMot.update(this.getMotCourant());
 		this.motCourant = nouveauMot;
 
+		if (res) {
+			JOptionPane.showMessageDialog(fenetre, "Mot modifié");
+		}
+		else {
+			JOptionPane.showMessageDialog(fenetre, "Echec de la modification");
+		}
 	}
 
 	public void supprimerMot(Mot m) {
