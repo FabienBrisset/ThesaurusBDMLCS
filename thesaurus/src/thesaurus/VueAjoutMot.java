@@ -63,12 +63,15 @@ public class VueAjoutMot
 		mots = listeMots;
 		mots = Mot.ArrayListEnOrdreAlphabetique(mots);
 		listeMots = Mot.ArrayListEnOrdreAlphabetique(listeMots);
+		ArrayList<VueAjoutMot> avam = new ArrayList<VueAjoutMot>(1);
+		avam.add(this);
 		
 		panNouvelleEntree = new JPanel();
 		panNouvelleEntree.setMaximumSize(new Dimension(32767, 200));
 		labelNouvelleEntree = new JLabel("Intitul\u00E9 de la nouvelle entr\u00E9e :");
 		textFieldNouvelleEntree = new JTextField();
 		textFieldNouvelleEntree.setColumns(30);
+		textFieldNouvelleEntree.setInputVerifier(new JTextFieldVerifier(1, avam));
 		
 		panParent = new JPanel();
 		panParent.setMaximumSize(new Dimension(32767, 200));

@@ -23,7 +23,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	private Mot motCourant;
 
 	public ControllerMots() {
-		this.motCourant = new Mot("table");
+		this.motCourant = new Mot("cuisine");
 	}
 
 	public ControllerMots(Mot m) {
@@ -60,7 +60,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	public void ajouterMot(String mot, String pere, String synonyme, String description) {
 		try {
 			Mot m = new Mot(null,mot,"",null,null,null,null);
-			if (m.existe()) {
+			if (Mot.existe(m)) {
 				this.afficherAjout();
 			}
 			else {
@@ -119,12 +119,13 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 
 	public void ajouterMot(String mot, String pere, Object[][] assos, Object[][] synonymes, String description)
 	{
+		boolean verifyClassName = Controller.fenetre.getVueAjout().getTextFieldNouvelleEntree().getInputVerifier().verify(Controller.fenetre.getVueAjout().getTextFieldNouvelleEntree());
 		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>();
 		ArrayList<Mot> listeAssos = new ArrayList<Mot>();
 		Mot motPere = null;
 		try {
 			Mot m = new Mot(null,mot,"",null,null,null,null);
-			if (m.existe()) {
+			if (Mot.existe(m)) {
 				this.afficherAjout();
 			}
 			else 
@@ -226,7 +227,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		{
 			String motaRechercher = Controller.fenetre.getVueMot().getTextFieldChampRecherche().getText().toLowerCase();
 			Mot m = new Mot(motaRechercher);
-			if (m.existe()) 
+			if (Mot.existe(m)) 
 			{
 				afficherMot(m);
 			}

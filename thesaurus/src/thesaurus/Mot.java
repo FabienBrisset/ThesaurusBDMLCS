@@ -727,12 +727,12 @@ public class Mot implements SQLData {
 	 * Permet de savoir si oui ou non un mot existe en BD
 	 * @return vrai si le mot existe, faux sinon
 	 */
-	public boolean existe()
+	public static boolean existe(Mot m)
 	{
 		try 
 		{
 			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT COUNT(*) FROM LesMots lm WHERE lm.libelleMot= ?");
-			requete.setString(1, this.libelleMot);
+			requete.setString(1, m.libelleMot);
 			ResultSet rs = requete.executeQuery();
 			
 			if (rs.next())

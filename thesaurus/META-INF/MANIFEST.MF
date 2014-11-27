@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Built-By: Tim
+Build-Jdk: 1.7.0_11
+Created-By: Apache Maven 3.1.0
+Main-Class: net.java.balloontip.examples.complete.CompleteExample
+Archiver-Version: Plexus Archiver
+
