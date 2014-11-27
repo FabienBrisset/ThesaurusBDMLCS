@@ -63,6 +63,14 @@ public class VueMot {
 	private JScrollPane scrollPanDescription;
 	private JTextArea textAreaDescription;
 
+	public JTextArea getTextAreaDescription() {
+		return textAreaDescription;
+	}
+
+	public void setTextAreaDescription(JTextArea textAreaDescription) {
+		this.textAreaDescription = textAreaDescription;
+	}
+
 	private JPanel panButtonsConsulter;
 	private JButton buttonEnregistrer;
 	private JButton buttonSupprimer;

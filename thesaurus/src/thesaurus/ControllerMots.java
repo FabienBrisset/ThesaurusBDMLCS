@@ -57,7 +57,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	}
 
 
-	public void ajouterMot(String mot, String pere, String synonyme, String description) {
+	/*public void ajouterMot(String mot, String pere, String synonyme, String description) {
 		try {
 			Mot m = new Mot(null,mot,"",null,null,null,null);
 			if (Mot.existe(m)) {
@@ -115,7 +115,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	public void ajouterMot(String mot, String pere, Object[][] assos, Object[][] synonymes, String description)
 	{
@@ -123,54 +123,44 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>();
 		ArrayList<Mot> listeAssos = new ArrayList<Mot>();
 		Mot motPere = null;
-		try {
-			Mot m = new Mot(null,mot,"",null,null,null,null);
-			if (Mot.existe(m)) {
-				this.afficherAjout();
-			}
-			else 
+		Mot m = null;
+		for (int i = 0; i < synonymes.length; i++) 
+		{
+			if (!synonymes[i][0].toString().toLowerCase().equals("aucun mot"))
 			{
-				for (int i = 0; i < synonymes.length; i++) 
+				m = new Mot(synonymes[i][0].toString().toLowerCase());
+				if(m != null)
 				{
-					if (!synonymes[i][0].toString().toLowerCase().equals("aucun mot"))
-					{
-						m = new Mot(synonymes[i][0].toString().toLowerCase());
-						if(m != null)
-						{
-							listeSynonymes.add(m);
-						}
-					}
-
+					listeSynonymes.add(m);
 				}
-				for (int i = 0; i < assos.length; i++) 
-				{
-					if (!assos[i][0].toString().toLowerCase().equals("aucun mot"))
-					{
-						m = new Mot(assos[i][0].toString().toLowerCase());
-						if(m != null)
-						{
-							listeAssos.add(m);
-						}
-					}
-
-				}
-
-				motPere = new Mot(pere.toLowerCase());
-
-				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, new ArrayList<Mot>(), listeSynonymes, listeAssos);
-				m2.insert();
-				this.afficherMot(m2);
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
+		for (int i = 0; i < assos.length; i++) 
+		{
+			if (!assos[i][0].toString().toLowerCase().equals("aucun mot"))
+			{
+				m = new Mot(assos[i][0].toString().toLowerCase());
+				if(m != null)
+				{
+					listeAssos.add(m);
+				}
+			}
+
+		}
+
+		motPere = new Mot(pere.toLowerCase());
+
+		Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, new ArrayList<Mot>(), listeSynonymes, listeAssos);
+		m2.insert();
+		this.afficherMot(m2);
 	}
 
-	public void modifierMot(Mot m) { 
-		//Ref refAncienMot = m.getRef();
-		Mot ancienMot = new Mot(m.getLibelleMot());
-		m.update(ancienMot);
+	public void modifierMot(Mot m, String description) { 
+		Mot nouveauMot = m;
+		m.setDefinitionMot(description);
+		nouveauMot.update(this.getMotCourant());
+		this.motCourant = nouveauMot;
 	}
 
 	public void supprimerMot(Mot m) {
@@ -208,10 +198,10 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	@Override
 	public void actionPerformed(ActionEvent arg0) 
 	{
-
-
 		if(arg0.getActionCommand().equals("Enregistrer les modifications")){
-			this.modifierMot(motCourant);
+			String description = Controller.fenetre.getVueMot().getTextAreaDescription().getText();
+			
+			this.modifierMot(motCourant, description);
 			this.afficherMot(motCourant);
 			JOptionPane.showMessageDialog(fenetre, "Modification Effectuée");
 		}
