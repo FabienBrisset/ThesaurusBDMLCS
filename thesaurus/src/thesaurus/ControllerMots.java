@@ -156,17 +156,33 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		this.afficherMot(m2);
 	}
 
+	public void modifierMot(Mot m) { 
+		//Ref refAncienMot = m.getRef();
+		Mot ancienMot = new Mot(m.getLibelleMot());
+		boolean res = m.update(ancienMot);
+		if(res){JOptionPane.showMessageDialog(fenetre, "Mot modifié");}
+		else{JOptionPane.showMessageDialog(fenetre, "Echec de la modification");
+		}
+		}
+
 	public void modifierMot(Mot m, String description) { 
 		Mot nouveauMot = m;
 		m.setDefinitionMot(description);
 		nouveauMot.update(this.getMotCourant());
 		this.motCourant = nouveauMot;
+
 	}
 
 	public void supprimerMot(Mot m) {
+		
+		if(m.getPereMot() == null){JOptionPane.showMessageDialog(fenetre, "Impossible de supprimer la racine");}
+		else {
 		Mot pere = new Mot(m.getPereMot().getLibelleMot());
-		m.delete();
+		boolean res = m.delete();
+		if(res){JOptionPane.showMessageDialog(fenetre, "Mot Supprimé");}
+		else{JOptionPane.showMessageDialog(fenetre, "Echec de la suppression");}
 		this.afficherMot(pere);
+		}
 	}
 
 	public Mot getMotCourant() {
@@ -203,13 +219,11 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			
 			this.modifierMot(motCourant, description);
 			this.afficherMot(motCourant);
-			JOptionPane.showMessageDialog(fenetre, "Modification Effectuée");
 		}
 
 		if(arg0.getActionCommand().equals("Supprimer l'entrée")){
 			this.supprimerMot(motCourant);
 			this.afficherMot(motCourant);
-			JOptionPane.showMessageDialog(fenetre, "Mot Supprimé");
 
 		}
 
