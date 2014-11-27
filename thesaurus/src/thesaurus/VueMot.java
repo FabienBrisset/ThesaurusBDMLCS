@@ -261,9 +261,34 @@ public class VueMot {
 		panButtonsConsulter.add(buttonSupprimer);
 		buttonEnregistrer.addActionListener(Controller.getControllerMots());
 		buttonSupprimer.addActionListener(Controller.getControllerMots());
+		buttonChampRecherche.addActionListener(Controller.getControllerMots());
 		Controller.fenetre.getVueCourante().panConsulter.add(panButtonsConsulter);
 		
 		Controller.fenetre.getVueCourante().panConsulter.revalidate();
+	}
+
+	public JTextField getTextFieldChampRecherche() {
+		return textFieldChampRecherche;
+	}
+
+	public void setTextFieldChampRecherche(JTextField textFieldChampRecherche) {
+		this.textFieldChampRecherche = textFieldChampRecherche;
+	}
+
+	public JButton getButtonChampRecherche() {
+		return buttonChampRecherche;
+	}
+
+	public void setButtonChampRecherche(JButton buttonChampRecherche) {
+		this.buttonChampRecherche = buttonChampRecherche;
+	}
+
+	public JLabel getLabelFils() {
+		return labelFils;
+	}
+
+	public void setLabelFils(JLabel labelFils) {
+		this.labelFils = labelFils;
 	}
 
 	public JLabel getLabelEntreeRecherchee() {
