@@ -1,9 +1,14 @@
 package thesaurus;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.Map;
@@ -241,6 +246,41 @@ public class VueMot {
 		
 		panParent.add(labelParent);
 		panParent.add(labelMotParent);
+		labelMotParent.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		labelMotParent.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if(!labelMotParent.getText().equals("Aucun"))
+					new ControllerMots().afficherMot(new Mot(labelMotParent.getText().toLowerCase()));
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		Controller.fenetre.getVueCourante().panConsulter.add(panParent);
 
 		
