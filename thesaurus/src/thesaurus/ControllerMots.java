@@ -241,8 +241,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			if(arg0.getSource().getClass().equals(Controller.fenetre.getVueAjout().getJComboBox().getClass()))
 			{
 				String motChoisi = Controller.fenetre.getVueAjout().getJComboBox().getSelectedItem().toString();
-				//			try 
-				//			{
 				Mot monMotChoisi = new Mot(motChoisi.toLowerCase());
 				ArrayList<Mot> listeFils = monMotChoisi.getFilsMot();
 				listeFils = Mot.ArrayListEnOrdreAlphabetique(listeFils);
@@ -304,7 +302,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 				}
 			}
 		}
-		else if(arg0.getActionCommand().equals("Ajouter l'Entrée"))
+		if(arg0.getActionCommand().equals("Ajouter l'Entrée"))
 		{
 			String nouveauMot = Controller.fenetre.getVueAjout().getTextFieldNouvelleEntree().getText();
 			String pere = Controller.fenetre.getVueAjout().getJComboBox().getSelectedItem().toString();

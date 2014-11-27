@@ -19,12 +19,6 @@ public class VueAjoutMot
 	DefaultTableModel modelAssosGauche;
 	DefaultTableModel modelSynonymeDroite;
 	DefaultTableModel modelAssosDroite;
-	private Object[][] donneesTableauSynonymesGauche = {{"Aucun mot", "Aucun mot"},};
-	private Object[][] donneesTableauSynonymesDroite = {{"Aucun mot", "Aucun mot"},};
-	private Object[][] donneesTableauAssosGauche = {{"Aucun mot", "Aucun mot"},};
-	private Object[][] donneesTableauAssosDroite = {{"Aucun mot", "Aucun mot"},};
-	private String[] nomColonnesAssos = {"Entrée (Associations)", "Description"};
-	private String[] nomColonnesSynonyme = {"Entrée (Synonymes)", "Description"};
 	
 	JPanel panNouvelleEntree;
 	JPanel panParent;
@@ -62,7 +56,7 @@ public class VueAjoutMot
 	JTable tableauAssosGauche;
 	JTable tableauAssosDroite;
 	
-	VueTableauxMots vueTableauxMots;
+	VueTableauxAjout vueTableauxAjout;
 	
 	public VueAjoutMot(ArrayList<Mot> listeMots) throws SQLException 
 	{	
@@ -87,7 +81,7 @@ public class VueAjoutMot
 		comboBoxParent = new JComboBox(donneesComboBox);
 		comboBoxParent.addActionListener(Controller.getControllerMots());
 		
-		vueTableauxMots = new VueTableauxMots(listeMots, comboBoxParent.getSelectedItem().toString().toLowerCase());
+		vueTableauxAjout = new VueTableauxAjout(listeMots, comboBoxParent.getSelectedItem().toString().toLowerCase());
 	
 		panDescription = new JPanel();
 		panDescription.setLayout(new BoxLayout(panDescription, BoxLayout.Y_AXIS));
@@ -120,8 +114,8 @@ public class VueAjoutMot
 		panParent.add(comboBoxParent);
 		Controller.fenetre.getVueCourante().panAjouter.add(panParent);
 		
-		Controller.fenetre.getVueCourante().panAjouter.add(vueTableauxMots.getPanLabelSynonyme());
-		Controller.fenetre.getVueCourante().panAjouter.add(vueTableauxMots.getPanSplit());
+		Controller.fenetre.getVueCourante().panAjouter.add(vueTableauxAjout.getPanLabelSynonyme());
+		Controller.fenetre.getVueCourante().panAjouter.add(vueTableauxAjout.getPanSplit());
 		
 		panLabelDescription.add(labelDescription);
 		panDescription.add(panLabelDescription);
@@ -132,12 +126,12 @@ public class VueAjoutMot
 		Controller.fenetre.getVueCourante().panAjouter.add(panButton);
 	}
 	
-	public VueTableauxMots getVueTableauxMots() {
-		return vueTableauxMots;
+	public VueTableauxAjout getVueTableauxMots() {
+		return vueTableauxAjout;
 	}
 
-	public void setVueTableauxMots(VueTableauxMots vueTableauxMots) {
-		this.vueTableauxMots = vueTableauxMots;
+	public void setVueTableauxMots(VueTableauxAjout vueTableauxAjout) {
+		this.vueTableauxAjout = vueTableauxAjout;
 	}
 
 	public JTextField getTextFieldNouvelleEntree() {
@@ -157,102 +151,102 @@ public class VueAjoutMot
 	}
 
 	public Object[][] getDonneesTableauSynonymesGauche() {
-		return vueTableauxMots.getDonneesTableauSynonymesGauche();
+		return vueTableauxAjout.getDonneesTableauSynonymesGauche();
 	}
 
 	public void setDonneesTableauSynonymesGauche(
 			Object[][] donneesTableauSynonymesGauche) {
-		this.vueTableauxMots.setDonneesTableauSynonymesGauche(donneesTableauSynonymesGauche);
+		this.vueTableauxAjout.setDonneesTableauSynonymesGauche(donneesTableauSynonymesGauche);
 	}
 
 	public Object[][] getDonneesTableauSynonymesDroite() {
-		return vueTableauxMots.getDonneesTableauSynonymesDroite();
+		return vueTableauxAjout.getDonneesTableauSynonymesDroite();
 	}
 
 	public void setDonneesTableauSynonymesDroite(
 			Object[][] donneesTableauSynonymesDroite) {
-		this.vueTableauxMots.setDonneesTableauSynonymesDroite(donneesTableauSynonymesDroite);
+		this.vueTableauxAjout.setDonneesTableauSynonymesDroite(donneesTableauSynonymesDroite);
 	}
 
 	public Object[][] getDonneesTableauAssosGauche() {
-		return vueTableauxMots.getDonneesTableauAssosGauche();
+		return vueTableauxAjout.getDonneesTableauAssosGauche();
 	}
 
 	public void setDonneesTableauAssosGauche(Object[][] donneesTableauAssosGauche) {
-		this.vueTableauxMots.setDonneesTableauAssosGauche(donneesTableauAssosGauche);
+		this.vueTableauxAjout.setDonneesTableauAssosGauche(donneesTableauAssosGauche);
 	}
 
 	public Object[][] getDonneesTableauAssosDroite() {
-		return vueTableauxMots.getDonneesTableauAssosDroite();
+		return vueTableauxAjout.getDonneesTableauAssosDroite();
 	}
 
 	public void setDonneesTableauAssosDroite(Object[][] donneesTableauAssosDroite) {
-		this.vueTableauxMots.setDonneesTableauAssosDroite(donneesTableauAssosDroite);
+		this.vueTableauxAjout.setDonneesTableauAssosDroite(donneesTableauAssosDroite);
 	}
 
 	public JTable getTableauSynonymeGauche() {
-		return vueTableauxMots.getTableauSynonymeGauche();
+		return vueTableauxAjout.getTableauSynonymeGauche();
 	}
 
 	public void setTableauSynonymeGauche(JTable tableauSynonymeGauche) {
-		this.vueTableauxMots.setTableauSynonymeGauche(tableauSynonymeGauche);
+		this.vueTableauxAjout.setTableauSynonymeGauche(tableauSynonymeGauche);
 	}
 
 	public JTable getTableauSynonymeDroite() {
-		return vueTableauxMots.getTableauSynonymeDroite();
+		return vueTableauxAjout.getTableauSynonymeDroite();
 	}
 
 	public void setTableauSynonymeDroite(JTable tableauSynonymeDroite) {
-		this.vueTableauxMots.setTableauSynonymeDroite(tableauSynonymeDroite);
+		this.vueTableauxAjout.setTableauSynonymeDroite(tableauSynonymeDroite);
 	}
 
 	public JTable getTableauAssosGauche() {
-		return vueTableauxMots.getTableauAssosGauche();
+		return vueTableauxAjout.getTableauAssosGauche();
 	}
 
 	public void setTableauAssosGauche(JTable tableauAssosGauche) {
-		this.vueTableauxMots.setTableauAssosGauche(tableauAssosGauche);
+		this.vueTableauxAjout.setTableauAssosGauche(tableauAssosGauche);
 	}
 
 	public JTable getTableauAssosDroite() {
-		return vueTableauxMots.getTableauAssosDroite();
+		return vueTableauxAjout.getTableauAssosDroite();
 	}
 
 	public void setTableauAssosDroite(JTable tableauAssosDroite) {
 
-		this.vueTableauxMots.setTableauAssosDroite(tableauAssosDroite);
+		this.vueTableauxAjout.setTableauAssosDroite(tableauAssosDroite);
 	}
 	
 	public DefaultTableModel getModelSynonymeGauche() {
-		return vueTableauxMots.getModelSynonymeGauche();
+		return vueTableauxAjout.getModelSynonymeGauche();
 	}
 
 	public void setModelSynonymeGauche(DefaultTableModel modelSynonymeGauche) {
-		this.vueTableauxMots.setModelSynonymeGauche(modelSynonymeGauche);
+		this.vueTableauxAjout.setModelSynonymeGauche(modelSynonymeGauche);
 	}
 
 	public DefaultTableModel getModelAssosGauche() {
-		return vueTableauxMots.getModelAssosGauche();
+		return vueTableauxAjout.getModelAssosGauche();
 	}
 
 	public void setModelAssosGauche(DefaultTableModel modelAssosGauche) {
-		this.vueTableauxMots.setModelAssosGauche(modelAssosGauche);
+		this.vueTableauxAjout.setModelAssosGauche(modelAssosGauche);
 	}
 
 	public DefaultTableModel getModelSynonymeDroite() {
-		return vueTableauxMots.getModelSynonymeDroite();
+		return vueTableauxAjout.getModelSynonymeDroite();
 	}
 
 	public void setModelSynonymeDroite(DefaultTableModel modelSynonymeDroite) {
-		this.vueTableauxMots.setModelSynonymeDroite(modelSynonymeDroite);
+		this.vueTableauxAjout.setModelSynonymeDroite(modelSynonymeDroite);
 	}
 
 	public DefaultTableModel getModelAssosDroite() {
-		return vueTableauxMots.getModelAssosDroite();
+		return vueTableauxAjout.getModelAssosDroite();
 	}
 
 	public void setModelAssosDroite(DefaultTableModel modelAssosDroite) {
-		this.vueTableauxMots.setModelAssosDroite(modelAssosDroite);
+		this.vueTableauxAjout.setModelAssosDroite(modelAssosDroite);
 	}
 
 }

@@ -11,7 +11,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class VueTableauxMots extends JPanel 
+public class VueTableauxAjout extends JPanel 
 {
 	DefaultTableModel modelSynonymeGauche;
 	DefaultTableModel modelAssosGauche;
@@ -23,24 +23,24 @@ public class VueTableauxMots extends JPanel
 	private Object[][] donneesTableauAssosDroite = {{"Aucun mot", "Aucun mot"},};
 	private String[] nomColonnesAssos = {"Entrée (Associations)", "Description"};
 	private String[] nomColonnesSynonyme = {"Entrée (Synonymes)", "Description"};
-	
+
 	private JPanel panSplit;
 	private JPanel panLabelSynonyme;
 	private JLabel labelSynonyme;
-	
+
 	private JSplitPane splitPanSynonyme;
 	private JScrollPane scrollPanSynonymeGauche;
 	private JScrollPane scrollPanSynonymeDroite;
 	private JTable tableauSynonymeGauche;
 	private JTable tableauSynonymeDroite;
-	
+
 	private JSplitPane splitPanAssos;
 	private JScrollPane scrollPanAssosGauche;
 	private JScrollPane scrollPanAssosDroite;
 	private JTable tableauAssosGauche;
 	private JTable tableauAssosDroite;
-	
-	public VueTableauxMots(ArrayList<Mot> listeMots, String parent)
+
+	public VueTableauxAjout(ArrayList<Mot> listeMots, String parent)
 	{
 		listeMots = Mot.ArrayListEnOrdreAlphabetique(listeMots);
 		panSplit = new JPanel();
@@ -51,13 +51,14 @@ public class VueTableauxMots extends JPanel
 		labelSynonyme = new JLabel("Association(s) et Synonyme(s) :");
 		scrollPanSynonymeGauche = new JScrollPane();
 		scrollPanSynonymeDroite = new JScrollPane();
-		
-		modelSynonymeGauche = new DefaultTableModel(donneesTableauSynonymesGauche,nomColonnesSynonyme);
-		tableauSynonymeGauche = new JTable(modelSynonymeGauche);
+
 		if(listeMots.size() == 0)
 		{
 			modelAssosGauche = new DefaultTableModel(donneesTableauAssosGauche,nomColonnesAssos);
 			tableauAssosGauche = new JTable(modelAssosGauche);
+			((DefaultTableModel) tableauAssosGauche.getModel()).removeRow(0);
+			tableauAssosGauche.setDefaultRenderer(Object.class, new RenduCellule());
+			tableauAssosGauche.addMouseListener(Controller.getControllerMots());
 		}
 		else
 		{
@@ -68,7 +69,6 @@ public class VueTableauxMots extends JPanel
 			{
 				if(!parent.toLowerCase().equals(listeMots.get(i).libelleMot.toLowerCase()))
 				{
-					System.out.println(i);
 					donneesTableauAssosGauche[curseur][0] = listeMots.get(i).libelleMot.toUpperCase();
 					donneesTableauAssosGauche[curseur][1] = listeMots.get(i).definitionMot;
 					curseur++;
@@ -77,36 +77,61 @@ public class VueTableauxMots extends JPanel
 			}
 			modelAssosGauche = new DefaultTableModel(donneesTableauAssosGauche,nomColonnesAssos);
 			tableauAssosGauche = new JTable(modelAssosGauche);
-			tableauSynonymeGauche.addMouseListener(Controller.getControllerMots());
+			tableauAssosGauche.setDefaultRenderer(Object.class, new RenduCellule());
 			tableauAssosGauche.addMouseListener(Controller.getControllerMots());
 		}
-		tableauSynonymeGauche.setDefaultRenderer(Object.class, new RenduCellule());
-		((DefaultTableModel) tableauSynonymeGauche.getModel()).removeRow(0);
-		tableauAssosGauche.setDefaultRenderer(Object.class, new RenduCellule());
-		modelSynonymeDroite = new DefaultTableModel(donneesTableauSynonymesDroite,nomColonnesSynonyme);
+
 		modelAssosDroite = new DefaultTableModel(donneesTableauAssosDroite,nomColonnesAssos);
-		tableauSynonymeDroite = new JTable(modelSynonymeDroite);
-		((DefaultTableModel) tableauSynonymeDroite.getModel()).removeRow(0);
-		Controller.fenetre.getVueCourante().revalidate();
 		tableauAssosDroite = new JTable(modelAssosDroite);
 		((DefaultTableModel) tableauAssosDroite.getModel()).removeRow(0);
-		tableauSynonymeDroite.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauAssosDroite.setDefaultRenderer(Object.class, new RenduCellule());
-		tableauSynonymeDroite.addMouseListener(Controller.getControllerMots());
 		tableauAssosDroite.addMouseListener(Controller.getControllerMots());
-		
+
+		Mot motParent = new Mot(parent.toLowerCase());
+		ArrayList<Mot> listeFils = motParent.getFilsMot();
+		listeFils = Mot.ArrayListEnOrdreAlphabetique(listeFils);
+		if(listeFils.size() == 0)
+		{
+			modelSynonymeGauche = new DefaultTableModel(donneesTableauSynonymesGauche,nomColonnesSynonyme);
+			tableauSynonymeGauche = new JTable(modelSynonymeGauche);
+			((DefaultTableModel) tableauSynonymeGauche.getModel()).removeRow(0);
+			tableauSynonymeGauche.setDefaultRenderer(Object.class, new RenduCellule());
+			tableauSynonymeGauche.addMouseListener(Controller.getControllerMots());
+		}
+		else
+		{
+			donneesTableauSynonymesGauche = new Object[listeFils.size()][2];
+			for (int i = 0; i < listeFils.size(); i++)
+			{
+				donneesTableauSynonymesGauche[i][0] = listeFils.get(i).libelleMot.toUpperCase();
+				donneesTableauSynonymesGauche[i][1] = listeFils.get(i).definitionMot;
+			}
+			modelSynonymeGauche = new DefaultTableModel(donneesTableauSynonymesGauche,nomColonnesSynonyme);
+			tableauSynonymeGauche = new JTable(modelSynonymeGauche);
+			tableauSynonymeGauche.setDefaultRenderer(Object.class, new RenduCellule());
+			tableauSynonymeGauche.addMouseListener(Controller.getControllerMots());
+		}
+
+		modelSynonymeDroite = new DefaultTableModel(donneesTableauSynonymesDroite,nomColonnesSynonyme);
+		tableauSynonymeDroite = new JTable(modelSynonymeDroite);
+		((DefaultTableModel) tableauSynonymeDroite.getModel()).removeRow(0);
+		tableauSynonymeDroite.setDefaultRenderer(Object.class, new RenduCellule());
+		tableauSynonymeDroite.addMouseListener(Controller.getControllerMots());
+
+		Controller.fenetre.getVueCourante().revalidate();
+
 		scrollPanSynonymeGauche.setViewportView(tableauSynonymeGauche);
 		scrollPanSynonymeDroite.setViewportView(tableauSynonymeDroite);
 		splitPanSynonyme = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,scrollPanSynonymeGauche,scrollPanSynonymeDroite);
 		splitPanSynonyme.setDividerLocation(300);
-		
+
 		scrollPanAssosGauche = new JScrollPane();
 		scrollPanAssosDroite = new JScrollPane();
 		scrollPanAssosGauche.setViewportView(tableauAssosGauche);
 		scrollPanAssosDroite.setViewportView(tableauAssosDroite);
 		splitPanAssos = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,scrollPanAssosGauche,scrollPanAssosDroite);
 		splitPanAssos.setDividerLocation(300);
-		
+
 		panSplit.add(splitPanAssos);
 		panSplit.add(splitPanSynonyme);
 		panLabelSynonyme.add(labelSynonyme);

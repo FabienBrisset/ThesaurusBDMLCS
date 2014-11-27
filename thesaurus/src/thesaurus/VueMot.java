@@ -67,6 +67,8 @@ public class VueMot {
 	private JButton buttonEnregistrer;
 	private JButton buttonSupprimer;
 	
+	VueTableauxConsult vueTableauxConsult;
+	
 	public VueMot(Mot m)
 	{
 		this.mot = m;
@@ -101,18 +103,15 @@ public class VueMot {
 			labelMotParent = new JLabel("Aucun");
 		}
 		
-		panSynonyme = new JPanel();
+		/*panSynonyme = new JPanel();
 		panSynonyme.setLayout(new BoxLayout(panSynonyme, BoxLayout.Y_AXIS));
 		panLabelSynonyme = new JPanel();
 		labelSynonyme = new JLabel("Synonyme(s) :");
 		scrollPanSynonyme = new JScrollPane();
-		//ArrayList<Mot> listeSynonymes = mot.getSynonymes(); PIERRE
-		/* Fab */
 		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>();
 		for (int i = 0; i < mot.getSynonymesMot().size(); i++) {
 			listeSynonymes.add(mot.getSynonymesMot().get(i));
 		}
-		/* */
 		if(listeSynonymes.size() == 0)
 		{
 			Object[][] donneesTableauSynonymes= {{"Aucun synonyme", "Aucun synonyme"},};
@@ -131,7 +130,7 @@ public class VueMot {
 			}
 		}
 		tableauSynonyme.setDefaultRenderer(Object.class, new RenduCellule());
-		tableauSynonyme.setShowVerticalLines(false);
+		tableauSynonyme.setShowVerticalLines(false);*/
 		
 		panFils = new JPanel();
 		panFils.setLayout(new BoxLayout(panFils, BoxLayout.Y_AXIS));
@@ -158,7 +157,7 @@ public class VueMot {
 		tableauFils.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauFils.setShowVerticalLines(false);
 		
-		panAssos = new JPanel();
+		/*panAssos = new JPanel();
 		panAssos.setLayout(new BoxLayout(panAssos, BoxLayout.Y_AXIS));
 		panLabelAssos = new JPanel();
 		labelAssos = new JLabel("Association(s) :");
@@ -181,7 +180,7 @@ public class VueMot {
 			}
 		}
 		tableauAssos.setDefaultRenderer(Object.class, new RenduCellule());
-		tableauAssos.setShowVerticalLines(false);
+		tableauAssos.setShowVerticalLines(false);*/
 		
 		panDescription = new JPanel();
 		panDescription.setMinimumSize(new Dimension(10, 150));
@@ -233,11 +232,14 @@ public class VueMot {
 		panParent.add(labelMotParent);
 		Controller.fenetre.getVueCourante().panConsulter.add(panParent);
 		
-		panSynonyme.add(panLabelSynonyme);
+		ArrayList<Mot> listeMots = Mot.listeDesMots();
+		vueTableauxConsult = new VueTableauxConsult(listeMots, mot);
+		
+		/*panSynonyme.add(panLabelSynonyme);
 		panLabelSynonyme.add(labelSynonyme);
 		panSynonyme.add(scrollPanSynonyme);
 		scrollPanSynonyme.setViewportView(tableauSynonyme);
-		Controller.fenetre.getVueCourante().panConsulter.add(panSynonyme);
+		Controller.fenetre.getVueCourante().panConsulter.add(panSynonyme);*/
 		
 		Controller.fenetre.getVueCourante().panConsulter.add(panFils);
 		panFils.add(panLabelFils);
@@ -245,11 +247,14 @@ public class VueMot {
 		panFils.add(scrollPanFils);
 		scrollPanFils.setViewportView(tableauFils);
 		
-		Controller.fenetre.getVueCourante().panConsulter.add(panAssos);
+		/*Controller.fenetre.getVueCourante().panConsulter.add(panAssos);
 		panAssos.add(panLabelAssos);
 		panLabelAssos.add(labelAssos);
 		panAssos.add(scrollPanAssos);
-		scrollPanAssos.setViewportView(tableauAssos);
+		scrollPanAssos.setViewportView(tableauAssos);*/
+		
+		Controller.fenetre.getVueCourante().panConsulter.add(vueTableauxConsult.getPanLabelSynonyme());
+		Controller.fenetre.getVueCourante().panConsulter.add(vueTableauxConsult.getPanSplit());
 		
 		panDescription.add(panLabelDescription);
 		panLabelDescription.add(labelDescription);
