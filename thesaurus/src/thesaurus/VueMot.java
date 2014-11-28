@@ -340,4 +340,12 @@ public class VueMot {
 	public void setLabelEntreeRecherchee(JLabel labelEntreeRecherchee) {
 		this.labelEntreeRecherchee = labelEntreeRecherchee;
 	}
+
+	public JButton getButtonSupprimer() {
+		return buttonSupprimer;
+	}
+
+	public void setButtonSupprimer(JButton buttonSupprimer) {
+		this.buttonSupprimer = buttonSupprimer;
+	}
 }

@@ -35,6 +35,10 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		VueMot vue = new VueMot(m);
 		vue.afficher();
 		Controller.fenetre.setVueMot(vue);
+		if(motCourant.getPereMot() == null)
+		{
+			Controller.fenetre.getVueMot().getButtonSupprimer().setEnabled(false);
+		}
 		Controller.fenetre.getVueCourante().panConsulter.revalidate();
 
 		Controller.fenetre.getVueCourante().listeOnglets.setSelectedIndex(1);
