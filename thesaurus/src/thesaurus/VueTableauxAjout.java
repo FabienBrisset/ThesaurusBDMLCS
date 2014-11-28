@@ -31,14 +31,14 @@ public class VueTableauxAjout extends JPanel
 	private JSplitPane splitPanSynonyme;
 	private JScrollPane scrollPanSynonymeGauche;
 	private JScrollPane scrollPanSynonymeDroite;
-	private JTable tableauSynonymeGauche;
-	private JTable tableauSynonymeDroite;
+	private RenduJTable tableauSynonymeGauche;
+	private RenduJTable tableauSynonymeDroite;
 
 	private JSplitPane splitPanAssos;
 	private JScrollPane scrollPanAssosGauche;
 	private JScrollPane scrollPanAssosDroite;
-	private JTable tableauAssosGauche;
-	private JTable tableauAssosDroite;
+	private RenduJTable tableauAssosGauche;
+	private RenduJTable tableauAssosDroite;
 
 	public VueTableauxAjout(ArrayList<Mot> listeMots, String parent)
 	{
@@ -55,7 +55,7 @@ public class VueTableauxAjout extends JPanel
 		if(listeMots.size() == 0)
 		{
 			modelAssosGauche = new DefaultTableModel(donneesTableauAssosGauche,nomColonnesAssos);
-			tableauAssosGauche = new JTable(modelAssosGauche);
+			tableauAssosGauche = new RenduJTable(modelAssosGauche);
 			((DefaultTableModel) tableauAssosGauche.getModel()).removeRow(0);
 			tableauAssosGauche.setDefaultRenderer(Object.class, new RenduCellule());
 			tableauAssosGauche.addMouseListener(Controller.getControllerMots());
@@ -76,13 +76,13 @@ public class VueTableauxAjout extends JPanel
 				i++;
 			}
 			modelAssosGauche = new DefaultTableModel(donneesTableauAssosGauche,nomColonnesAssos);
-			tableauAssosGauche = new JTable(modelAssosGauche);
+			tableauAssosGauche = new RenduJTable(modelAssosGauche);
 			tableauAssosGauche.setDefaultRenderer(Object.class, new RenduCellule());
 			tableauAssosGauche.addMouseListener(Controller.getControllerMots());
 		}
 
 		modelAssosDroite = new DefaultTableModel(donneesTableauAssosDroite,nomColonnesAssos);
-		tableauAssosDroite = new JTable(modelAssosDroite);
+		tableauAssosDroite = new RenduJTable(modelAssosDroite);
 		((DefaultTableModel) tableauAssosDroite.getModel()).removeRow(0);
 		tableauAssosDroite.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauAssosDroite.addMouseListener(Controller.getControllerMots());
@@ -93,7 +93,7 @@ public class VueTableauxAjout extends JPanel
 		if(listeFils.size() == 0)
 		{
 			modelSynonymeGauche = new DefaultTableModel(donneesTableauSynonymesGauche,nomColonnesSynonyme);
-			tableauSynonymeGauche = new JTable(modelSynonymeGauche);
+			tableauSynonymeGauche = new RenduJTable(modelSynonymeGauche);
 			((DefaultTableModel) tableauSynonymeGauche.getModel()).removeRow(0);
 			tableauSynonymeGauche.setDefaultRenderer(Object.class, new RenduCellule());
 			tableauSynonymeGauche.addMouseListener(Controller.getControllerMots());
@@ -107,13 +107,13 @@ public class VueTableauxAjout extends JPanel
 				donneesTableauSynonymesGauche[i][1] = listeFils.get(i).definitionMot;
 			}
 			modelSynonymeGauche = new DefaultTableModel(donneesTableauSynonymesGauche,nomColonnesSynonyme);
-			tableauSynonymeGauche = new JTable(modelSynonymeGauche);
+			tableauSynonymeGauche = new RenduJTable(modelSynonymeGauche);
 			tableauSynonymeGauche.setDefaultRenderer(Object.class, new RenduCellule());
 			tableauSynonymeGauche.addMouseListener(Controller.getControllerMots());
 		}
 
 		modelSynonymeDroite = new DefaultTableModel(donneesTableauSynonymesDroite,nomColonnesSynonyme);
-		tableauSynonymeDroite = new JTable(modelSynonymeDroite);
+		tableauSynonymeDroite = new RenduJTable(modelSynonymeDroite);
 		((DefaultTableModel) tableauSynonymeDroite.getModel()).removeRow(0);
 		tableauSynonymeDroite.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauSynonymeDroite.addMouseListener(Controller.getControllerMots());
@@ -267,11 +267,11 @@ public class VueTableauxAjout extends JPanel
 		this.scrollPanSynonymeDroite = scrollPanSynonymeDroite;
 	}
 
-	public JTable getTableauSynonymeGauche() {
+	public RenduJTable getTableauSynonymeGauche() {
 		return tableauSynonymeGauche;
 	}
 
-	public void setTableauSynonymeGauche(JTable tableauSynonymeGauche) {
+	public void setTableauSynonymeGauche(RenduJTable tableauSynonymeGauche) {
 		this.tableauSynonymeGauche = tableauSynonymeGauche;
 	}
 
@@ -279,7 +279,7 @@ public class VueTableauxAjout extends JPanel
 		return tableauSynonymeDroite;
 	}
 
-	public void setTableauSynonymeDroite(JTable tableauSynonymeDroite) {
+	public void setTableauSynonymeDroite(RenduJTable tableauSynonymeDroite) {
 		this.tableauSynonymeDroite = tableauSynonymeDroite;
 	}
 
@@ -307,19 +307,19 @@ public class VueTableauxAjout extends JPanel
 		this.scrollPanAssosDroite = scrollPanAssosDroite;
 	}
 
-	public JTable getTableauAssosGauche() {
+	public RenduJTable getTableauAssosGauche() {
 		return tableauAssosGauche;
 	}
 
-	public void setTableauAssosGauche(JTable tableauAssosGauche) {
+	public void setTableauAssosGauche(RenduJTable tableauAssosGauche) {
 		this.tableauAssosGauche = tableauAssosGauche;
 	}
 
-	public JTable getTableauAssosDroite() {
+	public RenduJTable getTableauAssosDroite() {
 		return tableauAssosDroite;
 	}
 
-	public void setTableauAssosDroite(JTable tableauAssosDroite) {
+	public void setTableauAssosDroite(RenduJTable tableauAssosDroite) {
 		this.tableauAssosDroite = tableauAssosDroite;
 	}
 

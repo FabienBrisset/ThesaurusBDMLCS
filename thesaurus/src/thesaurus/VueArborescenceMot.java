@@ -29,7 +29,7 @@ public class VueArborescenceMot {
 	DefaultTableModel modelTableauArbo;
 	private Object[][] donneesTableauArbo = {{"Aucun mot", "Aucun mot"},};
 	private String[] nomColonnesArbo = {"Entrée", "Description"};
-	JTable tableauArbo;
+	RenduJTable tableauArbo;
 	
 	public VueArborescenceMot(TreeNode<Mot> arborescence){
 		this.arborescence = arborescence;
@@ -58,7 +58,7 @@ public class VueArborescenceMot {
 		if(listeMots.size() == 0)
 		{
 			modelTableauArbo = new DefaultTableModel(donneesTableauArbo,nomColonnesArbo);
-			tableauArbo = new JTable(modelTableauArbo);
+			tableauArbo = new RenduJTable(modelTableauArbo);
 		}
 		else
 		{
@@ -81,7 +81,7 @@ public class VueArborescenceMot {
 			     }
 			 }
 			modelTableauArbo = new DefaultTableModel(donneesTableauArbo,nomColonnesArbo);
-			tableauArbo = new JTable(modelTableauArbo);
+			tableauArbo = new RenduJTable(modelTableauArbo);
 			tableauArbo.setDefaultRenderer(Object.class, new RenduCellule());
 			tableauArbo.addMouseListener(Controller.getControllerMots());
 		}
@@ -113,7 +113,7 @@ public class VueArborescenceMot {
 		return tableauArbo;
 	}
 
-	public void setTableauArbo(JTable tableauArbo) {
+	public void setTableauArbo(RenduJTable tableauArbo) {
 		this.tableauArbo = tableauArbo;
 	}
 

@@ -26,9 +26,7 @@ public class VueMot {
 
 	private Mot mot;
 	
-	private Object[][] donneesTableauSynonymes;
 	private Object[][] donneesTableauFils;
-	private Object[][] donneesTableauAssos;
 	private String[] nomColonnes = {"Entrée", "Description"};
 	
 	private JPanel panChampRecherche;
@@ -44,23 +42,11 @@ public class VueMot {
 	private JLabel labelParent;
 	private JLabel labelMotParent;
 	
-	private JPanel panSynonyme;
-	private JPanel panLabelSynonyme; // Pas r�ussi � faire sans en gardant le centrage du label
-	private JLabel labelSynonyme;
-	private JScrollPane scrollPanSynonyme; // Conteneur scrollable du tableau contenant les synonymes
-	private JTable tableauSynonyme;
-	
 	private JPanel panFils;
 	private JPanel panLabelFils; // Pas r�ussi � faire sans en gardant le centrage du label
 	private JLabel labelFils;
 	private JScrollPane scrollPanFils;
-	private JTable tableauFils;
-	
-	private JPanel panAssos;
-	private JPanel panLabelAssos; // Pas r�ussi � faire sans en gardant le centrage du label
-	private JLabel labelAssos;
-	private JScrollPane scrollPanAssos;
-	private JTable tableauAssos;
+	private RenduJTable tableauFils;
 	
 	private JPanel panDescription;
 	private JPanel panLabelDescription;
@@ -154,7 +140,7 @@ public class VueMot {
 		if(listeFils.size() == 0)
 		{
 			Object[][] donneesTableauFils= {{"Aucun fils", "Aucun fils"},};
-			tableauFils = new JTable(donneesTableauFils, nomColonnes);
+			tableauFils = new RenduJTable(donneesTableauFils, nomColonnes);
 		}
 		else
 		{
@@ -164,39 +150,14 @@ public class VueMot {
 			{
 				donneesTableauFils[i][0] = listeFils.get(i).libelleMot.toUpperCase();
 				donneesTableauFils[i][1] = listeFils.get(i).definitionMot;
-				tableauFils = new JTable(donneesTableauFils,nomColonnes);
+				tableauFils = new RenduJTable(donneesTableauFils,nomColonnes);
 			}
 		}
 		tableauFils.setDefaultRenderer(Object.class, new RenduCellule());
 		tableauFils.setShowVerticalLines(false);
 		
 		ArrayList<Mot> listeMots = Mot.listeDesMots();
-		vueTableauxConsult = new VueTableauxConsult(listeMots, mot);
-		
-		/*panAssos = new JPanel();
-		panAssos.setLayout(new BoxLayout(panAssos, BoxLayout.Y_AXIS));
-		panLabelAssos = new JPanel();
-		labelAssos = new JLabel("Association(s) :");
-		scrollPanAssos = new JScrollPane();
-		ArrayList<Mot> listeAssos = mot.getAssociationsMot();
-		if(listeAssos.size() == 0)
-		{
-			Object[][] donneesTableauAssos= {{"Aucune association", "Aucune association"},};
-			tableauAssos = new JTable(donneesTableauAssos, nomColonnes);
-		}
-		else
-		{
-			listeAssos = Mot.ArrayListEnOrdreAlphabetique(listeAssos);
-			donneesTableauAssos = new Object[listeAssos.size()][2];
-			for (int i = 0; i < listeAssos.size(); i++)
-			{
-				donneesTableauAssos[i][0] = listeAssos.get(i).libelleMot.toUpperCase();
-				donneesTableauAssos[i][1] = listeAssos.get(i).definitionMot;
-				tableauAssos = new JTable(donneesTableauAssos,nomColonnes);
-			}
-		}
-		tableauAssos.setDefaultRenderer(Object.class, new RenduCellule());
-		tableauAssos.setShowVerticalLines(false);*/
+		vueTableauxConsult = new VueTableauxConsult(listeMots, mot);		
 		
 		panDescription = new JPanel();
 		panDescription.setMinimumSize(new Dimension(10, 150));
@@ -283,12 +244,6 @@ public class VueMot {
 		panLabelFils.add(labelFils);
 		panFils.add(scrollPanFils);
 		scrollPanFils.setViewportView(tableauFils);
-		
-		/*Controller.fenetre.getVueCourante().panConsulter.add(panAssos);
-		panAssos.add(panLabelAssos);
-		panLabelAssos.add(labelAssos);
-		panAssos.add(scrollPanAssos);
-		scrollPanAssos.setViewportView(tableauAssos);*/
 		
 		Controller.fenetre.getVueCourante().panConsulter.add(vueTableauxConsult.getPanLabelSynonyme());
 		Controller.fenetre.getVueCourante().panConsulter.add(vueTableauxConsult.getPanSplit());

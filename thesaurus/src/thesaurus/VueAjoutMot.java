@@ -46,8 +46,8 @@ public class VueAjoutMot
 	JSplitPane splitPanSynonyme;
 	JScrollPane scrollPanSynonymeGauche;
 	JScrollPane scrollPanSynonymeDroite;
-	JTable tableauSynonymeGauche;
-	JTable tableauSynonymeDroite;
+	RenduJTable tableauSynonymeGauche;
+	RenduJTable tableauSynonymeDroite;
 	
 	JPanel panAssos;
 	JPanel panLabelAssos;
@@ -55,8 +55,8 @@ public class VueAjoutMot
 	JSplitPane splitPanAssos;
 	JScrollPane scrollPanAssosGauche;
 	JScrollPane scrollPanAssosDroite;
-	JTable tableauAssosGauche;
-	JTable tableauAssosDroite;
+	RenduJTable tableauAssosGauche;
+	RenduJTable tableauAssosDroite;
 	
 	VueTableauxAjout vueTableauxAjout;
 	
@@ -203,11 +203,11 @@ public class VueAjoutMot
 		this.vueTableauxAjout.setDonneesTableauAssosDroite(donneesTableauAssosDroite);
 	}
 
-	public JTable getTableauSynonymeGauche() {
+	public RenduJTable getTableauSynonymeGauche() {
 		return vueTableauxAjout.getTableauSynonymeGauche();
 	}
 
-	public void setTableauSynonymeGauche(JTable tableauSynonymeGauche) {
+	public void setTableauSynonymeGauche(RenduJTable tableauSynonymeGauche) {
 		this.vueTableauxAjout.setTableauSynonymeGauche(tableauSynonymeGauche);
 	}
 
@@ -215,23 +215,23 @@ public class VueAjoutMot
 		return vueTableauxAjout.getTableauSynonymeDroite();
 	}
 
-	public void setTableauSynonymeDroite(JTable tableauSynonymeDroite) {
+	public void setTableauSynonymeDroite(RenduJTable tableauSynonymeDroite) {
 		this.vueTableauxAjout.setTableauSynonymeDroite(tableauSynonymeDroite);
 	}
 
-	public JTable getTableauAssosGauche() {
+	public RenduJTable getTableauAssosGauche() {
 		return vueTableauxAjout.getTableauAssosGauche();
 	}
 
-	public void setTableauAssosGauche(JTable tableauAssosGauche) {
+	public void setTableauAssosGauche(RenduJTable tableauAssosGauche) {
 		this.vueTableauxAjout.setTableauAssosGauche(tableauAssosGauche);
 	}
 
-	public JTable getTableauAssosDroite() {
+	public RenduJTable getTableauAssosDroite() {
 		return vueTableauxAjout.getTableauAssosDroite();
 	}
 
-	public void setTableauAssosDroite(JTable tableauAssosDroite) {
+	public void setTableauAssosDroite(RenduJTable tableauAssosDroite) {
 
 		this.vueTableauxAjout.setTableauAssosDroite(tableauAssosDroite);
 	}
