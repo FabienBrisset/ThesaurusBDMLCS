@@ -122,12 +122,12 @@ public VueTableauxConsult(ArrayList<Mot> listeMots, Mot motCourant)
 		}
 		else
 		{
-			donneesTableauSynonymesGauche = new Object[listeFils.size()-(motCourant.getSynonymesMot().size())][2];
+			donneesTableauSynonymesGauche = new Object[listeFils.size()-(motCourant.getSynonymesMot().size())-1][2];
 			int i = 0;
 			int curseur = 0;
 			while (i < listeFils.size())
 			{
-				if(!motCourant.estDansSynonymes(listeFils.get(i)))
+				if(!motCourant.estDansSynonymes(listeFils.get(i)) && !listeFils.get(i).equals(motCourant))
 				{
 					donneesTableauSynonymesGauche[curseur][0] = listeFils.get(i).libelleMot.toUpperCase();
 					donneesTableauSynonymesGauche[curseur][1] = listeFils.get(i).definitionMot;
