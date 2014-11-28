@@ -66,7 +66,7 @@ public class ModelDB {
 		}
 		else
 		{
-			System.out.println("Connexion SQL already exists");
+			//System.out.println("Connexion SQL already exists");
 		}
 		
 		return instance;

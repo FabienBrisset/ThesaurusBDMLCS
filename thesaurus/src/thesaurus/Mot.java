@@ -279,6 +279,10 @@ public class Mot implements SQLData {
 	 * 					******************************  METHODE POUR REPRESENTATION GRAPHIQUE DU MOT ******************************
 	 */
 	
+	/**
+	 * Permet d'obtenir une structure arborescente du mot servant à l'affichage de ce mot sous la forme d'un arbre
+	 * @return TreeNode<Mot> une structure arborescente du Mot
+	 */
 	public TreeNode<Mot> getArborescence(){
 		ArrayList<TreeNode<Mot>> aTraiterTreeNode = new ArrayList<TreeNode<Mot>>();
 		ArrayList<Mot> aTraiterMot = new ArrayList<Mot>();
@@ -608,35 +612,6 @@ public class Mot implements SQLData {
 		}
 	}
 	
-	public void beginTransaction(){
-		try {
-			ModelDB.getDB().db.setAutoCommit(false);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void commit(){
-		try {
-			ModelDB.getDB().db.commit();
-			ModelDB.getDB().db.setAutoCommit(true);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void rollback(){
-		try {
-			ModelDB.getDB().db.rollback();
-			ModelDB.getDB().db.setAutoCommit(true);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	/**
 	 * Permet la suppression recursive d'un mot en BD 
 	 * @return vrai si le mot a été correctement supprimé, faux sinon
@@ -753,6 +728,44 @@ public class Mot implements SQLData {
 	}
 	
 	/**
+	 * Permet de commencer une transaction pour les operations en base (insert,update,delete)
+	 */
+	public void beginTransaction(){
+		try {
+			ModelDB.getDB().db.setAutoCommit(false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Permet d'effectuer un commit des operations réalisées sur la base base (insert,update,delete)
+	 */
+	public void commit(){
+		try {
+			ModelDB.getDB().db.commit();
+			ModelDB.getDB().db.setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Permet d'effectuer un rollback des operations réalisées sur la base base (insert,update,delete)
+	 */
+	public void rollback(){
+		try {
+			ModelDB.getDB().db.rollback();
+			ModelDB.getDB().db.setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Permet de savoir si oui ou non un mot existe en BD
 	 * @return vrai si le mot existe, faux sinon
 	 */
@@ -814,6 +827,10 @@ public class Mot implements SQLData {
 		}
 	}
 	
+	/**
+	 * Permet d'obtenir la liste de tous les mots présent en BD
+	 * @return ArrayList<Mot>
+	 */
 	public static ArrayList<Mot> listeDesMots()
 	{
 		try

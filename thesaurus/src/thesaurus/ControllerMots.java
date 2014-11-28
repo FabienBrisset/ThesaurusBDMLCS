@@ -161,8 +161,21 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		motPere = new Mot(pere.toLowerCase());
 
 		Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, new ArrayList<Mot>(), listeSynonymes, listeAssos);
-		m2.insert();
-		this.afficherMot(m2);
+		m2.beginTransaction();
+		boolean res = m2.insert();
+		
+		if (res)
+		{
+			m2.commit();
+			this.afficherMot(m2);
+		}
+		else
+		{
+			m2.rollback();
+			JOptionPane.showMessageDialog(fenetre, "Echec de l'insertion");
+			System.out.println("Erreur : ajout du mot " + m2.getLibelleMot());
+		}
+		
 	}
 
 	/*public void modifierMot(Mot m) { 
@@ -180,13 +193,16 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	public void modifierMot(Mot m, String description) { 
 		Mot nouveauMot = m;
 		m.setDefinitionMot(description);
+		m.beginTransaction();
 		boolean res = nouveauMot.update(this.getMotCourant());
 		this.motCourant = nouveauMot;
 
 		if (res) {
+			m.commit();
 			JOptionPane.showMessageDialog(fenetre, "Mot modifié");
 		}
 		else {
+			m.rollback();
 			JOptionPane.showMessageDialog(fenetre, "Echec de la modification");
 		}
 	}
