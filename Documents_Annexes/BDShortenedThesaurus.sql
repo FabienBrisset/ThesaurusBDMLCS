@@ -19,6 +19,7 @@ Create table LesMots of Mot
 Nested table filsMot store as fils 
 Nested table synonymesMot store as synonymes 
 Nested table associationsMot store as associations;
+/
 
 
 
