@@ -98,7 +98,8 @@ public VueTableauxConsult(ArrayList<Mot> listeMots, Mot motCourant)
 		{
 			donneesTableauAssosDroite[i][0] = listeAssos.get(i).libelleMot.toUpperCase();
 			donneesTableauAssosDroite[i][1] = listeAssos.get(i).definitionMot;
-			tableauAssosDroite = new RenduJTable(donneesTableauAssosDroite,nomColonnesAssos);
+			modelAssosDroite = new DefaultTableModel(donneesTableauAssosDroite,nomColonnesAssos);
+			tableauAssosDroite = new RenduJTable(modelAssosDroite);
 		}
 	}
 	tableauAssosDroite.setDefaultRenderer(Object.class, new RenduCellule());
@@ -108,10 +109,8 @@ public VueTableauxConsult(ArrayList<Mot> listeMots, Mot motCourant)
 	if(motCourant.getPereMot() != null)
 	{
 		Mot motParent = new Mot(motCourant.getPereMot().getLibelleMot());
-		//Mot motParent = motCourant.getPereMot();
 		ArrayList<Mot> listeFils = motParent.getFilsMot();
 		listeFils = Mot.ArrayListEnOrdreAlphabetique(listeFils);
-		System.out.println("motparent =" + motParent + "nbfils= " + listeFils.size());
 		if(listeFils.size() == 0)
 		{
 			modelSynonymeGauche = new DefaultTableModel(donneesTableauSynonymesGauche,nomColonnesSynonyme);
@@ -172,7 +171,8 @@ public VueTableauxConsult(ArrayList<Mot> listeMots, Mot motCourant)
 		{	
 			donneesTableauSynonymesDroite[i][0] = listeSynonymes.get(i).getLibelleMot().toUpperCase();
 			donneesTableauSynonymesDroite[i][1] = listeSynonymes.get(i).getDefinitionMot();
-			tableauSynonymeDroite = new RenduJTable(donneesTableauSynonymesDroite,nomColonnesSynonyme);
+			modelSynonymeDroite = new DefaultTableModel(donneesTableauSynonymesDroite,nomColonnesSynonyme);
+			tableauSynonymeDroite = new RenduJTable(modelSynonymeDroite);
 		}
 	}
 	tableauSynonymeDroite.setDefaultRenderer(Object.class, new RenduCellule());

@@ -382,6 +382,70 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		{
 			actionSurVueArbo(arg0);
 		}
+		if(Controller.fenetre.getVueMot() != null)
+		{
+			actionSurVueMot();
+		}
+	}
+	
+	public void actionSurVueMot()
+	{
+		if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getSelectedRow() > -1
+				&& Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getSelectedColumn() == 0)
+		{
+			int x = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getSelectedRow();
+			int y = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getSelectedColumn();
+			if (Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getValueAt(x, y) != null)
+			{
+				actionVueTableauAssosGauche(x, y);
+			}
+			Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().clearSelection();
+			Controller.fenetre.getVueCourante().revalidate();
+		}
+
+		if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getSelectedRow() > -1
+				&& Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getSelectedColumn() == 0)
+		{
+			int x = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getSelectedRow();
+			int y = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getSelectedColumn();
+			if (Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getValueAt(x, y) != null)
+			{
+				actionVueTableauAssosDroite(x, y);
+
+			}
+			Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().clearSelection();
+			Controller.fenetre.getVueCourante().revalidate();
+		}
+		else
+		{
+			if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getSelectedRow() > -1
+					&& Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getSelectedColumn() == 0)
+			{
+				int x = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getSelectedRow();
+				int y = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getSelectedColumn();
+				if (Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getValueAt(x, y) != null)
+				{
+					actionVueTableauSynonymeGauche(x, y);
+				}
+				Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().clearSelection();
+				Controller.fenetre.getVueCourante().revalidate();
+			}
+			else
+			{
+				if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getSelectedRow() > -1
+						&& Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getSelectedColumn()== 0)
+				{
+					int x = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getSelectedRow();
+					int y = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getSelectedColumn();
+					if (Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getValueAt(x, y) != null)
+					{
+						actionVueTableauSynonymeDroite(x, y);
+					}
+					Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().clearSelection();
+					Controller.fenetre.getVueCourante().revalidate();
+				}
+			}
+		}
 	}
 	
 	public void actionSurVueAjout()
@@ -518,6 +582,52 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		Controller.fenetre.getVueCourante().revalidate();
 	}
 
+	public void actionVueTableauAssosGauche(int x, int y)
+	{
+		Object[][] donneesTableauAssosGaucheFUTUR;
+		Object[][] donneesTableauAssosDroiteFUTUR;
+		Object[][] listeAssosGauche = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauAssosGauche();
+		Object[][] listeAssosDroite = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauAssosDroite();
+		donneesTableauAssosDroiteFUTUR = new Object[listeAssosDroite.length+1][2];
+		donneesTableauAssosGaucheFUTUR = new Object[listeAssosGauche.length-1][2];
+		String[] nomColonnesAssos = {"Entrée (Associations)", "Description"};
+		int rangMotaAjouter = 0;
+		if(!Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getValueAt(x, y).toString().equals("Aucun mot"))
+		{
+			int i = 0;
+			int curseur = 0;
+			while(i < listeAssosGauche.length)
+			{
+				if(!(listeAssosGauche[i][0].toString().toLowerCase().equals(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getValueAt(x, y).toString().toLowerCase())))
+				{
+					donneesTableauAssosGaucheFUTUR[curseur][0] = listeAssosGauche[i][0].toString().toUpperCase();
+					donneesTableauAssosGaucheFUTUR[curseur][1] = listeAssosGauche[i][1];
+					curseur ++;
+				}
+				else
+				{
+					rangMotaAjouter = i;
+				}
+				i++;
+			}
+		}
+		for (int i = 0; i < listeAssosDroite.length; i++)
+		{
+			donneesTableauAssosDroiteFUTUR[i][0] = listeAssosDroite[i][0].toString().toUpperCase();
+			donneesTableauAssosDroiteFUTUR[i][1] = listeAssosDroite[i][1];
+		}
+		donneesTableauAssosDroiteFUTUR[listeAssosDroite.length][0] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getValueAt(x, y).toString().toUpperCase();
+		donneesTableauAssosDroiteFUTUR[listeAssosDroite.length][1] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosGauche().getValueAt(x, 1);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauAssosDroite(donneesTableauAssosDroiteFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelAssosDroite().setDataVector(donneesTableauAssosDroiteFUTUR, nomColonnesAssos);
+		if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getValueAt(0, 0).toString().equals("AUCUN MOT"))
+		((DefaultTableModel) Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getModel()).removeRow(0);
+		Controller.fenetre.getVueCourante().revalidate();
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauAssosGauche(donneesTableauAssosGaucheFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelAssosGauche().setDataVector(donneesTableauAssosGaucheFUTUR, nomColonnesAssos);
+		Controller.fenetre.getVueCourante().revalidate();
+	}
+	
 	public void actionAjoutTableauAssosDroite(int x, int y)
 	{
 		Object[][] donneesTableauAssosGaucheFUTUR;
@@ -563,6 +673,52 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		Controller.fenetre.getVueCourante().revalidate();
 	}
 
+	public void actionVueTableauAssosDroite(int x, int y)
+	{
+		Object[][] donneesTableauAssosGaucheFUTUR;
+		Object[][] donneesTableauAssosDroiteFUTUR;
+		Object[][] listeAssosGauche = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauAssosGauche();
+		Object[][] listeAssosDroite = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauAssosDroite();
+		donneesTableauAssosDroiteFUTUR = new Object[listeAssosDroite.length-1][2];
+		donneesTableauAssosGaucheFUTUR = new Object[listeAssosGauche.length+1][2];
+		String[] nomColonnesAssos = {"Entrée (Associations)", "Description"};
+		int rangMotaAjouter = 0;
+		if(!Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getValueAt(x, y).toString().equals("Aucun mot"))
+		{
+			int i = 0;
+			int curseur = 0;
+			while(i < listeAssosDroite.length)
+			{
+				if(!(listeAssosDroite[i][0].toString().toLowerCase().equals(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getValueAt(x, y).toString().toLowerCase())))
+				{
+					donneesTableauAssosDroiteFUTUR[curseur][0] = listeAssosDroite[i][0].toString().toUpperCase();
+					donneesTableauAssosDroiteFUTUR[curseur][1] = listeAssosDroite[i][1];
+					curseur ++;
+				}
+				else
+				{
+					rangMotaAjouter = i;
+				}
+				i++;
+			}
+		}
+		for (int i = 0; i < listeAssosGauche.length; i++)
+		{
+			donneesTableauAssosGaucheFUTUR[i][0] = listeAssosGauche[i][0].toString().toUpperCase();
+			donneesTableauAssosGaucheFUTUR[i][1] = listeAssosGauche[i][1];
+		}
+		donneesTableauAssosGaucheFUTUR[listeAssosGauche.length][0] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getValueAt(x, y).toString().toUpperCase();
+		donneesTableauAssosGaucheFUTUR[listeAssosGauche.length][1] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getValueAt(x, 1);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauAssosGauche(donneesTableauAssosGaucheFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelAssosGauche().setDataVector(donneesTableauAssosGaucheFUTUR, nomColonnesAssos);
+		Controller.fenetre.getVueCourante().revalidate();
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauAssosDroite(donneesTableauAssosDroiteFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelAssosDroite().setDataVector(donneesTableauAssosDroiteFUTUR, nomColonnesAssos);
+		if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getValueAt(0, 0).toString().equals("AUCUN MOT"))
+		((DefaultTableModel) Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauAssosDroite().getModel()).removeRow(0);
+		Controller.fenetre.getVueCourante().revalidate();
+	}
+	
 	public void actionAjoutTableauSynonymeGauche(int x, int y)
 	{
 		Object[][] donneesTableauSynonymeGaucheFUTUR;
@@ -608,6 +764,52 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		Controller.fenetre.getVueCourante().revalidate();
 	}
 
+	public void actionVueTableauSynonymeGauche(int x, int y)
+	{
+		Object[][] donneesTableauSynonymeGaucheFUTUR;
+		Object[][] donneesTableauSynonymeDroiteFUTUR;
+		Object[][] listeSynonymeGauche = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauSynonymesGauche();
+		Object[][] listeSynonymeDroite = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauSynonymesDroite();
+		donneesTableauSynonymeDroiteFUTUR = new Object[listeSynonymeDroite.length+1][2];
+		donneesTableauSynonymeGaucheFUTUR = new Object[listeSynonymeGauche.length-1][2];
+		String[] nomColonnesSynonyme = {"Entrée (Synonymes)", "Description"};
+		int rangMotaAjouter = 0;
+		if(!Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getValueAt(x, y).toString().equals("Aucun mot"))
+		{
+			int i = 0;
+			int curseur = 0;
+			while(i < listeSynonymeGauche.length)
+			{
+				if(!(listeSynonymeGauche[i][0].toString().toLowerCase().equals(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getValueAt(x, y).toString().toLowerCase())))
+				{
+					donneesTableauSynonymeGaucheFUTUR[curseur][0] = listeSynonymeGauche[i][0].toString().toUpperCase();
+					donneesTableauSynonymeGaucheFUTUR[curseur][1] = listeSynonymeGauche[i][1];
+					curseur ++;
+				}
+				else
+				{
+					rangMotaAjouter = i;
+				}
+				i++;
+			}
+		}
+		for (int i = 0; i < listeSynonymeDroite.length; i++)
+		{
+			donneesTableauSynonymeDroiteFUTUR[i][0] = listeSynonymeDroite[i][0].toString().toUpperCase();
+			donneesTableauSynonymeDroiteFUTUR[i][1] = listeSynonymeDroite[i][1];
+		}
+		donneesTableauSynonymeDroiteFUTUR[listeSynonymeDroite.length][0] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getValueAt(x, y).toString().toUpperCase();
+		donneesTableauSynonymeDroiteFUTUR[listeSynonymeDroite.length][1] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeGauche().getValueAt(x, 1);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauSynonymesDroite(donneesTableauSynonymeDroiteFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelSynonymeDroite().setDataVector(donneesTableauSynonymeDroiteFUTUR, nomColonnesSynonyme);
+		if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getValueAt(0, 0).toString().equals("AUCUN MOT"))
+		((DefaultTableModel) Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getModel()).removeRow(0);
+		Controller.fenetre.getVueCourante().revalidate();
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauSynonymesGauche(donneesTableauSynonymeGaucheFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelSynonymeGauche().setDataVector(donneesTableauSynonymeGaucheFUTUR, nomColonnesSynonyme);
+		Controller.fenetre.getVueCourante().revalidate();
+	}
+	
 	public void actionAjoutTableauSynonymeDroite(int x, int y)
 	{
 		Object[][] donneesTableauSynonymeDroiteFUTUR;
@@ -653,6 +855,54 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getModel()).removeRow(0);
 		Controller.fenetre.getVueCourante().revalidate();
 	}
+	
+	public void actionVueTableauSynonymeDroite(int x, int y)
+	{
+		Object[][] donneesTableauSynonymeDroiteFUTUR;
+		Object[][] donneesTableauSynonymeGaucheFUTUR;
+		Object[][] listeSynonymeDroite = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauSynonymesDroite();
+		Object[][] listeSynonymeGauche = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauSynonymesGauche();
+		donneesTableauSynonymeGaucheFUTUR = new Object[listeSynonymeGauche.length+1][2];
+		donneesTableauSynonymeDroiteFUTUR = new Object[listeSynonymeDroite.length-1][2];
+		String[] nomColonnesSynonyme = {"Entrée (Synonymes)", "Description"};
+		int rangMotaAjouter = 0;
+		if(!Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getValueAt(x, y).toString().equals("Aucun mot"))
+		{
+			int i = 0;
+			int curseur = 0;
+			while(i < listeSynonymeDroite.length)
+			{
+				if(!(listeSynonymeDroite[i][0].toString().toLowerCase().equals(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getValueAt(x, y).toString().toLowerCase())))
+				{
+					donneesTableauSynonymeDroiteFUTUR[curseur][0] = listeSynonymeDroite[i][0].toString().toUpperCase();
+					donneesTableauSynonymeDroiteFUTUR[curseur][1] = listeSynonymeDroite[i][1];
+					curseur ++;
+				}
+				else
+				{
+					rangMotaAjouter = i;
+				}
+				i++;
+			}
+		}
+		for (int i = 0; i < listeSynonymeGauche.length; i++)
+		{
+			donneesTableauSynonymeGaucheFUTUR[i][0] = listeSynonymeGauche[i][0].toString().toUpperCase();
+			donneesTableauSynonymeGaucheFUTUR[i][1] = listeSynonymeGauche[i][1];
+		}
+		donneesTableauSynonymeGaucheFUTUR[listeSynonymeGauche.length][0] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getValueAt(x, y).toString().toUpperCase();
+		donneesTableauSynonymeGaucheFUTUR[listeSynonymeGauche.length][1] = Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getValueAt(x, 1);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauSynonymesGauche(donneesTableauSynonymeGaucheFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelSynonymeGauche().setDataVector(donneesTableauSynonymeGaucheFUTUR, nomColonnesSynonyme);
+		//((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getModel()).removeRow(0);
+		Controller.fenetre.getVueCourante().revalidate();
+		Controller.fenetre.getVueMot().getVueTableauxConsult().setDonneesTableauSynonymesDroite(donneesTableauSynonymeDroiteFUTUR);
+		Controller.fenetre.getVueMot().getVueTableauxConsult().getModelSynonymeDroite().setDataVector(donneesTableauSynonymeDroiteFUTUR, nomColonnesSynonyme);
+		if(Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getValueAt(0, 0).toString().equals("AUCUN MOT"))
+		((DefaultTableModel) Controller.fenetre.getVueMot().getVueTableauxConsult().getTableauSynonymeDroite().getModel()).removeRow(0);
+		Controller.fenetre.getVueCourante().revalidate();
+	}
+	
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub

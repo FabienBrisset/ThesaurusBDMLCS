@@ -303,4 +303,12 @@ public class VueMot {
 	public void setButtonSupprimer(JButton buttonSupprimer) {
 		this.buttonSupprimer = buttonSupprimer;
 	}
+
+	public VueTableauxConsult getVueTableauxConsult() {
+		return vueTableauxConsult;
+	}
+
+	public void setVueTableauxConsult(VueTableauxConsult vueTableauxConsult) {
+		this.vueTableauxConsult = vueTableauxConsult;
+	}
 }
