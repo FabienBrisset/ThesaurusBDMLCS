@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -190,10 +191,18 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		
 		if(m.getPereMot() == null){JOptionPane.showMessageDialog(fenetre, "Impossible de supprimer la racine");}
 		else {
-		Mot pere = new Mot(m.getPereMot().getLibelleMot());
-		boolean res = m.delete();
-		if(res){JOptionPane.showMessageDialog(fenetre, "Mot Supprimé");}
-		else{JOptionPane.showMessageDialog(fenetre, "Echec de la suppression");}
+			Mot pere = new Mot(m.getPereMot().getLibelleMot());
+			m.beginTransaction();
+			boolean res = m.delete();
+			
+			if(res){
+				m.commit();
+				JOptionPane.showMessageDialog(fenetre, "Mot Supprimé");
+				}
+			else{
+				m.rollback();
+				JOptionPane.showMessageDialog(fenetre, "Echec de la suppression");
+				}
 		this.afficherMot(pere);
 		}
 	}
@@ -634,5 +643,9 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void insertUpdateNouvelleEntree(DocumentEvent e, JTextField textFieldNouvelleEntree) {
+		boolean verifyClassName = Controller.fenetre.getVueAjout().getTextFieldNouvelleEntree().getInputVerifier().verify(Controller.fenetre.getVueAjout().getTextFieldNouvelleEntree());
 	}
 }

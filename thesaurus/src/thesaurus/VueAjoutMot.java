@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicBorders.SplitPaneBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -72,6 +74,20 @@ public class VueAjoutMot
 		textFieldNouvelleEntree = new JTextField();
 		textFieldNouvelleEntree.setColumns(30);
 		textFieldNouvelleEntree.setInputVerifier(new JTextFieldVerifier(1, avam));
+		textFieldNouvelleEntree.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				new ControllerMots().insertUpdateNouvelleEntree(e, textFieldNouvelleEntree);
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				new ControllerMots().insertUpdateNouvelleEntree(e, textFieldNouvelleEntree);
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				new ControllerMots().insertUpdateNouvelleEntree(e, textFieldNouvelleEntree);
+			}
+			});
 		
 		panParent = new JPanel();
 		panParent.setMaximumSize(new Dimension(32767, 200));

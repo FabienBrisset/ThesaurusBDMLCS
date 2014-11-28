@@ -40,7 +40,7 @@ public class Mot implements SQLData {
 	protected ArrayList<Mot> associationsMot;
 	
 	private Ref oidMot;
-	private String sqlType = "SYSTEM.MOT";
+	private String sqlType = "MOT";
 	
 	private static Ref oid; 
 	private static ArrayList<Ref> historiqueMotFils;
@@ -96,7 +96,7 @@ public class Mot implements SQLData {
 			// On mappe l'objet Mot Java avec celui en BD
 			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
 			ModelDB.getDB().db.setTypeMap(map);
-			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
+			map.put("MOT", Class.forName("thesaurus.Mot"));
 			
 			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("SELECT REF(lm),VALUE(lm) FROM LesMots lm WHERE lm.libelleMot= ?");
 			requete.setString(1, libelle);
@@ -323,7 +323,7 @@ public class Mot implements SQLData {
 			// On mappe l'objet Mot Java avec celui en BD
 			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
 			ModelDB.getDB().db.setTypeMap(map);
-			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
+			map.put("MOT", Class.forName("thesaurus.Mot"));
 			
 			int rowsAffected = 0;
 			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("INSERT INTO LesMots VALUES (?)"); // on insere le mot
@@ -448,7 +448,7 @@ public class Mot implements SQLData {
 			// On mappe l'objet Mot Java avec celui en BD
 			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
 			ModelDB.getDB().db.setTypeMap(map);
-			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
+			map.put("MOT", Class.forName("thesaurus.Mot"));
 			
 			int rowsAffected = 0;
 			PreparedStatement requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm = ? WHERE REF(lm)= ?"); //MAJ du mot
@@ -605,6 +605,35 @@ public class Mot implements SQLData {
 		{
 			e.printStackTrace();
 			return false;
+		}
+	}
+	
+	public void beginTransaction(){
+		try {
+			ModelDB.getDB().db.setAutoCommit(false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void commit(){
+		try {
+			ModelDB.getDB().db.commit();
+			ModelDB.getDB().db.setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void rollback(){
+		try {
+			ModelDB.getDB().db.rollback();
+			ModelDB.getDB().db.setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -791,7 +820,7 @@ public class Mot implements SQLData {
 		{
 			Map<String,Class<?>> map = ModelDB.getDB().db.getTypeMap(); 
 			ModelDB.getDB().db.setTypeMap(map);
-			map.put("SYSTEM.MOT", Class.forName("thesaurus.Mot"));
+			map.put("MOT", Class.forName("thesaurus.Mot"));
 			
 			ArrayList<Mot> mots = new ArrayList<Mot>();
 			

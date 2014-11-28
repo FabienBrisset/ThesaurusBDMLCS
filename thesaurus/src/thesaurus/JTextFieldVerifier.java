@@ -14,14 +14,12 @@ import net.java.balloontip.examples.complete.Utils;
 
 public class JTextFieldVerifier extends InputVerifier {
         private  int length = 0;
-        private ArrayList<VueAjoutMot> classesList;
         private BalloonTip balloonTip;
         
         private String errorMessage = "";
         
         public JTextFieldVerifier(int length, ArrayList<VueAjoutMot> classesList) {
         	this.length = length;
-        	this.classesList = classesList;
         }
         
         private void createBalloonTip(JTextField cmp, String message){
