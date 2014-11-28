@@ -202,12 +202,14 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			if(res){
 				m.commit();
 				JOptionPane.showMessageDialog(fenetre, "Mot Supprimé");
+				this.afficherMot(pere);
 				}
 			else{
 				m.rollback();
 				JOptionPane.showMessageDialog(fenetre, "Echec de la suppression");
+				this.afficherMot(m);
 				}
-		this.afficherMot(pere);
+		
 		}
 	}
 
