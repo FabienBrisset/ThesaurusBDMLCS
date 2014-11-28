@@ -376,94 +376,104 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	{
 		if(Controller.fenetre.getVueAjout() != null)
 		{
-			if(Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow() > -1
-					&& Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn() == 0)
+			actionSurVueAjout();
+		}
+		if(Controller.fenetre.getVueArborescence() != null)
+		{
+			actionSurVueArbo(arg0);
+		}
+	}
+	
+	public void actionSurVueAjout()
+	{
+		if(Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow() > -1
+				&& Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn() == 0)
+		{
+			int x = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow();
+			int y = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn();
+			if (Controller.fenetre.getVueAjout().getTableauAssosGauche().getValueAt(x, y) != null)
 			{
-				int x = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedRow();
-				int y = Controller.fenetre.getVueAjout().getTableauAssosGauche().getSelectedColumn();
-				if (Controller.fenetre.getVueAjout().getTableauAssosGauche().getValueAt(x, y) != null)
-				{
-					ActionTableauAssosGauche(x, y);
-				}
-				Controller.fenetre.getVueAjout().getTableauAssosGauche().clearSelection();
-				Controller.fenetre.getVueCourante().revalidate();
+				actionAjoutTableauAssosGauche(x, y);
 			}
+			Controller.fenetre.getVueAjout().getTableauAssosGauche().clearSelection();
+			Controller.fenetre.getVueCourante().revalidate();
+		}
 
-			if(Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow() > -1
-					&& Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn() == 0)
+		if(Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow() > -1
+				&& Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn() == 0)
+		{
+			int x = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow();
+			int y = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn();
+			if (Controller.fenetre.getVueAjout().getTableauAssosDroite().getValueAt(x, y) != null)
 			{
-				int x = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedRow();
-				int y = Controller.fenetre.getVueAjout().getTableauAssosDroite().getSelectedColumn();
-				if (Controller.fenetre.getVueAjout().getTableauAssosDroite().getValueAt(x, y) != null)
-				{
-					ActionTableauAssosDroite(x, y);
+				actionAjoutTableauAssosDroite(x, y);
 
+			}
+			Controller.fenetre.getVueAjout().getTableauAssosGauche().clearSelection();
+			Controller.fenetre.getVueCourante().revalidate();
+		}
+		else
+		{
+			if(Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow() > -1
+					&& Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn() == 0)
+			{
+				int x = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow();
+				int y = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn();
+				if (Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getValueAt(x, y) != null)
+				{
+					actionAjoutTableauSynonymeGauche(x, y);
 				}
-				Controller.fenetre.getVueAjout().getTableauAssosGauche().clearSelection();
+				Controller.fenetre.getVueAjout().getTableauSynonymeGauche().clearSelection();
 				Controller.fenetre.getVueCourante().revalidate();
 			}
 			else
 			{
-				if(Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow() > -1
-						&& Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn() == 0)
+				if(Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow() > -1
+						&& Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn()== 0)
 				{
-					int x = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedRow();
-					int y = Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getSelectedColumn();
-					if (Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getValueAt(x, y) != null)
+					int x = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow();
+					int y = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn();
+					if (Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, y) != null)
 					{
-						ActionTableauSynonymeGauche(x, y);
+						actionAjoutTableauSynonymeDroite(x, y);
 					}
-					Controller.fenetre.getVueAjout().getTableauSynonymeGauche().clearSelection();
+					Controller.fenetre.getVueAjout().getTableauSynonymeDroite().clearSelection();
 					Controller.fenetre.getVueCourante().revalidate();
-				}
-				else
-				{
-					if(Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow() > -1
-							&& Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn()== 0)
-					{
-						int x = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedRow();
-						int y = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getSelectedColumn();
-						if (Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, y) != null)
-						{
-							ActionTableauSynonymeDroite(x, y);
-						}
-						Controller.fenetre.getVueAjout().getTableauSynonymeDroite().clearSelection();
-						Controller.fenetre.getVueCourante().revalidate();
-					}
-				}
-			}
-		}
-		if(Controller.fenetre.getVueArborescence() != null)
-		{
-			if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getTableauArbo()))
-			{
-				int x = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedRow();
-				int y = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedColumn();
-				if (Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y) != null)
-				{
-					Mot m = new Mot(Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y).toString().toLowerCase());
-					if(m != null)
-					{
-						afficherArborescenceMot(m);
-					}
-				}
-				//Double click sur un noeud de l'arborescence
-			} else if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getGraphicArbo())){
-				int selRow = Controller.fenetre.getVueArborescence().getGraphicArbo().getRowForLocation(arg0.getX(), arg0.getY());
-				TreePath selPath = Controller.fenetre.getVueArborescence().getGraphicArbo().getPathForLocation(arg0.getX(), arg0.getY());
-				if(selRow != -1) {
-					if(arg0.getClickCount() == 1) {
-						System.out.println("simple");
-					}
-					else if(arg0.getClickCount() == 2) {
-						afficherMot(new Mot(selPath.getLastPathComponent().toString()));
-					}
 				}
 			}
 		}
 	}
 
-	public void ActionTableauAssosGauche(int x, int y)
+	public void actionSurVueArbo(MouseEvent arg0)
+	{
+		if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getTableauArbo()))
+		{
+			int x = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedRow();
+			int y = Controller.fenetre.getVueArborescence().getTableauArbo().getSelectedColumn();
+			if (Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y) != null)
+			{
+				Mot m = new Mot(Controller.fenetre.getVueArborescence().getTableauArbo().getValueAt(x, y).toString().toLowerCase());
+				if(m != null)
+				{
+					afficherArborescenceMot(m);
+				}
+			}
+			//Double click sur un noeud de l'arborescence
+		} else if(arg0.getSource().equals(Controller.fenetre.getVueArborescence().getGraphicArbo())){
+			int selRow = Controller.fenetre.getVueArborescence().getGraphicArbo().getRowForLocation(arg0.getX(), arg0.getY());
+			TreePath selPath = Controller.fenetre.getVueArborescence().getGraphicArbo().getPathForLocation(arg0.getX(), arg0.getY());
+			if(selRow != -1) {
+				if(arg0.getClickCount() == 1) {
+					System.out.println("simple");
+				}
+				else if(arg0.getClickCount() == 2) {
+					afficherMot(new Mot(selPath.getLastPathComponent().toString()));
+				}
+			}
+		}
+	}
+	
+	public void actionAjoutTableauAssosGauche(int x, int y)
 	{
 		Object[][] donneesTableauAssosGaucheFUTUR;
 		Object[][] donneesTableauAssosDroiteFUTUR;
@@ -508,7 +518,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		Controller.fenetre.getVueCourante().revalidate();
 	}
 
-	public void ActionTableauAssosDroite(int x, int y)
+	public void actionAjoutTableauAssosDroite(int x, int y)
 	{
 		Object[][] donneesTableauAssosGaucheFUTUR;
 		Object[][] donneesTableauAssosDroiteFUTUR;
@@ -553,7 +563,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		Controller.fenetre.getVueCourante().revalidate();
 	}
 
-	public void ActionTableauSynonymeGauche(int x, int y)
+	public void actionAjoutTableauSynonymeGauche(int x, int y)
 	{
 		Object[][] donneesTableauSynonymeGaucheFUTUR;
 		Object[][] donneesTableauSynonymeDroiteFUTUR;
@@ -598,7 +608,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		Controller.fenetre.getVueCourante().revalidate();
 	}
 
-	public void ActionTableauSynonymeDroite(int x, int y)
+	public void actionAjoutTableauSynonymeDroite(int x, int y)
 	{
 		Object[][] donneesTableauSynonymeDroiteFUTUR;
 		Object[][] donneesTableauSynonymeGaucheFUTUR;

@@ -2,15 +2,25 @@ package thesaurus;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.InputVerifier;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.examples.complete.Utils;
+import net.java.balloontip.positioners.BalloonTipPositioner;
+import net.java.balloontip.positioners.LeftAbovePositioner;
+import net.java.balloontip.positioners.RightAbovePositioner;
+import net.java.balloontip.positioners.RightBelowPositioner;
+import net.java.balloontip.styles.BalloonTipStyle;
+import net.java.balloontip.styles.EdgedBalloonStyle;
 
 public class JTextFieldVerifier extends InputVerifier {
         private  int length = 0;
@@ -27,7 +37,10 @@ public class JTextFieldVerifier extends InputVerifier {
         		balloonTip.closeBalloon();
         	
         	cmp.setBackground(new Color(255, 226, 198));
-        	balloonTip = new BalloonTip(cmp, message);
+        	BalloonTipStyle edgedLook = new EdgedBalloonStyle(new Color(255, 133, 109), Color.BLACK);
+        	balloonTip = new BalloonTip(cmp, new JLabel(message), edgedLook, false);
+			balloonTip.getStyle().setHorizontalOffset(20);
+			balloonTip.setBounds(cmp.getBounds().x + 170, cmp.getBounds().y + 40, balloonTip.getWidth(), balloonTip.getHeight());
         }
         
         public String getErrorMessage(){
