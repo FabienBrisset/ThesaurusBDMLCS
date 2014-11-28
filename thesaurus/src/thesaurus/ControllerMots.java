@@ -120,6 +120,10 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	public void ajouterMot(String mot, String pere, Object[][] assos, Object[][] synonymes, String description)
 	{
 		boolean verifyClassName = Controller.fenetre.getVueAjout().getTextFieldNouvelleEntree().getInputVerifier().verify(Controller.fenetre.getVueAjout().getTextFieldNouvelleEntree());
+		if(!verifyClassName){
+			return;
+		}
+		
 		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>();
 		ArrayList<Mot> listeAssos = new ArrayList<Mot>();
 		Mot motPere = null;
