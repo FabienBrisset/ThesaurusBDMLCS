@@ -42,7 +42,7 @@ public class ModelDB {
 		// On effectue ensuite la connexion
 		try 
 		{
-			db = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:database","system","Toto123");
+			db = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl","system","Fabien34090");
 		} 
 		catch (SQLException e) 
 		{
@@ -62,7 +62,7 @@ public class ModelDB {
 		if (instance==null)
 		{
 			instance = new ModelDB();
-			System.out.println("First instance of connexion SQL");
+			//System.out.println("First instance of connexion SQL");
 		}
 		else
 		{
