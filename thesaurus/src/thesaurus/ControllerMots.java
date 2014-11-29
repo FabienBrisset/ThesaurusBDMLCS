@@ -211,9 +211,9 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		
 		if(m.getPereMot() == null){JOptionPane.showMessageDialog(fenetre, "Impossible de supprimer la racine");}
 		else {
-			Mot pere = new Mot(m.getPereMot().getLibelleMot());
 			m.beginTransaction();
 			boolean res = m.delete();
+			Mot pere = new Mot(m.getPereMot().getLibelleMot());
 			
 			if(res){
 				m.commit();
