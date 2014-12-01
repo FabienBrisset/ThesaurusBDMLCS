@@ -190,19 +190,57 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		}
 	}*/
 
-	public void modifierMot(Mot m, String description) { 
-		Mot nouveauMot = m;
-		m.setDefinitionMot(description);
-		m.beginTransaction();
-		boolean res = nouveauMot.update(this.getMotCourant());
+	public void modifierMot(Mot m, Object[][] assos, Object[][] synonymes, String description) { 
+		
+		Mot nouveauMot = new Mot(m.getOid(),m.getLibelleMot(),description,m.getPereMot(),m.getFilsMot(),null,null);
+		
+		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>();
+		ArrayList<Mot> listeAssos = new ArrayList<Mot>();
+		
+		//Mot motPere = new Mot(pere.toLowerCase());
+		
+		Mot m1 = null;
+		
+		for (int i = 0; i < synonymes.length; i++) 
+		{
+			if (!synonymes[i][0].toString().toLowerCase().equals("aucun mot"))
+			{
+				m1 = new Mot(synonymes[i][0].toString().toLowerCase());
+				if(m1 != null)
+				{
+					listeSynonymes.add(m1);
+				}
+			}
+
+		}
+		
+		for (int i = 0; i < assos.length; i++) 
+		{
+			if (!assos[i][0].toString().toLowerCase().equals("aucun mot"))
+			{
+				m1 = new Mot(assos[i][0].toString().toLowerCase());
+				if(m1 != null)
+				{
+					listeAssos.add(m1);
+				}
+			}
+
+		}
+		
+		nouveauMot.setSynonymesMot(listeSynonymes);
+		nouveauMot.setAssociationsMot(listeAssos);
+		
+		
+		nouveauMot.beginTransaction();
+		boolean res = nouveauMot.update(m);
 		this.motCourant = nouveauMot;
 
 		if (res) {
-			m.commit();
+			nouveauMot.commit();
 			JOptionPane.showMessageDialog(fenetre, "Mot modifié");
 		}
 		else {
-			m.rollback();
+			nouveauMot.rollback();
 			JOptionPane.showMessageDialog(fenetre, "Echec de la modification");
 		}
 	}
@@ -260,8 +298,11 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	{
 		if(arg0.getActionCommand().equals("Enregistrer les modifications")){
 			String description = Controller.fenetre.getVueMot().getTextAreaDescription().getText();
+			//String pere = Controller.fenetre.getVueAjout().getJComboBox().getSelectedItem().toString();
+			Object[][] synonymes = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauSynonymesDroite();
+			Object[][] assos = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauAssosDroite();
 			
-			this.modifierMot(motCourant, description);
+			this.modifierMot(motCourant,assos,synonymes,description);
 			this.afficherMot(motCourant);
 		}
 
