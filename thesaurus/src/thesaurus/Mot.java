@@ -365,32 +365,30 @@ public class Mot implements SQLData {
 						rowsAffected = 0;
 						
 						// on met à jour le pere de chacun des fils appartenant au Mot courant (MAJ symétrique)
+						requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
 						for (int i=0;i<this.filsMot.size();i++)
-						{
-							requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
-							
+						{	
 							requete.setRef(1,this.oidMot);
 							requete.setRef(2,this.filsMot.get(i).getOid());
 							
 							rowsAffected = rowsAffected + requete.executeUpdate();
-							requete.close();
 						}
+						requete.close();
 						
 						if (rowsAffected == this.filsMot.size())
 						{
 							rowsAffected = 0;
 							
 							// on met à jour les synonymes de chacun des synonymes appartenant au Mot courant (MAJ symétrique)
+							requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)");
 							for (int i=0;i<this.synonymesMot.size();i++)
-							{
-								requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)");
-								
+							{								
 								requete.setRef(1,this.synonymesMot.get(i).getOid());
 								requete.setRef(2,this.oidMot);
 								
-								rowsAffected = rowsAffected + requete.executeUpdate();
-								requete.close();
+								rowsAffected = rowsAffected + requete.executeUpdate();	
 							}
+							requete.close();
 							
 							if (rowsAffected == this.synonymesMot.size())
 							{
@@ -525,15 +523,14 @@ public class Mot implements SQLData {
 						rowsAffected = 0;
 						
 						// on met à NULL le pere des fils de l'ancien Mot
+						requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = NULL WHERE REF(lm) = ?");
 						for (int i=0;i<ancienMot.getFilsMot().size();i++)
-						{
-							requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = NULL WHERE REF(lm) = ?");
-							
+						{	
 							requete.setRef(1,ancienMot.getFilsMot().get(i).getOid());
 							
 							rowsAffected = rowsAffected + requete.executeUpdate();
-							requete.close();
 						}
+						requete.close();
 						
 						
 						if (rowsAffected == ancienMot.getFilsMot().size())
@@ -541,34 +538,51 @@ public class Mot implements SQLData {
 							rowsAffected = 0;
 							
 							// on met à jour le pere des fils du nouveau mot
+							requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
 							for (int i=0;i<this.filsMot.size();i++)
-							{
-								requete = ModelDB.getDB().db.prepareStatement("UPDATE LesMots lm SET lm.pereMot = ? WHERE REF(lm) = ?");
-								
+							{	
 								requete.setRef(1,this.oidMot);
 								requete.setRef(2,this.filsMot.get(i).getOid());
 								
-								rowsAffected = rowsAffected + requete.executeUpdate();
-								requete.close();
+								rowsAffected = rowsAffected + requete.executeUpdate();	
 							}
+							requete.close();
 							
 							if (rowsAffected == this.filsMot.size())
 							{
 								rowsAffected = 0;
 								
 								// on met à jour les synonymes de chacun des synonymes appartenant au Mot courant (MAJ symétrique)
-								for (int i=0; i<this.synonymesMot.size(); i++)
+								requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?");
+								for (int i=0; i<ancienMot.getSynonymesMot().size(); i++)
 								{
-										requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)"); 
-										requete.setRef(1, this.synonymesMot.get(i).getOid());
-										requete.setRef(2, this.oidMot);
-										rowsAffected = rowsAffected + requete.executeUpdate();
-										requete.close();
+									requete.setRef(1, ancienMot.getSynonymesMot().get(i).getOid());
+									requete.setRef(2, ancienMot.getOid());
+									rowsAffected = rowsAffected + requete.executeUpdate();
 								}
+								requete.close();
 								
-								if (rowsAffected == this.synonymesMot.size())
+								if (rowsAffected == ancienMot.getSynonymesMot().size())
 								{
-									return true;
+									rowsAffected = 0;
+									
+									requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)"); 
+									for (int i=0; i<this.synonymesMot.size(); i++)
+									{
+											requete.setRef(1, this.synonymesMot.get(i).getOid());
+											requete.setRef(2, this.oidMot);
+											rowsAffected = rowsAffected + requete.executeUpdate();
+									}
+									requete.close();
+									
+									if (rowsAffected == this.synonymesMot.size())
+									{
+										return true;
+									}
+									else
+									{
+										return false;
+									}
 								}
 								else
 								{
@@ -642,14 +656,14 @@ public class Mot implements SQLData {
 				rowsAffected = 0;
 				
 				// on supprime le mot dans les synonymes des synonymes du mot qui correspond au mot à supprimer
+				requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?"); 
 				for (int i=0; i<this.synonymesMot.size(); i++)
 				{	
-					requete = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.synonymesMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?"); 
 					requete.setRef(1, this.synonymesMot.get(i).getOid());
 					requete.setRef(2, this.oidMot);
 					rowsAffected = rowsAffected + requete.executeUpdate();
-					requete.close();
 				}
+				requete.close();
 				
 				if (rowsAffected == this.synonymesMot.size())
 				{
@@ -661,9 +675,9 @@ public class Mot implements SQLData {
 					ResultSet rs = requete.executeQuery();
 					
 					// suppression de ces associations
+					PreparedStatement majAssoc = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.associationsMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?");
 					while (rs.next())
 					{
-						PreparedStatement majAssoc = ModelDB.getDB().db.prepareStatement("DELETE FROM THE(SELECT lm.associationsMot FROM LesMots lm WHERE REF(lm) = ?) t WHERE VALUE(t) = ?");
 						majAssoc.setRef(1,rs.getRef(1));
 						majAssoc.setRef(2,this.oidMot);
 						
@@ -674,9 +688,8 @@ public class Mot implements SQLData {
 							System.out.println("pb1 : " + this.libelleMot );
 							return false;
 						}
-						
-						majAssoc.close();
 					}
+					majAssoc.close();
 					
 					requete.close();
 					
