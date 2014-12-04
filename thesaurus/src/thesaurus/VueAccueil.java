@@ -1,9 +1,6 @@
 package thesaurus;
 
-import java.awt.Color;
-
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
 public class VueAccueil extends View 

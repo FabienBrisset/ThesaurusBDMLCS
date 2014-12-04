@@ -4,19 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Ref;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.JTree;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 public class ControllerMots extends Controller implements ActionListener, MouseListener {
@@ -60,67 +55,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		vue.afficher();
 		Controller.fenetre.setVueAjout(vue);
 	}
-
-
-	/*public void ajouterMot(String mot, String pere, String synonyme, String description) {
-		try {
-			Mot m = new Mot(null,mot,"",null,null,null,null);
-			if (Mot.existe(m)) {
-				this.afficherAjout();
-			}
-			else {
-				String[] lesSynonymesEnString = recupererSousChaineEtMot(synonyme);
-				String[] lesSynonymesEnStringEnMinuscules = new String[lesSynonymesEnString.length];
-				Mot[] lesSynonymesEnMot = new Mot[lesSynonymesEnString.length];
-				Ref[] lesSynonymesEnRef = new Ref[lesSynonymesEnMot.length];
-				ArrayList<Ref> lesSynonymesEnRefArrayList = new ArrayList<Ref>(lesSynonymesEnRef.length);
-				ArrayList<Mot> lesSynonymesMotArrayList = new ArrayList<Mot>(lesSynonymesEnMot.length);
-
-
-				for (int i = 0; i < lesSynonymesEnString.length; i++) {
-					lesSynonymesEnStringEnMinuscules[i] = lesSynonymesEnString[i].toLowerCase();
-					Mot motTeste = null;
-					//try {
-					motTeste = new Mot(lesSynonymesEnStringEnMinuscules[i]);
-					if (motTeste != null)
-						lesSynonymesEnMot[i] = motTeste;
-					//					} catch (SQLException e) {
-					//						// TODO Auto-generated catch block
-					//						e.printStackTrace();
-					//					}
-					if (lesSynonymesEnMot[i] != null)
-						lesSynonymesEnRef[i] = lesSynonymesEnMot[i].getRef();
-				}
-
-				Mot motPere = null;
-				//try {
-				//motPere = this.motCourant.getMotByLibelle(pere.toLowerCase());
-				motPere = new Mot(pere.toLowerCase());
-				//				} catch (SQLException e) {
-				//					// TODO Auto-generated catch block
-				//					e.printStackTrace();
-				//				}
-
-				for (int i = 0; i < lesSynonymesEnRef.length; i++) {
-					if (lesSynonymesEnRef[i] != null)
-						lesSynonymesEnRefArrayList.add(lesSynonymesEnRef[i]);
-				}
-
-				for (int i = 0; i < lesSynonymesEnMot.length; i++) {
-					if (lesSynonymesEnMot[i] != null)
-						lesSynonymesMotArrayList.add(lesSynonymesEnMot[i]);
-				}
-
-				Mot m2 = new Mot(null,mot.toLowerCase(), description, motPere, new ArrayList<Mot>(), lesSynonymesMotArrayList, null);
-
-				m2.insert();
-				this.afficherMot(m2);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
 
 	public void ajouterMot(String mot, String pere, Object[][] assos, Object[][] synonymes, String description)
 	{
@@ -178,26 +112,12 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		
 	}
 
-	/*public void modifierMot(Mot m) { 
-		//Ref refAncienMot = m.getRef();
-		Mot ancienMot = new Mot(m.getLibelleMot());
-		boolean res = m.update(ancienMot);
-		if (res) {
-			JOptionPane.showMessageDialog(fenetre, "Mot modifié");
-		}
-		else {
-			JOptionPane.showMessageDialog(fenetre, "Echec de la modification");
-		}
-	}*/
-
 	public void modifierMot(Mot m, Object[][] assos, Object[][] synonymes, String description) { 
 		
 		Mot nouveauMot = new Mot(m.getOid(),m.getLibelleMot(),description,m.getPereMot(),m.getFilsMot(),null,null);
 		
 		ArrayList<Mot> listeSynonymes = new ArrayList<Mot>();
 		ArrayList<Mot> listeAssos = new ArrayList<Mot>();
-		
-		//Mot motPere = new Mot(pere.toLowerCase());
 		
 		Mot m1 = null;
 		
@@ -211,7 +131,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 					listeSynonymes.add(m1);
 				}
 			}
-
 		}
 		
 		for (int i = 0; i < assos.length; i++) 
@@ -224,12 +143,10 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 					listeAssos.add(m1);
 				}
 			}
-
 		}
 		
 		nouveauMot.setSynonymesMot(listeSynonymes);
 		nouveauMot.setAssociationsMot(listeAssos);
-		
 		
 		nouveauMot.beginTransaction();
 		boolean res = nouveauMot.update(m);
@@ -246,7 +163,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	}
 
 	public void supprimerMot(Mot m) {
-		
 		if(m.getPereMot() == null){JOptionPane.showMessageDialog(fenetre, "Impossible de supprimer la racine");}
 		else {
 			m.beginTransaction();
@@ -263,7 +179,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 				JOptionPane.showMessageDialog(fenetre, "Echec de la suppression");
 				this.afficherMot(m);
 				}
-		
 		}
 	}
 
@@ -298,7 +213,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 	{
 		if(arg0.getActionCommand().equals("Enregistrer les modifications")){
 			String description = Controller.fenetre.getVueMot().getTextAreaDescription().getText();
-			//String pere = Controller.fenetre.getVueAjout().getJComboBox().getSelectedItem().toString();
 			Object[][] synonymes = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauSynonymesDroite();
 			Object[][] assos = Controller.fenetre.getVueMot().getVueTableauxConsult().getDonneesTableauAssosDroite();
 			
@@ -401,8 +315,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			String description = Controller.fenetre.getVueAjout().getTextAreaDescription().getText();
 			ajouterMot(nouveauMot, pere, assos, synonymes, description);
 		}
-
-		//this.ajouterMot(nouveauMot, pere, synonymeEnString, description);
 	}
 
 	public String[] recupererSousChaineEtMot(String s) {
@@ -568,10 +480,7 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 			int selRow = Controller.fenetre.getVueArborescence().getGraphicArbo().getRowForLocation(arg0.getX(), arg0.getY());
 			TreePath selPath = Controller.fenetre.getVueArborescence().getGraphicArbo().getPathForLocation(arg0.getX(), arg0.getY());
 			if(selRow != -1) {
-				if(arg0.getClickCount() == 1) {
-					System.out.println("simple");
-				}
-				else if(arg0.getClickCount() == 2) {
+				if(arg0.getClickCount() == 2) {
 					afficherMot(new Mot(selPath.getLastPathComponent().toString()));
 				}
 			}
@@ -889,7 +798,6 @@ public class ControllerMots extends Controller implements ActionListener, MouseL
 		donneesTableauSynonymeGaucheFUTUR[listeSynonymeGauche.length][1] = Controller.fenetre.getVueAjout().getTableauSynonymeDroite().getValueAt(x, 1);
 		Controller.fenetre.getVueAjout().setDonneesTableauSynonymesGauche(donneesTableauSynonymeGaucheFUTUR);
 		Controller.fenetre.getVueAjout().getModelSynonymeGauche().setDataVector(donneesTableauSynonymeGaucheFUTUR, nomColonnesSynonyme);
-		//((DefaultTableModel) Controller.fenetre.getVueAjout().getTableauSynonymeGauche().getModel()).removeRow(0);
 		Controller.fenetre.getVueCourante().revalidate();
 		Controller.fenetre.getVueAjout().setDonneesTableauSynonymesDroite(donneesTableauSynonymeDroiteFUTUR);
 		Controller.fenetre.getVueAjout().getModelSynonymeDroite().setDataVector(donneesTableauSynonymeDroiteFUTUR, nomColonnesSynonyme);

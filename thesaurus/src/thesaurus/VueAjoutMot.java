@@ -1,15 +1,12 @@
 package thesaurus;
 
 import java.awt.*;
-import java.awt.font.TextAttribute;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.basic.BasicBorders.SplitPaneBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class VueAjoutMot 
@@ -267,5 +264,4 @@ public class VueAjoutMot
 	public void setModelAssosDroite(DefaultTableModel modelAssosDroite) {
 		this.vueTableauxAjout.setModelAssosDroite(modelAssosDroite);
 	}
-
 }

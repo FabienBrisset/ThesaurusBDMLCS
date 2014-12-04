@@ -322,5 +322,4 @@ public class VueTableauxAjout extends JPanel
 	public void setTableauAssosDroite(RenduJTable tableauAssosDroite) {
 		this.tableauAssosDroite = tableauAssosDroite;
 	}
-
 }

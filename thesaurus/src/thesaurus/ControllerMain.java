@@ -1,6 +1,5 @@
 package thesaurus;
 
-import java.awt.Event;
 import java.awt.event.ActionEvent;
 
 public class ControllerMain extends Controller {

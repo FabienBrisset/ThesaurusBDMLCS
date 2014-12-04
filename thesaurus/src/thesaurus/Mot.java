@@ -512,7 +512,6 @@ public class Mot implements SQLData {
 							requete = ModelDB.getDB().db.prepareStatement("INSERT INTO THE(SELECT lm.filsMot FROM LesMots lm WHERE REF(lm) = ?) VALUES (?)"); 
 							requete.setRef(1, this.pereMot.getOid());
 							requete.setRef(2, this.oidMot);
-							System.out.println(rowsAffected + " -- " + this.pereMot.getOid().toString());
 							rowsAffected = requete.executeUpdate();
 							requete.close();
 						}
@@ -1165,7 +1164,6 @@ public class Mot implements SQLData {
 		
 		requete.close();
 		
-		System.out.println(rowsAffected + "-"+ relations.size());
 		return (rowsAffected == relations.size() + 1);
 	}
 }
