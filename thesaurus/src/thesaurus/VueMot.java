@@ -25,7 +25,6 @@ public class VueMot {
 	
 	private Object[][] donneesTableauFils;
 	private String[] nomColonnes = {"Entrée", "Description"};
-	
 	private JPanel panChampRecherche;
 	private JLabel labelChampRecherche;
 	private JTextField textFieldChampRecherche;
@@ -180,9 +179,8 @@ public class VueMot {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 				if(!labelMotParent.getText().equals("Aucun"))
-					new ControllerMots().afficherMot(new Mot(labelMotParent.getText().toLowerCase()));
+					Controller.getControllerMots().afficherMot(new Mot(labelMotParent.getText().toLowerCase()));
 			}
 
 			@Override
